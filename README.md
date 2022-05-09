@@ -1,2 +1,2 @@
-# DigitalWellBeing
-Repository for the Mobile and Social Sensing Systems project.
+# DigitalWellBeing-App
+Main app repository for the Mobile and Social Sensing Systems project.
