@@ -19,14 +19,14 @@ import it.unipi.dii.digitalwellbeing_app.ml.PickupClassifier;
 public class ActivityClassifier {
 
     private static final String TAG = "PickupClassifier";
-    TreeMap<Long,Float[]> toBeClassified = new TreeMap<>();
     long timestamp;
     boolean already_recognized = false;
     private Context ctx;
 
 
-    private void classifySamples() {
+    Boolean classifySamples(TreeMap<Long, Float[]> toBeClassified) {
         // classify the samples
+        Boolean pickup = false;
         TensorBuffer inputFeature0 = null;
         float[] data = new float[12];
 
@@ -60,6 +60,7 @@ public class ActivityClassifier {
 
                 // tv.setText(outputFeature0.getDataType().toString());
                 if (data[0] <= 0.5) {
+                    pickup = true;
                     // tv.setText("Picking up phone!");
                     // CharSequence counter = tv2.getText();
                     // int count = Integer.parseInt(counter.toString());
@@ -77,84 +78,13 @@ public class ActivityClassifier {
             // Releases model resources if no longer used.
             model.close();
 
+
         } catch (IOException e) {
             // TODO Handle the exception
         }
-
+        return pickup;
     }
 
-    private void addMapValues(SensorEvent event, int i1, int i2, int i3) {
-        boolean ret = false;
 
-        // puó succedere che arrivino due valori di accelerometro consecutivi, si potrebbe fare quindi la media anziché scartare il valore
-        // la media sarebbe sempre tra due campioni non molto distanti tra loro, accettabile come approssimazione?
 
-        for(int i = i1; i <= i3 ; i++){
-            if(toBeClassified.size() != 0 && !isFull()) {
-
-                if(Objects.requireNonNull(toBeClassified.get(toBeClassified.lastKey()))[i] != null) {
-                    Objects.requireNonNull(toBeClassified.get(toBeClassified.lastKey()))[i] =
-                            (Objects.requireNonNull(toBeClassified.get(toBeClassified.lastKey()))[i] + event.values[i % 3]) / 2;
-                    Log.d(TAG, "Campione duplicato faccio la MEDIA");
-                } else {
-                    Objects.requireNonNull(toBeClassified.get(toBeClassified.lastKey()))[i] = event.values[i % 3];
-                }
-
-                ret = true;
-            }
-        }
-
-        if(!ret) {
-            toBeClassified.put(event.timestamp, new Float[12]);
-
-            Objects.requireNonNull(toBeClassified.get(event.timestamp))[i1] = event.values[0];
-            Objects.requireNonNull(toBeClassified.get(event.timestamp))[i2] = event.values[1];
-            Objects.requireNonNull(toBeClassified.get(event.timestamp))[i3] = event.values[2];
-        }
-
-        // si puó prendere un campione ogni 10 (non abbiamo bisogno di tanti campioni per classificare)
-        // oppure si puó pensare di aggregare questi campioni in qualche modo (media?)
-        if(toBeClassified.size() >= 40) {
-            classifySamples();
-        }
-
-        /*
-            if(toBeClassified.get(event.timestamp) == null) {
-            List<Float>valuesList = new ArrayList<Float>() {
-                {
-                    add(event.values[0]);
-                    add(event.values[1]);
-                    add(event.values[2]);
-                }
-            };
-            if(toBeClassified.size() == 0 || toBeClassified.get(toBeClassified.lastKey()).size() == 12) {
-                timestamp = event.timestamp;
-                toBeClassified.put(event.timestamp, valuesList);
-            } else {
-                toBeClassified.get(toBeClassified.lastKey()).add(event.values[0]);
-                toBeClassified.get(toBeClassified.lastKey()).add(event.values[1]);
-                toBeClassified.get(toBeClassified.lastKey()).add(event.values[2]);
-            }
-        } else {
-            toBeClassified.get(event.timestamp).add(event.values[0]);
-            toBeClassified.get(event.timestamp).add(event.values[1]);
-            toBeClassified.get(event.timestamp).add(event.values[2]);
-        }
-
-        if(toBeClassified.size() >= 10) {
-            classifyFiftySamples();
-        }
-
-         */
-    }
-
-    private boolean isFull() {
-        for(int i = 0; i < Objects.requireNonNull(toBeClassified.get(toBeClassified.lastKey())).length; i++) {
-            if(Objects.requireNonNull(toBeClassified.get(toBeClassified.lastKey()))[i] == null) {
-                return false;
-            }
-        }
-
-        return true;
-    }
 }

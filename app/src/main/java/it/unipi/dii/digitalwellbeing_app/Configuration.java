@@ -12,7 +12,7 @@ public class Configuration {
     static final int WINDOW_SIZE = 4; //seconds
 
     static final long DETECTION_DELAY = 300000;     //Timer delay for whole detection period, of 5 minutes
-    static final long FAST_SAMPLING_DELAY = 10000;  //Timer delay for fast sampling period, of 10 seconds
+    static final long FAST_SAMPLING_DELAY = 20000;  //Timer delay for fast sampling period, of 10 seconds
 
     // Range values for accelerometer {
 

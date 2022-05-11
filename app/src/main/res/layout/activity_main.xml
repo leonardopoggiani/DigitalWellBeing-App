@@ -8,10 +8,10 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/gesture"
+        android:id="@+id/activity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:text="@string/other"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -26,16 +26,16 @@
         android:text="@string/start"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gesture" />
+        app:layout_constraintTop_toBottomOf="@+id/activity" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/counter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="7dp"
         android:layout_marginBottom="33dp"
-        android:text="@string/counter_pickup"
-        app:layout_constraintBottom_toTopOf="@+id/gesture"
-        app:layout_constraintStart_toStartOf="@+id/gesture" />
+        android:text="@string/_0"
+        app:layout_constraintBottom_toTopOf="@+id/activity"
+        app:layout_constraintStart_toStartOf="@+id/activity" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,9 +13,14 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
+import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Objects;
+import java.util.TreeMap;
 
 public class SensorHandler extends Service implements SensorEventListener {
 
@@ -32,10 +37,12 @@ public class SensorHandler extends Service implements SensorEventListener {
 
     private SensorManager sm;
     private Sensor accelerometer;
+    private Sensor proximity;
     private Sensor gyroscope;
-    private Sensor rotation;
     private Sensor gravity;
+    private Sensor rotation;
     private Sensor linear;
+    private Sensor magnetometer;
 
 
     private HandlerThread detectionThread;
@@ -49,15 +56,22 @@ public class SensorHandler extends Service implements SensorEventListener {
     //Used to find out if the fast sampling is in progress
     private boolean started;
     private int counter;
-    public SensorHandler() {
-    }
+
+    TreeMap<Long,Float[]> toBeClassified = new TreeMap<>();
+    long timestamp;
+    boolean already_recognized = false;
+    boolean in_pocket = false;
+
+    private ActivityClassifier classifier = new ActivityClassifier();
+
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
         Log.d(TAG, "OnStartCommand SensorHandler");
-        if(intent.getAction() != null && intent.getAction().compareTo("Command") == 0) {
-            String command = intent.getStringExtra("command_key");
+         String command = "START";
+        //if(intent.getAction() != null && intent.getAction().compareTo("Command") == 0) {
+            //String command = intent.getStringExtra("command_key");
             switch(command) {
                 case "START":
                     Log.d(TAG, "Start case");
@@ -98,9 +112,9 @@ public class SensorHandler extends Service implements SensorEventListener {
                     Log.d(TAG, "Default Case");
                     break;
             }
-        } else {
-            Log.d(TAG, "SensorHandler activated");
-        }
+        //} else {
+            //Log.d(TAG, "SensorHandler activated");
+       // }
         return Service.START_STICKY;
     }
 
@@ -127,6 +141,33 @@ public class SensorHandler extends Service implements SensorEventListener {
         },Configuration.DETECTION_DELAY);
 
     }
+    */
+
+    //Initialize the Detection Timer. When it will expire the sampling operations will be stopped
+    private void initializeDetectionTimer() {
+        Log.d(TAG, "Timer "+Configuration.DETECTION_DELAY/60000+" minutes started");
+        detectionThread = new HandlerThread("SensorHandler");
+        detectionThread.start();
+        detectionHandler = new Handler(detectionThread.getLooper());
+        detectionHandler.postDelayed(new Runnable() {
+            public void run() {
+                Log.d(TAG, "run del thread");
+                if(started) {
+                    wakeLock.release();
+                    Log.d(TAG, "wakeLock released");
+                    fastSamplingThread.quit();
+                    fastSamplingThread = null;
+                    fastSamplingHandler = null;
+
+                }
+                if(stopListener())
+                    Log.d(TAG, "Detection stopped");
+                stopSelf();
+            }
+        },Configuration.DETECTION_DELAY);
+
+    }
+
 
     //Initialize the Fast Sampling Timer. When it will expire the sampling rate will be decreased and
     //an Intent will be sent to the WearActitvitySerivce in order to notify that new data are ready to be sent
@@ -148,7 +189,7 @@ public class SensorHandler extends Service implements SensorEventListener {
                 Log.d(TAG, "Sampling rate decreased");
             }
         },Configuration.FAST_SAMPLING_DELAY);
-    }*/
+    }
 
 
     protected Boolean startListener(int rate){
@@ -156,7 +197,8 @@ public class SensorHandler extends Service implements SensorEventListener {
         //Se il rate è quello basso prelevo solo dall'accelerometro e il sonsore di prossimità
         if(rate == SensorManager.SENSOR_DELAY_NORMAL){
             Log.d(TAG, "Delay normal activated");
-            return sm.registerListener(this, accelerometer, rate);
+            return (sm.registerListener(this, accelerometer, rate) && sm.registerListener (this, proximity, rate));
+
         }
 
         //Altrimenti, attivo tutti prelevo da tutti i sensori per classifirare un pickup
@@ -165,17 +207,20 @@ public class SensorHandler extends Service implements SensorEventListener {
                 sm.registerListener(this, rotation, rate) &&
                 sm.registerListener(this, gyroscope, rate) &&
                 sm.registerListener(this, gravity, rate) &&
-                sm.registerListener(this, linear, rate) ) {
+                sm.registerListener(this, linear, rate) &&
+                sm.registerListener (this, magnetometer, rate) &&
+                sm.registerListener (this, proximity, rate)) {
 
 
             started = true;
-            //initializeTimerFastSampling();
+            initializeTimerFastSampling();
             Log.d(TAG,"Fast Sampling activated");
             return true;
         } else {
             //registerListener on some sensor could be failed so the rate must be reset on low frequency rate
             stopListener();
             sm.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+            sm.registerListener (this, proximity, SensorManager.SENSOR_DELAY_NORMAL);
             Log.d(TAG,"Some registration is failed");
             return false;
         }
@@ -199,7 +244,88 @@ public class SensorHandler extends Service implements SensorEventListener {
         rotation = sm.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR);
         gravity = sm.getDefaultSensor(Sensor.TYPE_GRAVITY);
         linear = sm.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+        proximity = sm.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+        magnetometer = sm.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
+    }
+
+    private void addMapValues(SensorEvent event, int i1, int i2, int i3) {
+        boolean ret = false;
+
+        // puó succedere che arrivino due valori di accelerometro consecutivi, si potrebbe fare quindi la media anziché scartare il valore
+        // la media sarebbe sempre tra due campioni non molto distanti tra loro, accettabile come approssimazione?
+
+        for (int i = i1; i <= i3; i++) {
+            if (toBeClassified.size() != 0 && !isFull()) {
+
+                if (Objects.requireNonNull(toBeClassified.get(toBeClassified.lastKey()))[i] != null) {
+                    Objects.requireNonNull(toBeClassified.get(toBeClassified.lastKey()))[i] =
+                            (Objects.requireNonNull(toBeClassified.get(toBeClassified.lastKey()))[i] + event.values[i % 3]) / 2;
+                    Log.d(TAG, "Campione duplicato faccio la MEDIA");
+                } else {
+                    Objects.requireNonNull(toBeClassified.get(toBeClassified.lastKey()))[i] = event.values[i % 3];
+                }
+
+                ret = true;
+            }
+        }
+
+        if (!ret) {
+            toBeClassified.put(event.timestamp, new Float[12]);
+
+            Objects.requireNonNull(toBeClassified.get(event.timestamp))[i1] = event.values[0];
+            Objects.requireNonNull(toBeClassified.get(event.timestamp))[i2] = event.values[1];
+            Objects.requireNonNull(toBeClassified.get(event.timestamp))[i3] = event.values[2];
+        }
+
+        // si puó prendere un campione ogni 10 (non abbiamo bisogno di tanti campioni per classificare)
+        // oppure si puó pensare di aggregare questi campioni in qualche modo (media?)
+        if (toBeClassified.size() >= 40) {
+            if(classifier.classifySamples(toBeClassified))
+            {
+                serviceCallbacks.setActivityAndCounter("Pickup the Phone!");
+            }
+        }
+
+
+        /*
+            if(toBeClassified.get(event.timestamp) == null) {
+            List<Float>valuesList = new ArrayList<Float>() {
+                {
+                    add(event.values[0]);
+                    add(event.values[1]);
+                    add(event.values[2]);
+                }
+            };
+            if(toBeClassified.size() == 0 || toBeClassified.get(toBeClassified.lastKey()).size() == 12) {
+                timestamp = event.timestamp;
+                toBeClassified.put(event.timestamp, valuesList);
+            } else {
+                toBeClassified.get(toBeClassified.lastKey()).add(event.values[0]);
+                toBeClassified.get(toBeClassified.lastKey()).add(event.values[1]);
+                toBeClassified.get(toBeClassified.lastKey()).add(event.values[2]);
+            }
+        } else {
+            toBeClassified.get(event.timestamp).add(event.values[0]);
+            toBeClassified.get(event.timestamp).add(event.values[1]);
+            toBeClassified.get(event.timestamp).add(event.values[2]);
+        }
+
+        if(toBeClassified.size() >= 10) {
+            classifyFiftySamples();
+        }
+
+         */
+    }
+
+    private boolean isFull() {
+        for(int i = 0; i < Objects.requireNonNull(toBeClassified.get(toBeClassified.lastKey())).length; i++) {
+            if(Objects.requireNonNull(toBeClassified.get(toBeClassified.lastKey()))[i] == null) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
 
@@ -235,7 +361,31 @@ public class SensorHandler extends Service implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
 
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            addMapValues(event, 0, 1, 2);
+        } else if(event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
+            addMapValues(event, 3, 4, 5);
+        } else if (event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
+            addMapValues(event, 6, 7, 8);
+        } /*else if (event.sensor.getType() == Sensor.TYPE_GAME_ROTATION_VECTOR) {
+                addMapValues(event, 9, 10, 11); }*/
+        else if (event.sensor.getType() == Sensor.TYPE_GRAVITY) {
+            addMapValues(event, 9, 10, 11);
+
+            for(Map.Entry<Long, Float[]> entry : toBeClassified.entrySet()) {
+                Log.d(TAG, entry.getKey() + ": " + Arrays.toString(entry.getValue()));
+            }
+
+        } /*else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+                addMapValues(event, 12, 13, 14);
+            }*/ else if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
+            Log.d(TAG, "Proximity: " + event.values[0]);
+            if(event.values[0] == 0.0 /*&& checkRangePocket()*/) {
+                already_recognized = false;
+            }
+        }
     }
+
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {

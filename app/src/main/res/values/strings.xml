@@ -2,4 +2,6 @@
     <string name="app_name">DigitalWellBeing-App</string>
     <string name="counter_pickup">TextView</string>
     <string name="start">START</string>
+    <string name="other">OTHER!</string>
+    <string name="_0">0</string>
 </resources>

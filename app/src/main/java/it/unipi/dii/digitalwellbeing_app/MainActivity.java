@@ -2,12 +2,14 @@ package it.unipi.dii.digitalwellbeing_app;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity implements ServiceCallbacks {
 
@@ -21,6 +23,8 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks 
         Intent intentSensorHandler = new Intent(this, SensorHandler.class);
         bindService(intentSensorHandler, serviceConnection, Context.BIND_AUTO_CREATE);
     }
+
+
 
     /**
      * Callbacks for service binding, passed to bindService()
@@ -40,7 +44,24 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks 
         public void onServiceDisconnected(ComponentName arg0) {
             //bound = false;
         }
+
+
+
     };
 
 
+    @Override
+    public void setActivityAndCounter(String actvity) {
+
+        TextView tv = findViewById(R.id.activity);
+        TextView tv2 = findViewById(R.id.counter);
+
+        tv.setText(actvity);
+
+        CharSequence counter = tv2.getText();
+        int count = Integer.parseInt(counter.toString());
+        count += 1;
+        tv2.setText(String.valueOf(count));
+
+    }
 }
