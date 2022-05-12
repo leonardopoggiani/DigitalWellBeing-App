@@ -20,6 +20,8 @@ import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
@@ -49,7 +51,6 @@ public class SensorHandler extends Service implements SensorEventListener {
     private Sensor linear;
     private Sensor magnetometer;
 
-
     private HandlerThread detectionThread;
     private Handler detectionHandler;
     //Timer used to start and stop the sampling with higher rate on the smartwatch
@@ -64,9 +65,10 @@ public class SensorHandler extends Service implements SensorEventListener {
     private Intent intent_;
 
     TreeMap<Long,Float[]> toBeClassified = new TreeMap<>();
-    long timestamp;
     boolean already_recognized = false;
-    boolean in_pocket = false;
+    final float[] rotationMatrix = new float[9];
+    final float[] orientationAngles = new float[3];
+
 
     private ActivityClassifier classifier = new ActivityClassifier(this);
 
@@ -245,13 +247,12 @@ public class SensorHandler extends Service implements SensorEventListener {
         // puó succedere che arrivino due valori di accelerometro consecutivi, si potrebbe fare quindi la media anziché scartare il valore
         // la media sarebbe sempre tra due campioni non molto distanti tra loro, accettabile come approssimazione?
 
-        for (int i = i1; i <= i3; i++) {
-            if (toBeClassified.size() != 0 && !isFull()) {
+        for(int i = i1; i <= i3 ; i++){
+            if(toBeClassified.size() != 0 && !isFull()) {
 
-                if (Objects.requireNonNull(toBeClassified.get(toBeClassified.lastKey()))[i] != null) {
+                if(Objects.requireNonNull(toBeClassified.get(toBeClassified.lastKey()))[i] != null) {
                     Objects.requireNonNull(toBeClassified.get(toBeClassified.lastKey()))[i] =
                             (Objects.requireNonNull(toBeClassified.get(toBeClassified.lastKey()))[i] + event.values[i % 3]) / 2;
-                    Log.d(TAG, "Campione duplicato faccio la MEDIA");
                 } else {
                     Objects.requireNonNull(toBeClassified.get(toBeClassified.lastKey()))[i] = event.values[i % 3];
                 }
@@ -260,8 +261,8 @@ public class SensorHandler extends Service implements SensorEventListener {
             }
         }
 
-        if (!ret) {
-            toBeClassified.put(event.timestamp, new Float[12]);
+        if(!ret) {
+            toBeClassified.put(event.timestamp, new Float[18]);
 
             Objects.requireNonNull(toBeClassified.get(event.timestamp))[i1] = event.values[0];
             Objects.requireNonNull(toBeClassified.get(event.timestamp))[i2] = event.values[1];
@@ -270,43 +271,41 @@ public class SensorHandler extends Service implements SensorEventListener {
 
         // si puó prendere un campione ogni 10 (non abbiamo bisogno di tanti campioni per classificare)
         // oppure si puó pensare di aggregare questi campioni in qualche modo (media?)
-        if (toBeClassified.size() >= 40) {
-            if(classifier.classifySamples(toBeClassified))
-            {
-                serviceCallbacks.setActivityAndCounter("Pickup the Phone!");
-            }
+        if(toBeClassified.size() >= 50) {
+            long last_timestamp = toBeClassified.lastKey();
+            Collection<Float[]> values = toBeClassified.values();
+            Float[] toClassify = new Float[18];
+            int[] count = new int[18];
 
-        }
+            for(int i = 0; i < 18; i++) {
+                for (Iterator<Float[]> it = values.iterator(); it.hasNext(); ) {
+                    Float[] value = it.next();
+                    if(value[i] == null) {
+                        continue;
+                    } else {
+                        count[i]++;
+                    }
 
-
-        /*
-            if(toBeClassified.get(event.timestamp) == null) {
-            List<Float>valuesList = new ArrayList<Float>() {
-                {
-                    add(event.values[0]);
-                    add(event.values[1]);
-                    add(event.values[2]);
+                    if(toClassify[i] == null) {
+                        toClassify[i] = value[i];
+                    } else {
+                        toClassify[i] = (toClassify[i] + value[i]);
+                    }
                 }
-            };
-            if(toBeClassified.size() == 0 || toBeClassified.get(toBeClassified.lastKey()).size() == 12) {
-                timestamp = event.timestamp;
-                toBeClassified.put(event.timestamp, valuesList);
-            } else {
-                toBeClassified.get(toBeClassified.lastKey()).add(event.values[0]);
-                toBeClassified.get(toBeClassified.lastKey()).add(event.values[1]);
-                toBeClassified.get(toBeClassified.lastKey()).add(event.values[2]);
             }
-        } else {
-            toBeClassified.get(event.timestamp).add(event.values[0]);
-            toBeClassified.get(event.timestamp).add(event.values[1]);
-            toBeClassified.get(event.timestamp).add(event.values[2]);
-        }
 
-        if(toBeClassified.size() >= 10) {
-            classifyFiftySamples();
-        }
+            for(int i = 0; i < 18; i++) {
+                toClassify[i] = toClassify[i] / count[i];
+            }
 
-         */
+            if(classifier.classifySamples(toClassify, toBeClassified))
+            {
+                Log.d(TAG, "PHONE PICKUP");
+                // serviceCallbacks.setActivityAndCounter("Pickup the Phone!");
+            }
+
+            toBeClassified.clear();
+        }
     }
 
     private boolean isFull() {
@@ -348,6 +347,8 @@ public class SensorHandler extends Service implements SensorEventListener {
         // TODO: Return the communication channel to the service.
         throw new UnsupportedOperationException("Not yet implemented");
     }
+    
+    
 
     @Override
     public void onSensorChanged(SensorEvent event) {
@@ -358,26 +359,32 @@ public class SensorHandler extends Service implements SensorEventListener {
             addMapValues(event, 3, 4, 5);
         } else if (event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
             addMapValues(event, 6, 7, 8);
-        } /*else if (event.sensor.getType() == Sensor.TYPE_GAME_ROTATION_VECTOR) {
-                addMapValues(event, 9, 10, 11); }*/
-        else if (event.sensor.getType() == Sensor.TYPE_GRAVITY) {
+        } else if (event.sensor.getType() == Sensor.TYPE_GRAVITY) {
             addMapValues(event, 9, 10, 11);
+        } else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+            addMapValues(event, 12, 13, 14);
+        } else if (event.sensor.getType() == Sensor.TYPE_GAME_ROTATION_VECTOR) {
+            SensorManager.getRotationMatrixFromVector(rotationMatrix, event.values);
+            SensorManager.getOrientation(rotationMatrix, orientationAngles);
 
-            for(Map.Entry<Long, Float[]> entry : toBeClassified.entrySet()) {
-                Log.d(TAG, entry.getKey() + ": " + Arrays.toString(entry.getValue()));
-            }
+            event.values[0] = (float) Math.toDegrees(orientationAngles[0]);
+            event.values[1] = (float) Math.toDegrees(orientationAngles[1]);
+            event.values[2] = (float) Math.toDegrees(orientationAngles[2]);
 
-        } /*else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-                addMapValues(event, 12, 13, 14);
-            }*/ else if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
+            addMapValues(event, 15, 16, 17);
+        } else if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
             Log.d(TAG, "Proximity: " + event.values[0]);
-            if(event.values[0] == 0.0 /*&& checkRangePocket()*/) {
+            if(event.values[0] == 0.0 && checkRangePocket(event)) {
                 already_recognized = false;
             }
         }
     }
 
-
+    public boolean checkRangePocket(SensorEvent event) {
+        return (event.values[0] >= Configuration.X_LOWER_BOUND_POCKET && event.values[0] <= Configuration.X_UPPER_BOUND_POCKET) &&
+                (event.values[1] >= Configuration.Y_LOWER_BOUND_POCKET && event.values[1] <= Configuration.Y_UPPER_BOUND_POCKET) &&
+                (event.values[2] >= Configuration.Z_LOWER_BOUND_POCKET && event.values[2] <= Configuration.Z_UPPER_BOUND_POCKET);
+    }
 
 
     @Override

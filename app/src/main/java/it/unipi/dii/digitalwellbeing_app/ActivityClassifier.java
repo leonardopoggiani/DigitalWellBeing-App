@@ -1,17 +1,15 @@
 package it.unipi.dii.digitalwellbeing_app;
 
-import android.hardware.SensorEvent;
+import android.content.Context;
 import android.util.Log;
-import android.widget.TextView;
 
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
-import android.content.Context;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Objects;
 import java.util.TreeMap;
 
 import it.unipi.dii.digitalwellbeing_app.ml.PickupClassifier;
@@ -28,30 +26,25 @@ public class ActivityClassifier {
         this.ctx = context;
     }
 
-
-
-    Boolean classifySamples(TreeMap<Long, Float[]> toBeClassified) {
+    Boolean classifySamples(Float[] toClassify, TreeMap<Long, Float[]> toBeClassified) {
         // classify the samples
         Boolean pickup = false;
         TensorBuffer inputFeature0 = null;
-        float[] data = new float[12];
+        float[] data = new float[18];
 
-        Log.d(TAG, String.valueOf(toBeClassified.size()));
         try {
             PickupClassifier model = PickupClassifier.newInstance(ctx.getApplicationContext());
             for (Map.Entry<Long, Float[]> entry : toBeClassified.entrySet()) {
-                Log.d(TAG, "rowString length: " + (entry.getValue() != null ? entry.getValue().length : 0));
-
-                int[] shape = new int[]{1, 12};
+                int[] shape = new int[]{1, 18};
                 TensorBuffer tensorBuffer = TensorBuffer.createFixedSize(shape, DataType.FLOAT32);
 
-                for (int i = 0; i < entry.getValue().length; i++) {
-                    data[i] = entry.getValue()[i];
+                for (int i = 0; i < toClassify.length; i++) {
+                    data[i] = toClassify[i];
                 }
 
                 tensorBuffer.loadArray(data);
 
-                inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 12, 1}, DataType.FLOAT32);
+                inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 18, 1}, DataType.FLOAT32);
                 ByteBuffer byteBuffer = tensorBuffer.getBuffer();
                 inputFeature0.loadBuffer(byteBuffer);
 
@@ -60,18 +53,21 @@ public class ActivityClassifier {
                 TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
                 data = outputFeature0.getFloatArray();
 
-                /*
-                TextView tv = findViewById(R.id.activity);
-                TextView tv2 = findViewById(R.id.counter);
-                 */
+                // TextView tv = findViewById(R.id.activity);
+                // TextView tv2 = findViewById(R.id.counter);
 
                 // tv.setText(outputFeature0.getDataType().toString());
-                if (data[0] <= 0.5) {
-                    pickup = true;
+                if (data[0] > 0.5) {
+
                     // tv.setText("Picking up phone!");
                     // CharSequence counter = tv2.getText();
                     // int count = Integer.parseInt(counter.toString());
-                    // count += 1;
+
+                    if(!already_recognized) {
+                        pickup = true;
+                        // count += 1;
+                    }
+
                     // tv2.setText(String.valueOf(count));
                     already_recognized = true;
                 } else {
@@ -81,15 +77,13 @@ public class ActivityClassifier {
                 Log.d(TAG, "predictActivities: output array: " + Arrays.toString(outputFeature0.getFloatArray()));
                 break;
             }
-
             // Releases model resources if no longer used.
             model.close();
 
-
         } catch (IOException e) {
-            // TODO Handle the exception
+            e.printStackTrace();
         }
-        Log.d(TAG, "PICKUP");
+
         return pickup;
     }
 }
