@@ -86,5 +86,5 @@ public class ActivityClassifier {
             e.printStackTrace();
         }
         return pickup;
-    }*/
+    }
 }
