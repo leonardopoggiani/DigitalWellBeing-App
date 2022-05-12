@@ -8,7 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.content.ServiceConnection;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -85,18 +87,30 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks 
     @Override
     public void setActivityAndCounter(String actvity) {
 
-        TextView tv = findViewById(R.id.activity);
-        TextView tv2 = findViewById(R.id.counter);
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    TextView tv = findViewById(R.id.activity);
+                    TextView tv2 = findViewById(R.id.counter);
 
-        tv.setText(actvity);
+                    tv.setText(actvity);
+                    Log.d(TAG, actvity);
 
-        CharSequence counter = tv2.getText();
-        int count = Integer.parseInt(counter.toString());
-        count += 1;
-        tv2.setText(String.valueOf(count));
+                    CharSequence counter = tv2.getText();
+                    int count = Integer.parseInt(counter.toString());
+                    count += 1;
+                    tv2.setText(String.valueOf(count));
+                    Log.d(TAG, String.valueOf(count));
+                }
+
+
+            });
+        }
+
+
+
 
     }
 
 
 
-}

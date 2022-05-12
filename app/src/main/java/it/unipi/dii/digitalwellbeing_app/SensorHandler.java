@@ -13,6 +13,7 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
+import android.widget.TextView;
 
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
@@ -20,6 +21,8 @@ import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
@@ -30,7 +33,7 @@ import it.unipi.dii.digitalwellbeing_app.ml.PickupClassifier;
 public class SensorHandler extends Service implements SensorEventListener {
 
     //private final IBinder binder = new LocalBinder();
-    private ServiceCallbacks serviceCallbacks;
+
 
     //Class used for the client Binder
     public class LocalBinder extends Binder {
@@ -56,12 +59,14 @@ public class SensorHandler extends Service implements SensorEventListener {
     private HandlerThread fastSamplingThread;
     private Handler fastSamplingHandler;
 
+    private ServiceCallbacks serviceCallbacks;
+
+
     private static final String TAG = "SensorHandler";
 
     //Used to find out if the fast sampling is in progress
     private boolean started;
     private int counter;
-    private Intent intent_;
 
     TreeMap<Long,Float[]> toBeClassified = new TreeMap<>();
     long timestamp;
@@ -83,7 +88,7 @@ public class SensorHandler extends Service implements SensorEventListener {
                     counter = 0;
                     initializeSensorHandler();
                     //Start the sensorListener with a low sampling frequency and initialize the detection timer
-                    if (startListener(SensorManager.SENSOR_DELAY_GAME)) {
+                    if (startListener(SensorManager.SENSOR_DELAY_FASTEST)) {
                         //initializeDetectionTimer();
                         Log.d(TAG, "Detection Activated");
                     } else
@@ -191,14 +196,14 @@ public class SensorHandler extends Service implements SensorEventListener {
                 sm.registerListener (this, magnetometer, rate) &&
                 sm.registerListener (this, proximity, rate)) {
            */
-        else if(rate == SensorManager.SENSOR_DELAY_GAME){
-            sm.registerListener (this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
-            sm.registerListener (this, gravity, SensorManager.SENSOR_DELAY_GAME);
-            sm.registerListener (this, gyroscope, SensorManager.SENSOR_DELAY_GAME);
-            sm.registerListener (this, rotation, SensorManager.SENSOR_DELAY_GAME);
-            sm.registerListener (this, linear, SensorManager.SENSOR_DELAY_GAME);
-            sm.registerListener (this, magnetometer, SensorManager.SENSOR_DELAY_GAME);
-            sm.registerListener (this, proximity, SensorManager.SENSOR_DELAY_GAME);
+        else if(rate == SensorManager.SENSOR_DELAY_FASTEST){
+            sm.registerListener (this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+            sm.registerListener (this, gravity, SensorManager.SENSOR_DELAY_FASTEST);
+            sm.registerListener (this, gyroscope, SensorManager.SENSOR_DELAY_FASTEST);
+            sm.registerListener (this, rotation, SensorManager.SENSOR_DELAY_FASTEST);
+            sm.registerListener (this, linear, SensorManager.SENSOR_DELAY_FASTEST);
+            sm.registerListener (this, magnetometer, SensorManager.SENSOR_DELAY_FASTEST);
+            sm.registerListener (this, proximity, SensorManager.SENSOR_DELAY_FASTEST);
 
 
             started = true;
@@ -245,6 +250,71 @@ public class SensorHandler extends Service implements SensorEventListener {
         // puó succedere che arrivino due valori di accelerometro consecutivi, si potrebbe fare quindi la media anziché scartare il valore
         // la media sarebbe sempre tra due campioni non molto distanti tra loro, accettabile come approssimazione?
 
+        for(int i = i1; i <= i3 ; i++){
+            if(toBeClassified.size() != 0 && !isFull()) {
+
+                if(Objects.requireNonNull(toBeClassified.get(toBeClassified.lastKey()))[i] != null) {
+                    Objects.requireNonNull(toBeClassified.get(toBeClassified.lastKey()))[i] =
+                            (Objects.requireNonNull(toBeClassified.get(toBeClassified.lastKey()))[i] + event.values[i % 3]) / 2;
+                    Log.d(TAG, "Campione duplicato faccio la MEDIA");
+                } else {
+                    Objects.requireNonNull(toBeClassified.get(toBeClassified.lastKey()))[i] = event.values[i % 3];
+                }
+
+                ret = true;
+            }
+        }
+
+        if(!ret) {
+            toBeClassified.put(event.timestamp, new Float[18]);
+
+            Objects.requireNonNull(toBeClassified.get(event.timestamp))[i1] = event.values[0];
+            Objects.requireNonNull(toBeClassified.get(event.timestamp))[i2] = event.values[1];
+            Objects.requireNonNull(toBeClassified.get(event.timestamp))[i3] = event.values[2];
+        }
+
+        // si puó prendere un campione ogni 10 (non abbiamo bisogno di tanti campioni per classificare)
+        // oppure si puó pensare di aggregare questi campioni in qualche modo (media?)
+        if(toBeClassified.size() >= 100) {
+            long last_timestamp = toBeClassified.lastKey();
+            Collection<Float[]> values = toBeClassified.values();
+            Float[] toClassify = new Float[18];
+            int[] count = new int[18];
+
+            for(int i = 0; i < 18; i++) {
+                for (Iterator<Float[]> it = values.iterator(); it.hasNext(); ) {
+                    Float[] value = it.next();
+                    if(value[i] == null) {
+                        continue;
+                    } else {
+                        count[i]++;
+                    }
+
+                    if(toClassify[i] == null) {
+                        toClassify[i] = value[i];
+                    } else {
+                        toClassify[i] = (toClassify[i] + value[i]);
+                    }
+                }
+            }
+
+            for(int i = 0; i < 18; i++) {
+                toClassify[i] = toClassify[i] / count[i];
+            }
+
+            classifier.classifySamples(toClassify);
+            toBeClassified.clear();
+
+
+        }
+    }
+
+    /*private void addMapValues(SensorEvent event, int i1, int i2, int i3) {
+        boolean ret = false;
+
+        // puó succedere che arrivino due valori di accelerometro consecutivi, si potrebbe fare quindi la media anziché scartare il valore
+        // la media sarebbe sempre tra due campioni non molto distanti tra loro, accettabile come approssimazione?
+
         for (int i = i1; i <= i3; i++) {
             if (toBeClassified.size() != 0 && !isFull()) {
 
@@ -273,7 +343,7 @@ public class SensorHandler extends Service implements SensorEventListener {
         if (toBeClassified.size() >= 40) {
             if(classifier.classifySamples(toBeClassified))
             {
-                serviceCallbacks.setActivityAndCounter("Pickup the Phone!");
+                serviceCallbacks.setActivityAndCounter("Pickup the phone!");
             }
 
         }
@@ -307,7 +377,7 @@ public class SensorHandler extends Service implements SensorEventListener {
         }
 
          */
-    }
+    //}
 
     private boolean isFull() {
         for(int i = 0; i < Objects.requireNonNull(toBeClassified.get(toBeClassified.lastKey())).length; i++) {
