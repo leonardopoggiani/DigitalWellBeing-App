@@ -1,0 +1,14 @@
+
+r	java:S116"]Rename this field "already_recognized" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(œüùÆ
+@
+java:S1481&"*Remove this unused "entry" local variable.(¡ð¥ö
+t
+java:S3012+"YUse "Arrays.copyOf", "Arrays.asList", "Collections.addAll" or "System.arraycopy" instead.(ÏÈ‹…úÿÿÿÿ
+V	java:S1259"<This block of commented-out lines of code should be removed.(¯•Ð€üÿÿÿÿ
+V	java:S125<"<This block of commented-out lines of code should be removed.(²ý¥Âüÿÿÿÿ
+V	java:S125?"<This block of commented-out lines of code should be removed.(È–ØÙûÿÿÿÿ
+V	java:S125E"<This block of commented-out lines of code should be removed.(ÅŒ•Üûÿÿÿÿ
+V	java:S125H"<This block of commented-out lines of code should be removed.(ÝÞÓÓüÿÿÿÿ
+V	java:S125L"<This block of commented-out lines of code should be removed.(¯ïÀñûÿÿÿÿ
+K
+java:S1751P"5Remove this "break" statement or make it conditional.(›ûä·

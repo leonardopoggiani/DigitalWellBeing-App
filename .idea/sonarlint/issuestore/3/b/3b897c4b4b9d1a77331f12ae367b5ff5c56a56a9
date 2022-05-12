@@ -1,0 +1,17 @@
+
+h
+java:S1192)"FDefine a constant instead of duplicating this literal "START" 3 times.(ÕõÔëúÿÿÿÿ8Â°­Ë‹0
+m	java:S117&"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(æ¸öØ8Ã°­Ë‹0
+E
+java:S1604Z"(Make this anonymous inner class a lambda(âýùç8É°­Ë‹0
+j
+java:S3008"NRename this field "TAG" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(«î¸c8Ø°­Ë‹0
+]	java:S125"<This block of commented-out lines of code should be removed.(‘áÄÁûÿÿÿÿ8ã°­Ë‹0
+H
+java:S1172$"+Remove this unused method parameter "view".(º¨Ð8å°­Ë‹0
+]	java:S125G"<This block of commented-out lines of code should be removed.(¤Òû•ÿÿÿÿÿ8î°­Ë‹0
+X	java:S125O"<This block of commented-out lines of code should be removed.(ƒõÒÕ8ï°­Ë‹0
+[
+java:S1068"9Remove this unused "classificationService" private field.(Æò¨¹úÿÿÿÿ8õ°­Ë‹0
+Q
+java:S1068B"5Remove this unused "serviceConnection" private field.(£ª©8ö°­Ë‹0

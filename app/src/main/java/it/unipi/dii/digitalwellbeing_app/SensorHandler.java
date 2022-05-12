@@ -306,7 +306,7 @@ public class SensorHandler extends Service implements SensorEventListener {
                 Log.d(TAG, "PHONE PICKUP");
                 // serviceCallbacks.setActivityAndCounter("Pickup the Phone!");
             }
-
+            
             toBeClassified.clear();
         }
     }

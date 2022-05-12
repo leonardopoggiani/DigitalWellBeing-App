@@ -1,0 +1,77 @@
+
+l	java:S117–"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Øüöøÿÿÿÿ
+E
+java:S5411["*Use the primitive boolean expression here.(±éÊõøÿÿÿÿ
+A
+java:S5411¨"*Use the primitive boolean expression here.(šäÍ 
+A
+java:S5411°"*Use the primitive boolean expression here.(ˆ¯ü˜
+r	java:S116G"]Rename this field "already_recognized" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(œüùÆ
+˜
+java:S1186Š"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(ĞŠß±
+q
+java:S1450D"VRemove the "counter" field and declare it as a local variable in the relevant methods.(¶®¡êşÿÿÿÿ
+z
+java:S1450="_Remove the "serviceCallbacks" field and declare it as a local variable in the relevant methods.(ú˜Üÿÿÿÿÿ
+V	java:S125#"<This block of commented-out lines of code should be removed.(´áöøÿÿÿÿÿ
+Q	java:S125\"<This block of commented-out lines of code should be removed.(Ïğåú
+V	java:S125d"<This block of commented-out lines of code should be removed.(ÓÖèüÿÿÿÿ
+V	java:S125m"<This block of commented-out lines of code should be removed.(˜ıîÆùÿÿÿÿ
+Q	java:S125u"<This block of commented-out lines of code should be removed.(ƒ¾‘Œ
+Q	java:S125{"<This block of commented-out lines of code should be removed.(¡Õ±š
+R	java:S125†"<This block of commented-out lines of code should be removed.(Öâ“æ
+R	java:S125š"<This block of commented-out lines of code should be removed.(İ§è
+W	java:S125 "<This block of commented-out lines of code should be removed.(­×öİúÿÿÿÿ
+W	java:S125°"<This block of commented-out lines of code should be removed.(ûí¡ÿÿÿÿÿ
+R	java:S125¾"<This block of commented-out lines of code should be removed.(×˜Êš
+W	java:S125Ò"<This block of commented-out lines of code should be removed.(ÈåÊ”üÿÿÿÿ
+R	java:S125Ö"<This block of commented-out lines of code should be removed.(‹ìŒá
+W	java:S125ç"<This block of commented-out lines of code should be removed.(°“›ıÿÿÿÿ
+i
+java:S3776÷"RRefactor this method to reduce its Cognitive Complexity from 29 to the 15 allowed.(ßÊ³
+^
+java:S1854–"BRemove this useless assignment to local variable "last_timestamp".(Øüöøÿÿÿÿ
+O
+java:S1481–"3Remove this unused "last_timestamp" local variable.(Øüöøÿÿÿÿ
+R	java:S125³"<This block of commented-out lines of code should be removed.(˜¨Ø¹
+R	java:S125Ò"<This block of commented-out lines of code should be removed.(ëˆáô
+I
+java:S1135Í"2Complete the task associated to this TODO comment.(…ïœ†
+N
+java:S1135Ş"2Complete the task associated to this TODO comment.(Ú¦Ÿšûÿÿÿÿ
+J
+java:S1128"4Remove this unused import 'android.content.Context'.(©Ê‰è
+O
+java:S1128"4Remove this unused import 'android.widget.TextView'.(„Ë‚ˆÿÿÿÿÿ
+O
+java:S1128"9Remove this unused import 'org.tensorflow.lite.DataType'.(»¨±
+m
+java:S1128"RRemove this unused import 'org.tensorflow.lite.support.tensorbuffer.TensorBuffer'.(üñôŸøÿÿÿÿ
+K
+java:S1128"0Remove this unused import 'java.io.IOException'.(ªº»Úıÿÿÿÿ
+K
+java:S1128"0Remove this unused import 'java.nio.ByteBuffer'.(¿¢×±úÿÿÿÿ
+H
+java:S1128"-Remove this unused import 'java.util.Arrays'.(î–˜Éüÿÿÿÿ
+E
+java:S1128"*Remove this unused import 'java.util.Map'.(¼è½Òşÿÿÿÿ
+h
+java:S1128"RRemove this unused import 'it.unipi.dii.digitalwellbeing_app.ml.PickupClassifier'.(Â¬´Õ
+B
+java:S1068,",Remove this unused "wakeLock" private field.(òè¦Î
+I
+java:S10687"3Remove this unused "detectionThread" private field.(ªÅØê
+O
+java:S10688"4Remove this unused "detectionHandler" private field.(ú½™èúÿÿÿÿ
+Q
+java:S1068:"6Remove this unused "fastSamplingThread" private field.(ˆÄ†êøÿÿÿÿ
+M
+java:S1068;"7Remove this unused "fastSamplingHandler" private field.(®Çâ
+O
+java:S1068="4Remove this unused "serviceCallbacks" private field.(ú˜Üÿÿÿÿÿ
+F
+java:S1068C"+Remove this unused "started" private field.(ÊÊ±şÿÿÿÿ
+F
+java:S1068D"+Remove this unused "counter" private field.(¶®¡êşÿÿÿÿ
+\
+java:S1144Ÿ"@Remove this unused private "initializeTimerFastSampling" method.(á×Øüÿÿÿÿ
