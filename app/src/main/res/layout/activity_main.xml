@@ -19,14 +19,16 @@
         app:layout_constraintVertical_bias="0.234" />
 
     <Button
-        android:id="@+id/start_sensing"
+        android:id="@+id/start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="19dp"
+        android:onClick="onStartCommand"
         android:text="@string/start"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activity" />
+        app:layout_constraintTop_toBottomOf="@+id/activity"
+        tools:ignore="OnClick" />
 
     <TextView
         android:id="@+id/counter"

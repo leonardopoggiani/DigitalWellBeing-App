@@ -9,20 +9,51 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity implements ServiceCallbacks {
 
     private SensorHandler sensorHandlerService;
+    private static String TAG = "DigitalWellBeing";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent intentSensorHandler = new Intent(this, SensorHandler.class);
-        bindService(intentSensorHandler, serviceConnection, Context.BIND_AUTO_CREATE);
+        //Intent intentSensorHandler = new Intent(this, SensorHandler.class);
+        //bindService(intentSensorHandler, serviceConnection, Context.BIND_AUTO_CREATE);
+
     }
+
+
+    public void onStartCommand(View view){
+
+        Button start_button = (Button) findViewById(R.id.start);
+
+
+        if(start_button.getText().toString().equals("START")) {
+            Log.d(TAG, "Start Smartwatch sensing");
+            Intent startIntent = new Intent(this, SensorHandler.class);
+            startIntent.setAction("Command");
+            startIntent.putExtra("command_key", "START");
+            startService(startIntent);
+            start_button.setText("STOP");
+
+    } else if(start_button.getText() == "STOP") {
+            Log.d(TAG, "Stop sensing");
+            Intent stopIntent = new Intent(this, SensorHandler.class);
+            stopIntent.setAction("Command");
+            stopIntent.putExtra("command_key", "STOP");
+            startService(stopIntent);
+            start_button.setText("START");
+    }
+
+    }
+
 
 
 
@@ -64,4 +95,7 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks 
         tv2.setText(String.valueOf(count));
 
     }
+
+
+
 }

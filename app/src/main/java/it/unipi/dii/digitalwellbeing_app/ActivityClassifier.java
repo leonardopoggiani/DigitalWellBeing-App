@@ -82,6 +82,7 @@ public class ActivityClassifier {
         } catch (IOException e) {
             // TODO Handle the exception
         }
+        Log.d(TAG, "PICKUP");
         return pickup;
     }
 

@@ -69,42 +69,39 @@ public class SensorHandler extends Service implements SensorEventListener {
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
         Log.d(TAG, "OnStartCommand SensorHandler");
-         String command = "START";
-        //if(intent.getAction() != null && intent.getAction().compareTo("Command") == 0) {
-            //String command = intent.getStringExtra("command_key");
-            switch(command) {
+        if (intent.getAction() != null && intent.getAction().compareTo("Command") == 0) {
+            String command = intent.getStringExtra("command_key");
+            switch (command) {
                 case "START":
                     Log.d(TAG, "Start case");
                     counter = 0;
                     initializeSensorHandler();
                     //Start the sensorListener with a low sampling frequency and initialize the detection timer
-                    if(startListener(SensorManager.SENSOR_DELAY_NORMAL)) {
+                    if (startListener(SensorManager.SENSOR_DELAY_GAME)) {
                         //initializeDetectionTimer();
                         Log.d(TAG, "Detection Activated");
-                    }
-                    else
-                        Log.d(TAG,"Error in starting sensors listeners");
+                    } else
+                        Log.d(TAG, "Error in starting sensors listeners");
                     break;
                 case "STOP":
                     Log.d(TAG, "SensorHandlerService Stopped");
                     //When FastSampling is active the related timer must be cancelled before to stop the service
-                    if(started) {
+                    /*if (started) {
                         wakeLock.release();
                         fastSamplingThread.quit();
                         fastSamplingThread = null;
                         fastSamplingHandler = null;
 
-                    }
-                    if(sm != null) {
+                    }*/
+                    if (sm != null) {
                         stopListener();
-                        if(detectionThread != null) {
+                        /*if (detectionThread != null) {
                             detectionThread.quit();
                             detectionThread = null;
                             detectionHandler = null;
-                        }
+                        }*/
 
-                    }
-                    else
+                    } else
                         Log.d(TAG, "SensorManager null");
                     stopSelf();
                     break;
@@ -112,39 +109,18 @@ public class SensorHandler extends Service implements SensorEventListener {
                     Log.d(TAG, "Default Case");
                     break;
             }
-        //} else {
+            //} else {
             //Log.d(TAG, "SensorHandler activated");
-       // }
+            // }
+
+        }
         return Service.START_STICKY;
     }
 
-    /*//Initialize the Detection Timer. When it will expire the sampling operations will be stopped
-    private void initializeDetectionTimer() {
-        Log.d(TAG, "Timer "+Configuration.DETECTION_DELAY/60000+" minutes started");
-        detectionThread = new HandlerThread("SensorHandler");
-        detectionThread.start();
-        detectionHandler = new Handler(detectionThread.getLooper());
-        detectionHandler.postDelayed(new Runnable() {
-            public void run() {
-                Log.d(TAG, "run del thread");
-                if(started) {
-                    wakeLock.release();
-                    Log.d(TAG, "wakeLock released");
-                    fastSamplingThread.quit();
-                    fastSamplingThread = null;
-                    fastSamplingHandler = null;
-                }
-                if(stopListener())
-                    Log.d(TAG, "Detection stopped");
-                stopSelf();
-            }
-        },Configuration.DETECTION_DELAY);
 
-    }
-    */
 
     //Initialize the Detection Timer. When it will expire the sampling operations will be stopped
-    private void initializeDetectionTimer() {
+    /*private void initializeDetectionTimer() {
         Log.d(TAG, "Timer "+Configuration.DETECTION_DELAY/60000+" minutes started");
         detectionThread = new HandlerThread("SensorHandler");
         detectionThread.start();
@@ -162,34 +138,32 @@ public class SensorHandler extends Service implements SensorEventListener {
                 }
                 if(stopListener())
                     Log.d(TAG, "Detection stopped");
-                stopSelf();
-            }
-        },Configuration.DETECTION_DELAY);
-
-    }
+                //stopSelf();
+    }*/
+        //},Configuration.DETECTION_DELAY);
 
 
     //Initialize the Fast Sampling Timer. When it will expire the sampling rate will be decreased and
-    //an Intent will be sent to the WearActitvitySerivce in order to notify that new data are ready to be sent
+
     private void initializeTimerFastSampling() {
-        wakeLock.acquire(Configuration.FAST_SAMPLING_DELAY);
-        fastSamplingThread = new HandlerThread("SensorHandler");
-        fastSamplingThread.start();
-        fastSamplingHandler = new Handler(fastSamplingThread.getLooper());
-        fastSamplingHandler.postDelayed(new Runnable() {
-            public void run() {
-                wakeLock.release();
-                //Sends to paired smartphone collected data and decrease the sampling rate
+        //wakeLock.acquire(Configuration.FAST_SAMPLING_DELAY);
+        //fastSamplingThread = new HandlerThread("SensorHandler");
+        //fastSamplingThread.start();
+        //fastSamplingHandler = new Handler(fastSamplingThread.getLooper());
+        //fastSamplingHandler.postDelayed(new Runnable() {
+            //public void run() {
+                //wakeLock.release();
+
                 if(stopListener()) {
-                    Log.d(TAG, "Timer expired, sending files");
+                    Log.d(TAG, "Stop listener");
                 }
                 else
                     Log.d(TAG, "Errors in storing collected data");
                 startListener(SensorManager.SENSOR_DELAY_NORMAL);
                 Log.d(TAG, "Sampling rate decreased");
-            }
-        },Configuration.FAST_SAMPLING_DELAY);
     }
+        //},Configuration.FAST_SAMPLING_DELAY);
+
 
 
     protected Boolean startListener(int rate){
@@ -202,7 +176,7 @@ public class SensorHandler extends Service implements SensorEventListener {
         }
 
         //Altrimenti, attivo tutti prelevo da tutti i sensori per classifirare un pickup
-        if(rate == SensorManager.SENSOR_DELAY_GAME &&
+        /*if(rate == SensorManager.SENSOR_DELAY_GAME &&
                 sm.registerListener(this, accelerometer, rate) &&
                 sm.registerListener(this, rotation, rate) &&
                 sm.registerListener(this, gyroscope, rate) &&
@@ -210,20 +184,28 @@ public class SensorHandler extends Service implements SensorEventListener {
                 sm.registerListener(this, linear, rate) &&
                 sm.registerListener (this, magnetometer, rate) &&
                 sm.registerListener (this, proximity, rate)) {
+           */
+            sm.registerListener (this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
+            sm.registerListener (this, gravity, SensorManager.SENSOR_DELAY_GAME);
+            sm.registerListener (this, gyroscope, SensorManager.SENSOR_DELAY_GAME);
+            sm.registerListener (this, rotation, SensorManager.SENSOR_DELAY_GAME);
+            sm.registerListener (this, linear, SensorManager.SENSOR_DELAY_GAME);
+            sm.registerListener (this, magnetometer, SensorManager.SENSOR_DELAY_GAME);
+            sm.registerListener (this, proximity, SensorManager.SENSOR_DELAY_GAME);
 
 
             started = true;
-            initializeTimerFastSampling();
+            //initializeTimerFastSampling();
             Log.d(TAG,"Fast Sampling activated");
             return true;
-        } else {
+        /*} else {
             //registerListener on some sensor could be failed so the rate must be reset on low frequency rate
             stopListener();
             sm.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
             sm.registerListener (this, proximity, SensorManager.SENSOR_DELAY_NORMAL);
             Log.d(TAG,"Some registration is failed");
             return false;
-        }
+        }*/
 
     }
 
@@ -233,18 +215,18 @@ public class SensorHandler extends Service implements SensorEventListener {
 
         //Sets up the wakelock level to "PARTIAL_WAKE_LOCK" in order to mantain the cpu awake during
         //the fast sampling operations, so that each sensor's event is processed and no missing value occurs
-        PowerManager powerManager = (PowerManager) getApplicationContext().getSystemService(Context.POWER_SERVICE);
-        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-                "HandActivitySignal::WakelockTag");
+        //PowerManager powerManager = (PowerManager) getApplicationContext().getSystemService(Context.POWER_SERVICE);
+        //wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+                //"HandActivitySignal::WakelockTag");
 
         sm = (SensorManager) getApplicationContext().getSystemService(SENSOR_SERVICE);
 
-        gyroscope = sm.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         accelerometer = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        proximity = sm.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+        gyroscope = sm.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         rotation = sm.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR);
         gravity = sm.getDefaultSensor(Sensor.TYPE_GRAVITY);
         linear = sm.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-        proximity = sm.getDefaultSensor(Sensor.TYPE_PROXIMITY);
         magnetometer = sm.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
     }
