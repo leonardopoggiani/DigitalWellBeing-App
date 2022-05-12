@@ -22,10 +22,10 @@ public class ActivityClassifier {
     private static final String TAG = "PickupClassifier";
     long timestamp;
     boolean already_recognized = false;
-    private Context ctx = null;
+    private Context ctx;
 
     public ActivityClassifier(Context context){
-        ctx = context;
+        this.ctx = context;
     }
 
 
@@ -38,7 +38,7 @@ public class ActivityClassifier {
 
         Log.d(TAG, String.valueOf(toBeClassified.size()));
         try {
-            PickupClassifier model = PickupClassifier.newInstance(this.ctx);
+            PickupClassifier model = PickupClassifier.newInstance(ctx.getApplicationContext());
             for (Map.Entry<Long, Float[]> entry : toBeClassified.entrySet()) {
                 Log.d(TAG, "rowString length: " + (entry.getValue() != null ? entry.getValue().length : 0));
 
@@ -92,7 +92,4 @@ public class ActivityClassifier {
         Log.d(TAG, "PICKUP");
         return pickup;
     }
-
-
-
 }
