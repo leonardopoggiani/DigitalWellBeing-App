@@ -13,6 +13,7 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
+import android.widget.TextView;
 
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
@@ -32,7 +33,7 @@ import it.unipi.dii.digitalwellbeing_app.ml.PickupClassifier;
 public class SensorHandler extends Service implements SensorEventListener {
 
     //private final IBinder binder = new LocalBinder();
-    private ServiceCallbacks serviceCallbacks;
+
 
     //Class used for the client Binder
     public class LocalBinder extends Binder {
@@ -57,12 +58,14 @@ public class SensorHandler extends Service implements SensorEventListener {
     private HandlerThread fastSamplingThread;
     private Handler fastSamplingHandler;
 
+    private ServiceCallbacks serviceCallbacks;
+
+
     private static final String TAG = "SensorHandler";
 
     //Used to find out if the fast sampling is in progress
     private boolean started;
     private int counter;
-    private Intent intent_;
 
     TreeMap<Long,Float[]> toBeClassified = new TreeMap<>();
     boolean already_recognized = false;
@@ -85,7 +88,7 @@ public class SensorHandler extends Service implements SensorEventListener {
                     counter = 0;
                     initializeSensorHandler();
                     //Start the sensorListener with a low sampling frequency and initialize the detection timer
-                    if (startListener(SensorManager.SENSOR_DELAY_GAME)) {
+                    if (startListener(SensorManager.SENSOR_DELAY_FASTEST)) {
                         //initializeDetectionTimer();
                         Log.d(TAG, "Detection Activated");
                     } else
@@ -193,14 +196,14 @@ public class SensorHandler extends Service implements SensorEventListener {
                 sm.registerListener (this, magnetometer, rate) &&
                 sm.registerListener (this, proximity, rate)) {
            */
-        else if(rate == SensorManager.SENSOR_DELAY_GAME){
-            sm.registerListener (this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
-            sm.registerListener (this, gravity, SensorManager.SENSOR_DELAY_GAME);
-            sm.registerListener (this, gyroscope, SensorManager.SENSOR_DELAY_GAME);
-            sm.registerListener (this, rotation, SensorManager.SENSOR_DELAY_GAME);
-            sm.registerListener (this, linear, SensorManager.SENSOR_DELAY_GAME);
-            sm.registerListener (this, magnetometer, SensorManager.SENSOR_DELAY_GAME);
-            sm.registerListener (this, proximity, SensorManager.SENSOR_DELAY_GAME);
+        else if(rate == SensorManager.SENSOR_DELAY_FASTEST){
+            sm.registerListener (this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+            sm.registerListener (this, gravity, SensorManager.SENSOR_DELAY_FASTEST);
+            sm.registerListener (this, gyroscope, SensorManager.SENSOR_DELAY_FASTEST);
+            sm.registerListener (this, rotation, SensorManager.SENSOR_DELAY_FASTEST);
+            sm.registerListener (this, linear, SensorManager.SENSOR_DELAY_FASTEST);
+            sm.registerListener (this, magnetometer, SensorManager.SENSOR_DELAY_FASTEST);
+            sm.registerListener (this, proximity, SensorManager.SENSOR_DELAY_FASTEST);
 
 
             started = true;

@@ -21,6 +21,7 @@ public class ActivityClassifier {
     long timestamp;
     boolean already_recognized = false;
     private Context ctx;
+    TreeMap<Long,Float[]> toBeClassified = new TreeMap<>();
 
     public ActivityClassifier(Context context){
         this.ctx = context;
@@ -71,6 +72,7 @@ public class ActivityClassifier {
                     // tv2.setText(String.valueOf(count));
                     already_recognized = true;
                 } else {
+                    pickup = true;
                     // tv.setText("Other activities");
                 }
 
@@ -83,7 +85,6 @@ public class ActivityClassifier {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return pickup;
-    }
+    }*/
 }
