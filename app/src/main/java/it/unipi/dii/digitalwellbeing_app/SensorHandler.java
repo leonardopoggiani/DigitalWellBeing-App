@@ -13,18 +13,23 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
-import android.widget.TextView;
 
-import java.io.File;
-import java.io.FileWriter;
+import org.tensorflow.lite.DataType;
+import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
 
+import it.unipi.dii.digitalwellbeing_app.ml.PickupClassifier;
+
+
 public class SensorHandler extends Service implements SensorEventListener {
 
-    private final IBinder binder = new LocalBinder();
+    //private final IBinder binder = new LocalBinder();
     private ServiceCallbacks serviceCallbacks;
 
     //Class used for the client Binder
@@ -56,13 +61,14 @@ public class SensorHandler extends Service implements SensorEventListener {
     //Used to find out if the fast sampling is in progress
     private boolean started;
     private int counter;
+    private Intent intent_;
 
     TreeMap<Long,Float[]> toBeClassified = new TreeMap<>();
     long timestamp;
     boolean already_recognized = false;
     boolean in_pocket = false;
 
-    private ActivityClassifier classifier = new ActivityClassifier();
+    private ActivityClassifier classifier = new ActivityClassifier(this);
 
 
     @Override
@@ -103,7 +109,7 @@ public class SensorHandler extends Service implements SensorEventListener {
 
                     } else
                         Log.d(TAG, "SensorManager null");
-                    stopSelf();
+                    //stopSelf();
                     break;
                 default:
                     Log.d(TAG, "Default Case");
@@ -185,6 +191,7 @@ public class SensorHandler extends Service implements SensorEventListener {
                 sm.registerListener (this, magnetometer, rate) &&
                 sm.registerListener (this, proximity, rate)) {
            */
+        else if(rate == SensorManager.SENSOR_DELAY_GAME){
             sm.registerListener (this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
             sm.registerListener (this, gravity, SensorManager.SENSOR_DELAY_GAME);
             sm.registerListener (this, gyroscope, SensorManager.SENSOR_DELAY_GAME);
@@ -197,7 +204,8 @@ public class SensorHandler extends Service implements SensorEventListener {
             started = true;
             //initializeTimerFastSampling();
             Log.d(TAG,"Fast Sampling activated");
-            return true;
+
+        }
         /*} else {
             //registerListener on some sensor could be failed so the rate must be reset on low frequency rate
             stopListener();
@@ -206,7 +214,7 @@ public class SensorHandler extends Service implements SensorEventListener {
             Log.d(TAG,"Some registration is failed");
             return false;
         }*/
-
+        return true;
     }
 
     private void initializeSensorHandler() {
@@ -267,6 +275,7 @@ public class SensorHandler extends Service implements SensorEventListener {
             {
                 serviceCallbacks.setActivityAndCounter("Pickup the Phone!");
             }
+
         }
 
 
@@ -367,6 +376,8 @@ public class SensorHandler extends Service implements SensorEventListener {
             }
         }
     }
+
+
 
 
     @Override

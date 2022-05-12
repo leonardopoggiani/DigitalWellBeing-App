@@ -17,6 +17,7 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity implements ServiceCallbacks {
 
     private SensorHandler sensorHandlerService;
+    private ClassificationService classificationService;
     private static String TAG = "DigitalWellBeing";
 
     @Override
@@ -65,8 +66,8 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             // cast the IBinder and get SensorHandler Service instance
-            SensorHandler.LocalBinder binder = (SensorHandler.LocalBinder) service;
-            sensorHandlerService = binder.getService();
+            //SensorHandler.LocalBinder binder = (SensorHandler.LocalBinder) service;
+            //sensorHandlerService = binder.getService();
             //bound = true;
             sensorHandlerService.setCallbacks(MainActivity.this); // register
         }

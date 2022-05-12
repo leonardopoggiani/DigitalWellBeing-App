@@ -16,12 +16,18 @@ import java.util.TreeMap;
 
 import it.unipi.dii.digitalwellbeing_app.ml.PickupClassifier;
 
+
 public class ActivityClassifier {
 
     private static final String TAG = "PickupClassifier";
     long timestamp;
     boolean already_recognized = false;
-    private Context ctx;
+    private Context ctx = null;
+
+    public ActivityClassifier(Context context){
+        ctx = context;
+    }
+
 
 
     Boolean classifySamples(TreeMap<Long, Float[]> toBeClassified) {
@@ -30,8 +36,9 @@ public class ActivityClassifier {
         TensorBuffer inputFeature0 = null;
         float[] data = new float[12];
 
+        Log.d(TAG, String.valueOf(toBeClassified.size()));
         try {
-            PickupClassifier model = PickupClassifier.newInstance(ctx.getApplicationContext());
+            PickupClassifier model = PickupClassifier.newInstance(this.ctx);
             for (Map.Entry<Long, Float[]> entry : toBeClassified.entrySet()) {
                 Log.d(TAG, "rowString length: " + (entry.getValue() != null ? entry.getValue().length : 0));
 
@@ -74,7 +81,7 @@ public class ActivityClassifier {
                 Log.d(TAG, "predictActivities: output array: " + Arrays.toString(outputFeature0.getFloatArray()));
                 break;
             }
-            toBeClassified.clear();
+
             // Releases model resources if no longer used.
             model.close();
 
