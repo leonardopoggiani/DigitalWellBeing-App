@@ -15,6 +15,8 @@ import android.os.PowerManager;
 import android.util.Log;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 
@@ -32,8 +34,7 @@ import it.unipi.dii.digitalwellbeing_app.ml.PickupClassifier;
 
 public class SensorHandler extends Service implements SensorEventListener {
 
-    //private final IBinder binder = new LocalBinder();
-
+    private final IBinder binder = new LocalBinder();
 
     //Class used for the client Binder
     public class LocalBinder extends Binder {
@@ -41,6 +42,7 @@ public class SensorHandler extends Service implements SensorEventListener {
             return SensorHandler.this;
         }
     }
+
     private PowerManager.WakeLock wakeLock;
 
     private SensorManager sm;
@@ -68,13 +70,11 @@ public class SensorHandler extends Service implements SensorEventListener {
     private int counter;
 
     TreeMap<Long,Float[]> toBeClassified = new TreeMap<>();
-    boolean already_recognized = false;
+    static boolean already_recognized = true;
     final float[] rotationMatrix = new float[9];
     final float[] orientationAngles = new float[3];
 
-
     private ActivityClassifier classifier = new ActivityClassifier(this);
-
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -241,7 +241,6 @@ public class SensorHandler extends Service implements SensorEventListener {
         gravity = sm.getDefaultSensor(Sensor.TYPE_GRAVITY);
         linear = sm.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         magnetometer = sm.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-
     }
 
     private void addMapValues(SensorEvent event, int i1, int i2, int i3) {
@@ -281,15 +280,14 @@ public class SensorHandler extends Service implements SensorEventListener {
             int[] count = new int[18];
 
             for(int i = 0; i < 18; i++) {
-                for (Iterator<Float[]> it = values.iterator(); it.hasNext(); ) {
-                    Float[] value = it.next();
-                    if(value[i] == null) {
+                for (Float[] value : values) {
+                    if (value[i] == null) {
                         continue;
                     } else {
                         count[i]++;
                     }
 
-                    if(toClassify[i] == null) {
+                    if (toClassify[i] == null) {
                         toClassify[i] = value[i];
                     } else {
                         toClassify[i] = (toClassify[i] + value[i]);
@@ -303,8 +301,11 @@ public class SensorHandler extends Service implements SensorEventListener {
 
             if(classifier.classifySamples(toClassify, toBeClassified))
             {
-                Log.d(TAG, "PHONE PICKUP");
-                // serviceCallbacks.setActivityAndCounter("Pickup the Phone!");
+                if(serviceCallbacks != null) {
+                    serviceCallbacks.setActivityAndCounter("Pickup the Phone!");
+                } else {
+                    Log.d(TAG, "Service callbacks null");
+                }
             }
             
             toBeClassified.clear();
@@ -330,7 +331,7 @@ public class SensorHandler extends Service implements SensorEventListener {
         return true;
     }
 
-    //TODO
+    // TODO
     //Da ricontrollare i range per il telefono in tasca, in su e in giù, schermo verso l'interno e schermo verso l'esterno
     //anche da seduti
     //Check if accelerometer axis data are in the range of values related to the phone inside the pocket
@@ -345,13 +346,11 @@ public class SensorHandler extends Service implements SensorEventListener {
         else  return false;
     }*/
 
+    @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
-        throw new UnsupportedOperationException("Not yet implemented");
+        return binder;
     }
-    
-    
 
     @Override
     public void onSensorChanged(SensorEvent event) {
@@ -396,6 +395,12 @@ public class SensorHandler extends Service implements SensorEventListener {
     }
 
     public void setCallbacks(ServiceCallbacks callbacks) {
+
+        Log.d(TAG, "setCallbacks!");
+
+        if(callbacks == null)
+            Log.d(TAG, "Null pure qui");
+
         serviceCallbacks = callbacks;
     }
 
