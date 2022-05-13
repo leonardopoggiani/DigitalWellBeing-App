@@ -274,7 +274,6 @@ public class SensorHandler extends Service implements SensorEventListener {
         // si puó prendere un campione ogni 10 (non abbiamo bisogno di tanti campioni per classificare)
         // oppure si puó pensare di aggregare questi campioni in qualche modo (media?)
         if(toBeClassified.size() >= 50) {
-            long last_timestamp = toBeClassified.lastKey();
             Collection<Float[]> values = toBeClassified.values();
             Float[] toClassify = new Float[18];
             int[] count = new int[18];
@@ -318,7 +317,6 @@ public class SensorHandler extends Service implements SensorEventListener {
                 return false;
             }
         }
-
         return true;
     }
 
@@ -391,16 +389,10 @@ public class SensorHandler extends Service implements SensorEventListener {
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
+        // TODO document why this method is empty
     }
 
     public void setCallbacks(ServiceCallbacks callbacks) {
-
-        Log.d(TAG, "setCallbacks!");
-
-        if(callbacks == null)
-            Log.d(TAG, "Null pure qui");
-
         serviceCallbacks = callbacks;
     }
 

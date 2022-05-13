@@ -1,10 +1,15 @@
 package it.unipi.dii.digitalwellbeing_app;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.content.ServiceConnection;
 import android.os.Handler;
@@ -21,6 +26,12 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks 
     private ClassificationService classificationService;
     private static String TAG = "DigitalWellBeing";
     boolean bound = false;
+    private Context ctx;
+    String CHANNEL_ID = "notification";
+    int statusBarNotificationID;
+    public static final String ANDROID_CHANNEL_NAME = "ANDROID CHANNEL";
+    NotificationCompat.Builder builder;
+    NotificationManager notificationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +41,33 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks 
         Intent intentSensorHandler = new Intent(this, SensorHandler.class);
         bindService(intentSensorHandler, serviceConnection, Context.BIND_AUTO_CREATE);
 
+        TextView tv2 = findViewById(R.id.counter);
+        CharSequence counter = tv2.getText();
+        int count = Integer.parseInt(counter.toString());
+
+        createNotificationChannel();
+        builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle("DigitalWellBeing Alert")
+                .setContentText("You have picked your phone " + count + " times.")
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        builder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(statusBarNotificationID, builder.build());
+    }
+
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, ANDROID_CHANNEL_NAME, importance);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
     public void onStartCommand(View view){
@@ -52,7 +90,6 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks 
             startService(stopIntent);
             start_button.setText("START");
         }
-
     }
 
     /**
@@ -78,17 +115,25 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks 
 
 
     @Override
-    public void setActivityAndCounter(String actvity) {
+    public void setActivityAndCounter(String activity) {
         new Handler(Looper.getMainLooper()).post(() -> {
             TextView tv = findViewById(R.id.activity);
             TextView tv2 = findViewById(R.id.counter);
 
-            tv.setText(actvity);
-            Log.d(TAG, actvity);
+            tv.setText(activity);
+            Log.d(TAG, activity);
 
             CharSequence counter = tv2.getText();
             int count = Integer.parseInt(counter.toString());
             count += 1;
+
+            builder.setContentText("You have picked your phone " + count + " times.");
+            // Because the ID remains unchanged, the existing notification is
+            // updated.
+            notificationManager.notify(
+                    statusBarNotificationID,
+                    builder.build());
+
             tv2.setText(String.valueOf(count));
             Log.d(TAG, String.valueOf(count));
         });

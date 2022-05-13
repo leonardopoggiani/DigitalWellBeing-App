@@ -13,19 +13,21 @@
         android:layout_height="wrap_content"
         android:text="@string/other"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.234" />
+        app:layout_constraintVertical_bias="0.23" />
 
     <Button
         android:id="@+id/start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="19dp"
+        android:layout_marginTop="260dp"
         android:onClick="onStartCommand"
         android:text="@string/start"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/activity"
         tools:ignore="OnClick" />
@@ -34,8 +36,8 @@
         android:id="@+id/counter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="7dp"
-        android:layout_marginBottom="33dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="36dp"
         android:text="@string/_0"
         app:layout_constraintBottom_toTopOf="@+id/activity"
         app:layout_constraintStart_toStartOf="@+id/activity" />
