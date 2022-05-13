@@ -302,10 +302,11 @@ public class SensorHandler extends Service implements SensorEventListener {
             if(classifier.classifySamples(toClassify, toBeClassified))
             {
                 if(serviceCallbacks != null) {
-                    serviceCallbacks.setActivityAndCounter("Pickup the Phone!");
-                } else {
-                    Log.d(TAG, "Service callbacks null");
+                    serviceCallbacks.setActivityAndCounter("PICKUP!");
                 }
+            }
+            else if(!serviceCallbacks.getActivity().equals("OTHER!")){
+                serviceCallbacks.setActivityAndCounter("OTHER!");
             }
             
             toBeClassified.clear();

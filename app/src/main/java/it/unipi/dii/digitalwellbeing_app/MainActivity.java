@@ -86,12 +86,20 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks 
             tv.setText(actvity);
             Log.d(TAG, actvity);
 
-            CharSequence counter = tv2.getText();
-            int count = Integer.parseInt(counter.toString());
-            count += 1;
-            tv2.setText(String.valueOf(count));
-            Log.d(TAG, String.valueOf(count));
+            if(actvity.equals("PICKUP!")) {
+                CharSequence counter = tv2.getText();
+                int count = Integer.parseInt(counter.toString());
+                count += 1;
+                tv2.setText(String.valueOf(count));
+                Log.d(TAG, String.valueOf(count));
+            }
         });
+    }
+
+    @Override
+    public String getActivity() {
+        TextView tv = findViewById(R.id.activity);
+        return tv.getText().toString();
     }
 
 }
