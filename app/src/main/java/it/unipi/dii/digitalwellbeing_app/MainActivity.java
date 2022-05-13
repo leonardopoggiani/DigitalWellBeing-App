@@ -139,6 +139,12 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks 
         });
     }
 
+    @Override
+    public String getActivity() {
+        TextView tv = findViewById(R.id.activity);
+        return tv.getText().toString();
+    }
+
 }
 
 
