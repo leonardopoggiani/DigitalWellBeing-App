@@ -56,7 +56,6 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks 
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         builder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
-        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(statusBarNotificationID, builder.build());
     }
 
@@ -67,9 +66,13 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, ANDROID_CHANNEL_NAME, importance);
+            notificationManager = ctx.getSystemService(NotificationManager.class);
+
             if (notificationManager != null) {
                 notificationManager.createNotificationChannel(channel);
             }
+        } else {
+            notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         }
     }
 
