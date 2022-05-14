@@ -9,6 +9,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.AudioAttributes;
 import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,7 +24,7 @@ import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity implements ServiceCallbacks {
+public class MainActivity extends AppCompatActivity implements ServiceCallbacks, View.OnClickListener {
 
     private SensorHandler sensorHandlerService;
     private ClassificationService classificationService;
@@ -44,16 +45,20 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks 
         Intent intentSensorHandler = new Intent(this, SensorHandler.class);
         bindService(intentSensorHandler, serviceConnection, Context.BIND_AUTO_CREATE);
 
+        Button start = (Button) findViewById(R.id.start);
+        start.setOnClickListener(this);
+
         TextView tv2 = findViewById(R.id.counter);
         CharSequence counter = tv2.getText();
         int count = Integer.parseInt(counter.toString());
 
-        createNotificationChannel();
         builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("DigitalWellBeing Alert")
                 .setContentText("You have picked your phone " + count + " times.")
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        
+        createNotificationChannel();
 
         builder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
         notificationManager.notify(statusBarNotificationID, builder.build());
@@ -64,37 +69,22 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks 
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, ANDROID_CHANNEL_NAME, importance);
-            notificationManager = ctx.getSystemService(NotificationManager.class);
+            int importance = NotificationManager. IMPORTANCE_HIGH ;
+            NotificationChannel notificationChannel = new
+                    NotificationChannel( CHANNEL_ID , "NOTIFICATION_CHANNEL_NAME" , importance) ;
+            notificationChannel.enableLights( true ) ;
+            notificationChannel.setLightColor(Color. RED ) ;
+            notificationChannel.enableVibration( true ) ;
+            notificationChannel.setVibrationPattern( new long []{ 100 , 200 , 300 , 400 , 500 , 400 , 300 , 200 , 400 }) ;
+            builder.setChannelId( CHANNEL_ID ) ;
 
-            if (notificationManager != null) {
-                notificationManager.createNotificationChannel(channel);
-            }
+            notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+            assert notificationManager != null;
+            notificationManager.createNotificationChannel(notificationChannel) ;
+
         } else {
             notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        }
-    }
-
-    public void onStartCommand(View view){
-
-        Button start_button = (Button) findViewById(R.id.start);
-
-        if(start_button.getText().toString().equals("START")) {
-            Log.d(TAG, "Start Smartwatch sensing");
-            Intent startIntent = new Intent(this, SensorHandler.class);
-            startIntent.setAction("Command");
-            startIntent.putExtra("command_key", "START");
-            startService(startIntent);
-            start_button.setText("STOP");
-
-        } else if(start_button.getText() == "STOP") {
-            Log.d(TAG, "Stop sensing");
-            Intent stopIntent = new Intent(this, SensorHandler.class);
-            stopIntent.setAction("Command");
-            stopIntent.putExtra("command_key", "STOP");
-            startService(stopIntent);
-            start_button.setText("START");
         }
     }
 
@@ -173,6 +163,27 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks 
         Log.d(TAG, s);
     }
 
+    @Override
+    public void onClick(View v) {
+        Button start_button = (Button) findViewById(R.id.start);
+
+        if(start_button.getText().toString().equals("START")) {
+            Log.d(TAG, "Start Smartwatch sensing");
+            Intent startIntent = new Intent(this, SensorHandler.class);
+            startIntent.setAction("Command");
+            startIntent.putExtra("command_key", "START");
+            startService(startIntent);
+            start_button.setText("STOP");
+
+        } else if(start_button.getText() == "STOP") {
+            Log.d(TAG, "Stop sensing");
+            Intent stopIntent = new Intent(this, SensorHandler.class);
+            stopIntent.setAction("Command");
+            stopIntent.putExtra("command_key", "STOP");
+            startService(stopIntent);
+            start_button.setText("START");
+        }
+    }
 }
 
 
