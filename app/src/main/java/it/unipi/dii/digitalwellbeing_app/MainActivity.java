@@ -8,6 +8,7 @@ import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,7 +19,9 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RemoteViews;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements ServiceCallbacks {
 
@@ -64,9 +67,9 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, ANDROID_CHANNEL_NAME, importance);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            notificationManager.createNotificationChannel(channel);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(channel);
+            }
         }
     }
 
@@ -133,6 +136,18 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks 
             notificationManager.notify(
                     statusBarNotificationID,
                     builder.build());
+
+            if(count > 10) {
+                // TODO toast
+                Toast.makeText(getApplicationContext(),"You are watching too much your phone!",Toast.LENGTH_LONG).show();
+                notificationManager.cancel(statusBarNotificationID);
+                builder.setColor(Color.RED);
+                builder.setContentText("You have picked your phone " + count + " times.");
+
+                notificationManager.notify(
+                        statusBarNotificationID,
+                        builder.build());
+            }
 
             tv2.setText(String.valueOf(count));
             Log.d(TAG, String.valueOf(count));
