@@ -197,13 +197,13 @@ public class SensorHandler extends Service implements SensorEventListener {
                 sm.registerListener (this, proximity, rate)) {
            */
         else if(rate == SensorManager.SENSOR_DELAY_FASTEST){
-            sm.registerListener (this, accelerometer, 33000);
-            sm.registerListener (this, gravity, 33000);
-            sm.registerListener (this, gyroscope, 33000);
-            sm.registerListener (this, rotation, 33000);
-            sm.registerListener (this, linear, 33000);
-            sm.registerListener (this, magnetometer, 33000);
-            sm.registerListener (this, proximity, 33000);
+            sm.registerListener (this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+            sm.registerListener (this, gravity, SensorManager.SENSOR_DELAY_FASTEST);
+            sm.registerListener (this, gyroscope, SensorManager.SENSOR_DELAY_FASTEST);
+            sm.registerListener (this, rotation, SensorManager.SENSOR_DELAY_FASTEST);
+            sm.registerListener (this, linear, SensorManager.SENSOR_DELAY_FASTEST);
+            sm.registerListener (this, magnetometer, SensorManager.SENSOR_DELAY_FASTEST);
+            sm.registerListener (this, proximity, SensorManager.SENSOR_DELAY_FASTEST);
 
 
             started = true;

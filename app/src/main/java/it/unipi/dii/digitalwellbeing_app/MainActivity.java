@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks,
                 .setContentText("You have picked your phone " + count + " times.")
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-        
+
         createNotificationChannel();
 
         builder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
