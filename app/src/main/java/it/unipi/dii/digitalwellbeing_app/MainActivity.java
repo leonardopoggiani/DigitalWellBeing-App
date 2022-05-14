@@ -126,31 +126,33 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks 
             tv.setText(activity);
             Log.d(TAG, activity);
 
-            CharSequence counter = tv2.getText();
-            int count = Integer.parseInt(counter.toString());
-            count += 1;
+            if(!activity.equals("OTHER")) {
+                CharSequence counter = tv2.getText();
+                int count = Integer.parseInt(counter.toString());
+                count += 1;
 
-            builder.setContentText("You have picked your phone " + count + " times.");
-            // Because the ID remains unchanged, the existing notification is
-            // updated.
-            notificationManager.notify(
-                    statusBarNotificationID,
-                    builder.build());
-
-            if(count > 10) {
-                // TODO toast
-                Toast.makeText(getApplicationContext(),"You are watching too much your phone!",Toast.LENGTH_LONG).show();
-                notificationManager.cancel(statusBarNotificationID);
-                builder.setColor(Color.RED);
                 builder.setContentText("You have picked your phone " + count + " times.");
-
+                // Because the ID remains unchanged, the existing notification is
+                // updated.
                 notificationManager.notify(
                         statusBarNotificationID,
                         builder.build());
+
+                if(count > 10) {
+                    Toast.makeText(getApplicationContext(),"You are watching too much your phone!",Toast.LENGTH_LONG).show();
+                    notificationManager.cancel(statusBarNotificationID);
+                    builder.setColor(Color.RED);
+                    builder.setContentText("You have picked your phone " + count + " times.");
+
+                    notificationManager.notify(
+                            statusBarNotificationID,
+                            builder.build());
+                }
+
+                tv2.setText(String.valueOf(count));
+                Log.d(TAG, String.valueOf(count));
             }
 
-            tv2.setText(String.valueOf(count));
-            Log.d(TAG, String.valueOf(count));
         });
     }
 
@@ -158,6 +160,14 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks 
     public String getActivity() {
         TextView tv = findViewById(R.id.activity);
         return tv.getText().toString();
+    }
+
+    @Override
+    public void setActivity(String s) {
+        TextView tv = findViewById(R.id.activity);
+
+        tv.setText(s);
+        Log.d(TAG, s);
     }
 
 }
