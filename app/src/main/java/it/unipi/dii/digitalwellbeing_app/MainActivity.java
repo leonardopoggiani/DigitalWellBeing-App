@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks,
         Intent intentSensorHandler = new Intent(this, SensorHandler.class);
         bindService(intentSensorHandler, serviceConnection, Context.BIND_AUTO_CREATE);
 
+
         Button start = (Button) findViewById(R.id.start);
         start.setOnClickListener(this);
 

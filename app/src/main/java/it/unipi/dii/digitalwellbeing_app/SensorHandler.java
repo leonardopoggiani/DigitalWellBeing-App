@@ -114,7 +114,7 @@ public class SensorHandler extends Service implements SensorEventListener {
 
                     } else
                         Log.d(TAG, "SensorManager null");
-                    //stopSelf();
+                    stopSelf();
                     break;
                 default:
                     Log.d(TAG, "Default Case");
@@ -297,6 +297,11 @@ public class SensorHandler extends Service implements SensorEventListener {
             for(int i = 0; i < 18; i++) {
                 toClassify[i] = toClassify[i] / count[i];
             }
+            /*Intent intentClassification = new Intent(getApplicationContext(), ClassificationService.class);
+            intentClassification.putExtra("sampleArray", toClassify);
+            intentClassification.putExtra("treeMap", toBeClassified);
+            intentClassification.setAction("Classify");
+            startService(intentClassification);*/
 
             if(classifier.classifySamples(toClassify, toBeClassified)) {
                 if(serviceCallbacks != null) {
@@ -306,7 +311,7 @@ public class SensorHandler extends Service implements SensorEventListener {
             else if(!serviceCallbacks.getActivity().equals("OTHER!")) {
                 serviceCallbacks.setActivity("OTHER!");
             }
-            
+
             toBeClassified.clear();
         }
     }

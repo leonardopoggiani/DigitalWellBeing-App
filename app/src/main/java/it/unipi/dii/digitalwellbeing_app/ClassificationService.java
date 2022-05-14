@@ -8,12 +8,15 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import java.util.TreeMap;
+
 public class ClassificationService extends IntentService {
 
     private final IBinder binder = new LocalBinder();
     private ServiceCallbacks serviceCallbacks;
     private String TAG = "ClassificationService";
     private ActivityClassifier classifier;
+
     Intent intentResult;
     boolean status;
 
@@ -36,11 +39,43 @@ public class ClassificationService extends IntentService {
         Log.d(TAG, "Started");
 
         classifier = new ActivityClassifier(this);
-        intentResult = new Intent(this, MainActivity.class);
+        intentResult = new Intent(this, SensorHandler.class);
         intentResult.setAction("Classification_Result");
         status = false;
         return super.onStartCommand(intent, flags, startId);
     }
+
+
+    /*private void handleClassification() {
+
+            Float[] sampleArray = intentResult.getFloatArrayExtra("sampleArray");
+            TreeMap<Long,Float[]> toBeClassified = new TreeMap<>();
+            toBeClassified = intentResult.getParcelableExtra("treeMap");
+            boolean activity = classifier.classifySamples(sampleArray, toBeClassified);
+            if(activity) {
+                if(serviceCallbacks != null) {
+                    serviceCallbacks.setActivityAndCounter("PICKUP!");
+                }
+            }
+            else if(!serviceCallbacks.getActivity().equals("OTHER!")) {
+                serviceCallbacks.setActivity("OTHER!");
+            }
+            stopSelf();
+
+
+            */
+            /*if(activity) {
+                Log.d(TAG, "PICKUP");
+                intentResult.putExtra("activity","PICKUP");
+
+            }
+            else if(!activity) {
+                Log.d(TAG,"OTHERS");
+                intentResult.putExtra("activity","OTHERS");
+
+            }
+            startService(intentResult);*/
+    //}
 
     @Nullable
     public IBinder onBind(Intent intent) {
@@ -49,6 +84,11 @@ public class ClassificationService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
+
+        if(intent.getAction() != null && intent.getAction().compareTo("Classify")==0) {
+                //handleClassification();
+
+        }
 
     }
 
