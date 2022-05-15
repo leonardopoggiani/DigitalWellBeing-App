@@ -1,0 +1,30 @@
+
+a
+java:S2259X"DA "NullPointerException" could be thrown; "intent" is nullable here.(ÙäÒ8ÙåÊ¹Œ0
+j	java:S116"NRename this field "TAG" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(…²ÿö8ÚåÊ¹Œ0
+{
+java:S1450"YRemove the "classifier" field and declare it as a local variable in the relevant methods.(Ö’–’øÿÿÿÿ8ÜåÊ¹Œ0
+
+java:S1450"_Remove the "serviceCallbacks" field and declare it as a local variable in the relevant methods.(ú˜Üÿÿÿÿÿ8İåÊ¹Œ0
+W
+java:S1874"5Remove this use of "IntentService"; it is deprecated.(ãˆÓõøÿÿÿÿ8àåÊ¹Œ0
+K
+java:S1874".Remove this use of "<init>"; it is deprecated.(ÁÙ»8ãåÊ¹Œ0
+l
+java:S1874&"JDon't override a deprecated method or explicitly mark it as "@Deprecated".(·¦÷Õıÿÿÿÿ8æåÊ¹Œ0
+X
+java:S1874-"6Remove this use of "onStartCommand"; it is deprecated.(İ¨†äùÿÿÿÿ8ìåÊ¹Œ0
+g
+java:S1874Q"JDon't override a deprecated method or explicitly mark it as "@Deprecated".(çî¤º8ìåÊ¹Œ0
+W
+java:S1161Q":Add the "@Override" annotation above this method signature(çî¤º8îåÊ¹Œ0
+W	java:S1251"<This block of commented-out lines of code should be removed.(ïÊÊ.8ğåÊ¹Œ0
+]	java:S125C"<This block of commented-out lines of code should be removed.(éæè´ûÿÿÿÿ8ğåÊ¹Œ0
+]	java:S125N"<This block of commented-out lines of code should be removed.(éØ»Úûÿÿÿÿ8ñåÊ¹Œ0
+X	java:S125Y"<This block of commented-out lines of code should be removed.(ë‰ø»8ôåÊ¹Œ0
+P
+java:S1128".Remove this unused import 'java.util.TreeMap'.(¨éˆèıÿÿÿÿ8õåÊ¹Œ0
+V
+java:S1068"4Remove this unused "serviceCallbacks" private field.(ú˜Üÿÿÿÿÿ8öåÊ¹Œ0
+P
+java:S1068".Remove this unused "classifier" private field.(Ö’–’øÿÿÿÿ8öåÊ¹Œ0

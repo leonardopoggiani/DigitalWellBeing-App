@@ -1,44 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/counter_pickup"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:id="@+id/activity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/other"
+    <include
+        android:id="@+id/home_card"
+        layout="@layout/home_card"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.23" />
+        tools:layout_editor_absoluteX="-16dp" />
 
     <Button
         android:id="@+id/start"
-        android:layout_width="wrap_content"
+        style="@style/RoundedButton"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="260dp"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="-350dp"
+        android:layout_marginTop="644dp"
+        android:elevation="10dp"
         android:text="@string/start"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activity"
-        tools:ignore="OnClick" />
-
-    <TextView
-        android:id="@+id/counter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="36dp"
-        android:text="@string/_0"
-        app:layout_constraintBottom_toTopOf="@+id/activity"
-        app:layout_constraintStart_toStartOf="@+id/activity" />
+        app:layout_constraintStart_toEndOf="@+id/home_card"
+        app:layout_constraintTop_toTopOf="@+id/home_card" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+

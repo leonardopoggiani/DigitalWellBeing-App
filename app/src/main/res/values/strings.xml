@@ -4,5 +4,8 @@
     <string name="start">START</string>
     <string name="other">OTHER!</string>
     <string name="_0">0</string>
+    <string name="todo">TODO</string>
+    <string name="something_text">Activity counter:</string>
+    <string name="button">START</string>
 
 </resources>

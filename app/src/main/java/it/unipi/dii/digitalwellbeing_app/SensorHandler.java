@@ -379,7 +379,7 @@ public class SensorHandler extends Service implements SensorEventListener {
             addMapValues(event, 15, 16, 17);
         } else if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
             Log.d(TAG, "Proximity: " + event.values[0]);
-            if(event.values[0] == 0.0 && checkRangePocket(event)) {
+            if(event.values[0] == 0.0 /* && checkRangePocket(event)*/) {
                 already_recognized = false;
             }
         }
