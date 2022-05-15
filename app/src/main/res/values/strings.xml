@@ -7,5 +7,6 @@
     <string name="todo">TODO</string>
     <string name="something_text">Activity counter:</string>
     <string name="button">START</string>
+    <string name="pickup_phone">Pickup phone</string>
 
 </resources>
