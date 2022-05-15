@@ -29,7 +29,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
 
-import it.unipi.dii.digitalwellbeing_app.ml.PickupClassifier;
 
 
 public class SensorHandler extends Service implements SensorEventListener {
@@ -67,6 +66,8 @@ public class SensorHandler extends Service implements SensorEventListener {
 
     //Used to find out if the fast sampling is in progress
     private boolean started;
+    private boolean goodProximity;
+    private boolean goodAccel;
     private int counter;
 
     TreeMap<Long,Float[]> toBeClassified = new TreeMap<>();
@@ -89,7 +90,10 @@ public class SensorHandler extends Service implements SensorEventListener {
                     counter = 0;
                     initializeSensorHandler();
                     //Start the sensorListener with a low sampling frequency and initialize the detection timer
-                    if (startListener(SensorManager.SENSOR_DELAY_FASTEST)) {
+                    if (startListener(Configuration.HIGH_SAMPLING_RATE)) {
+                        //started = false;
+                        //goodProximity = false;
+                        //goodAccel = false;
                         //initializeDetectionTimer();
                         Log.d(TAG, "Detection Activated");
                     } else
@@ -191,19 +195,42 @@ public class SensorHandler extends Service implements SensorEventListener {
     }
         //},Configuration.FAST_SAMPLING_DELAY);
 
+    private void setFastSampling() {
+
+        if(stopListener()) {
+            Log.d(TAG, "Stop listener");
+        }
+        else
+            Log.d(TAG, "Errors in storing collected data");
+        startListener(Configuration.HIGH_SAMPLING_RATE);
+        started = true;
+        Log.d(TAG, "Sampling rate increased");
+    }
+
+    private void setLowSampling() {
+
+        if(stopListener()) {
+            Log.d(TAG, "Stop listener");
+        }
+        else
+            Log.d(TAG, "Errors in storing collected data");
+        startListener(Configuration.LOW_SAMPLING_RATE);
+        started = false;
+        Log.d(TAG, "Sampling rate decreased");
+    }
 
 
     protected Boolean startListener(int rate){
 
         //Se il rate è quello basso prelevo solo dall'accelerometro e il sonsore di prossimità
-        if(rate == SensorManager.SENSOR_DELAY_NORMAL){
+        if(rate == Configuration.LOW_SAMPLING_RATE){
             Log.d(TAG, "Delay normal activated");
             return (sm.registerListener(this, accelerometer, rate) && sm.registerListener (this, proximity, rate));
 
         }
 
         //Altrimenti, attivo tutti prelevo da tutti i sensori per classifirare un pickup
-        /*if(rate == SensorManager.SENSOR_DELAY_GAME &&
+        if(rate == Configuration.HIGH_SAMPLING_RATE &&
                 sm.registerListener(this, accelerometer, rate) &&
                 sm.registerListener(this, rotation, rate) &&
                 sm.registerListener(this, gyroscope, rate) &&
@@ -211,22 +238,23 @@ public class SensorHandler extends Service implements SensorEventListener {
                 sm.registerListener(this, linear, rate) &&
                 sm.registerListener (this, magnetometer, rate) &&
                 sm.registerListener (this, proximity, rate)) {
-           */
-        else if(rate == SensorManager.SENSOR_DELAY_FASTEST){
+
+        }
+        /*else if(rate == SensorManager.SENSOR_DELAY_FASTEST){
             sm.registerListener (this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
             sm.registerListener (this, gravity, SensorManager.SENSOR_DELAY_FASTEST);
             sm.registerListener (this, gyroscope, SensorManager.SENSOR_DELAY_FASTEST);
             sm.registerListener (this, rotation, SensorManager.SENSOR_DELAY_FASTEST);
             sm.registerListener (this, linear, SensorManager.SENSOR_DELAY_FASTEST);
             sm.registerListener (this, magnetometer, SensorManager.SENSOR_DELAY_FASTEST);
-            sm.registerListener (this, proximity, SensorManager.SENSOR_DELAY_FASTEST);
+            sm.registerListener (this, proximity, SensorManager.SENSOR_DELAY_FASTEST);*/
 
 
             started = true;
             //initializeTimerFastSampling();
             Log.d(TAG,"Fast Sampling activated");
 
-        }
+        //}
         /*} else {
             //registerListener on some sensor could be failed so the rate must be reset on low frequency rate
             stopListener();
@@ -320,16 +348,6 @@ public class SensorHandler extends Service implements SensorEventListener {
             intentClassification.setAction("Classify");
             Log.d(TAG, "Start Service");
             startService(intentClassification);
-
-            /*if(classifier.classifySamples(toClassify, toBeClassified)) {
-                if(serviceCallbacks != null) {
-                    serviceCallbacks.setActivityAndCounter("PICKUP!");
-                }
-            }
-            else if(!serviceCallbacks.getActivity().equals("OTHER!")) {
-                serviceCallbacks.setActivity("OTHER!");
-            }
-            */
             toBeClassified.clear();
         }
     }
@@ -376,32 +394,66 @@ public class SensorHandler extends Service implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
 
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            addMapValues(event, 0, 1, 2);
-        } else if(event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
-            addMapValues(event, 3, 4, 5);
-        } else if (event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
-            addMapValues(event, 6, 7, 8);
-        } else if (event.sensor.getType() == Sensor.TYPE_GRAVITY) {
-            addMapValues(event, 9, 10, 11);
-        } else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-            addMapValues(event, 12, 13, 14);
-        } else if (event.sensor.getType() == Sensor.TYPE_GAME_ROTATION_VECTOR) {
-            SensorManager.getRotationMatrixFromVector(rotationMatrix, event.values);
-            SensorManager.getOrientation(rotationMatrix, orientationAngles);
+        //TODO controllo nel caso in cui sia attivo il low sampling se sta per iniziare un'estrazione
+        /*
+        //Il fast sampling non è attivo
+        if(!started){
+            if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+                if(!goodAccel)
+                {
+                    goodAccel = checkRangePocket(event);
 
-            event.values[0] = (float) Math.toDegrees(orientationAngles[0]);
-            event.values[1] = (float) Math.toDegrees(orientationAngles[1]);
-            event.values[2] = (float) Math.toDegrees(orientationAngles[2]);
+                }
+            }
+            else if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
+                if(!goodProximity)
+                {
+                    if (event.values[0] == 0.0) {
+                        goodProximity = true;
+                    }
 
-            addMapValues(event, 15, 16, 17);
-        } else if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
-            Log.d(TAG, "Proximity: " + event.values[0]);
-            if(event.values[0] == 0.0 && checkRangePocket(event)) {
-                already_recognized = false;
+                }
+
+            }
+            if(goodProximity && goodAccel)
+            {
+                started = true;
+                setFastSampling();
+                return;
+            }
+
+        }
+        */
+        if(started) {
+            if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+                addMapValues(event, 0, 1, 2);
+            } else if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
+                addMapValues(event, 3, 4, 5);
+            } else if (event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
+                addMapValues(event, 6, 7, 8);
+            } else if (event.sensor.getType() == Sensor.TYPE_GRAVITY) {
+                addMapValues(event, 9, 10, 11);
+            } else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+                addMapValues(event, 12, 13, 14);
+            } else if (event.sensor.getType() == Sensor.TYPE_GAME_ROTATION_VECTOR) {
+                SensorManager.getRotationMatrixFromVector(rotationMatrix, event.values);
+                SensorManager.getOrientation(rotationMatrix, orientationAngles);
+
+                event.values[0] = (float) Math.toDegrees(orientationAngles[0]);
+                event.values[1] = (float) Math.toDegrees(orientationAngles[1]);
+                event.values[2] = (float) Math.toDegrees(orientationAngles[2]);
+
+                addMapValues(event, 15, 16, 17);
+            } else if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
+                Log.d(TAG, "Proximity: " + event.values[0]);
+                //TODO aggiungere controllo anche sui dati dell'accelerometro sia per settare already_recognized ma anche per il samplig fast
+                if (event.values[0] == 0.0) {
+                    already_recognized = false;
+                }
             }
         }
     }
+
 
     public boolean checkRangePocket(SensorEvent event) {
         return (event.values[0] >= Configuration.X_LOWER_BOUND_POCKET && event.values[0] <= Configuration.X_UPPER_BOUND_POCKET) &&
