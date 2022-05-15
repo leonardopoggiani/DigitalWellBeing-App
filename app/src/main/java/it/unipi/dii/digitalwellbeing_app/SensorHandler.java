@@ -73,6 +73,7 @@ public class SensorHandler extends Service implements SensorEventListener {
     static boolean already_recognized = true;
     final float[] rotationMatrix = new float[9];
     final float[] orientationAngles = new float[3];
+    Intent intentClassResult;
 
     private ActivityClassifier classifier = new ActivityClassifier(this);
 
@@ -123,6 +124,21 @@ public class SensorHandler extends Service implements SensorEventListener {
             //} else {
             //Log.d(TAG, "SensorHandler activated");
             // }
+
+        }
+        else if(intent.getAction() != null && intent.getAction().compareTo("Classification_Result") == 0)
+        {
+            intentClassResult = intent;
+
+            if(intent.getStringExtra("activity").equals("PICKUP")) {
+                if(serviceCallbacks != null) {
+                    serviceCallbacks.setActivityAndCounter("PICKUP!");
+                }
+            }
+            else if(!intent.getStringExtra("activity").equals("OTHER")) {
+                serviceCallbacks.setActivity("OTHER!");
+            }
+
 
         }
         return Service.START_STICKY;
@@ -297,13 +313,15 @@ public class SensorHandler extends Service implements SensorEventListener {
             for(int i = 0; i < 18; i++) {
                 toClassify[i] = toClassify[i] / count[i];
             }
-            /*Intent intentClassification = new Intent(getApplicationContext(), ClassificationService.class);
+
+            Intent intentClassification = new Intent(this, ClassificationService.class);
             intentClassification.putExtra("sampleArray", toClassify);
             intentClassification.putExtra("treeMap", toBeClassified);
             intentClassification.setAction("Classify");
-            startService(intentClassification);*/
+            Log.d(TAG, "Start Service");
+            startService(intentClassification);
 
-            if(classifier.classifySamples(toClassify, toBeClassified)) {
+            /*if(classifier.classifySamples(toClassify, toBeClassified)) {
                 if(serviceCallbacks != null) {
                     serviceCallbacks.setActivityAndCounter("PICKUP!");
                 }
@@ -311,7 +329,7 @@ public class SensorHandler extends Service implements SensorEventListener {
             else if(!serviceCallbacks.getActivity().equals("OTHER!")) {
                 serviceCallbacks.setActivity("OTHER!");
             }
-
+            */
             toBeClassified.clear();
         }
     }
