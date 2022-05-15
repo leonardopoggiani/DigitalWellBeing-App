@@ -14,19 +14,11 @@ import java.util.TreeMap;
 
 public class ClassificationService extends Service {
 
-    private final IBinder binder = new LocalBinder();
-    private ServiceCallbacks serviceCallbacks;
     private String TAG = "ClassificationService";
     private ActivityClassifier classifier;
 
     Intent intentResult;
     Intent intentData;
-
-    public class LocalBinder extends Binder {
-        ClassificationService getService() {
-            return ClassificationService.this;
-        }
-    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -66,7 +58,7 @@ public class ClassificationService extends Service {
 
     @Nullable
     public IBinder onBind(Intent intent) {
-        return binder;
+        return null;
     }
 
 
