@@ -91,24 +91,13 @@ public class SensorHandler extends Service implements SensorEventListener {
                     initializeSensorHandler();
                     //Start the sensorListener with a low sampling frequency and initialize the detection timer
                     if (startListener(Configuration.HIGH_SAMPLING_RATE)) {
-                        //started = false;
-                        //goodProximity = false;
-                        //goodAccel = false;
-                        //initializeDetectionTimer();
+                        started = true;
                         Log.d(TAG, "Detection Activated");
                     } else
                         Log.d(TAG, "Error in starting sensors listeners");
                     break;
                 case "STOP":
                     Log.d(TAG, "SensorHandlerService Stopped");
-                    //When FastSampling is active the related timer must be cancelled before to stop the service
-                    /*if (started) {
-                        wakeLock.release();
-                        fastSamplingThread.quit();
-                        fastSamplingThread = null;
-                        fastSamplingHandler = null;
-
-                    }*/
                     if (sm != null) {
                         stopListener();
                         /*if (detectionThread != null) {
@@ -135,6 +124,10 @@ public class SensorHandler extends Service implements SensorEventListener {
             intentClassResult = intent;
 
             if(intent.getStringExtra("activity").equals("PICKUP")) {
+                /*started = false;
+                goodProximity = false;
+                goodAccel = false;*/
+
                 if(serviceCallbacks != null) {
                     serviceCallbacks.setActivityAndCounter("PICKUP!");
                 }
@@ -239,42 +232,25 @@ public class SensorHandler extends Service implements SensorEventListener {
                 sm.registerListener (this, magnetometer, rate) &&
                 sm.registerListener (this, proximity, rate)) {
 
-        }
-        /*else if(rate == SensorManager.SENSOR_DELAY_FASTEST){
-            sm.registerListener (this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
-            sm.registerListener (this, gravity, SensorManager.SENSOR_DELAY_FASTEST);
-            sm.registerListener (this, gyroscope, SensorManager.SENSOR_DELAY_FASTEST);
-            sm.registerListener (this, rotation, SensorManager.SENSOR_DELAY_FASTEST);
-            sm.registerListener (this, linear, SensorManager.SENSOR_DELAY_FASTEST);
-            sm.registerListener (this, magnetometer, SensorManager.SENSOR_DELAY_FASTEST);
-            sm.registerListener (this, proximity, SensorManager.SENSOR_DELAY_FASTEST);*/
-
-
             started = true;
-            //initializeTimerFastSampling();
             Log.d(TAG,"Fast Sampling activated");
 
-        //}
-        /*} else {
+        }
+
+        else {
             //registerListener on some sensor could be failed so the rate must be reset on low frequency rate
             stopListener();
-            sm.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-            sm.registerListener (this, proximity, SensorManager.SENSOR_DELAY_NORMAL);
+            sm.registerListener(this, accelerometer, Configuration.LOW_SAMPLING_RATE);
+            sm.registerListener (this, proximity, Configuration.LOW_SAMPLING_RATE);
             Log.d(TAG,"Some registration is failed");
             return false;
-        }*/
+        }
         return true;
     }
 
     private void initializeSensorHandler() {
         Log.d(TAG, "Initialize sensor handler");
         started = false;
-
-        //Sets up the wakelock level to "PARTIAL_WAKE_LOCK" in order to mantain the cpu awake during
-        //the fast sampling operations, so that each sensor's event is processed and no missing value occurs
-        //PowerManager powerManager = (PowerManager) getApplicationContext().getSystemService(Context.POWER_SERVICE);
-        //wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-                //"HandActivitySignal::WakelockTag");
 
         sm = (SensorManager) getApplicationContext().getSystemService(SENSOR_SERVICE);
 
@@ -370,20 +346,7 @@ public class SensorHandler extends Service implements SensorEventListener {
         return true;
     }
 
-    // TODO
-    //Da ricontrollare i range per il telefono in tasca, in su e in giù, schermo verso l'interno e schermo verso l'esterno
-    //anche da seduti
-    //Check if accelerometer axis data are in the range of values related to the phone inside the pocket
-    /*
-    public boolean isInRange(SensorEvent event) {
-        if((event.values[0] >= Configuration.X_LOWER_BOUND_POCKET && event.values[0] <= Configuration.X_UPPER_BOUND_POCKET) &&
-                (event.values[1] >= Configuration.Y_LOWER_BOUND_POCKET && event.values[1] <= Configuration.Y_UPPER_BOUND_POCKET) &&
-                (event.values[2] >= Configuration.Z_LOWER_BOUND_POCKET && event.values[2] <= Configuration.Z_UPPER_BOUND_POCKET)) {
-            Log.d(TAG, "ACC_X: "+event.values[0]+", ACC_Y: "+event.values[1]+", ACC_Z: "+event.values[2]+", TIMESTAMP: "+event.timestamp);
-            return true;
-        }
-        else  return false;
-    }*/
+
 
     @Nullable
     @Override
@@ -395,9 +358,9 @@ public class SensorHandler extends Service implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
 
         //TODO controllo nel caso in cui sia attivo il low sampling se sta per iniziare un'estrazione
-        /*
+
         //Il fast sampling non è attivo
-        if(!started){
+        /*if(!started){
             if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
                 if(!goodAccel)
                 {
@@ -422,8 +385,8 @@ public class SensorHandler extends Service implements SensorEventListener {
                 return;
             }
 
-        }
-        */
+        }*/
+
         if(started) {
             if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
                 addMapValues(event, 0, 1, 2);
