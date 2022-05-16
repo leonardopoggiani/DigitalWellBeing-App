@@ -1,0 +1,79 @@
+
+
+java:S1192·"aDefine a constant instead of duplicating this literal "Errors in storing collected data" 3 times.(‡©ˆë8Û¸°áŒ0
+q
+java:S1192´"NDefine a constant instead of duplicating this literal "Stop listener" 3 times.(ÛÎğ¬øÿÿÿÿ8Û¸°áŒ0
+@
+java:S5411]"*Use the primitive boolean expression here.(Œùµ
+H
+java:S5411³"*Use the primitive boolean expression here.(šäÍ 8İ¸°áŒ0
+H
+java:S5411¿"*Use the primitive boolean expression here.(šäÍ 8Ş¸°áŒ0
+H
+java:S5411Ë"*Use the primitive boolean expression here.(šäÍ 8Ş¸°áŒ0
+s
+java:S3008J"]Rename this field "already_recognized" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ä‘ìø
+q
+java:S1450G"VRemove the "counter" field and declare it as a local variable in the relevant methods.(¶®¡êşÿÿÿÿ
+h
+java:S3776R"RRefactor this method to reduce its Cognitive Complexity from 17 to the 15 allowed.(ªĞªÄ
+]	java:S125g"<This block of commented-out lines of code should be removed.(˜ıîÆùÿÿÿÿ8ş¹°áŒ0
+X	java:S125u"<This block of commented-out lines of code should be removed.(¡Õ±š8ÿ¹°áŒ0
+X	java:S125"<This block of commented-out lines of code should be removed.(ùáƒÈ8€º°áŒ0
+Y	java:S125‘"<This block of commented-out lines of code should be removed.(Öâ“æ8º°áŒ0
+Y	java:S125¥"<This block of commented-out lines of code should be removed.(İ§è8º°áŒ0
+^	java:S125«"<This block of commented-out lines of code should be removed.(­×öİúÿÿÿÿ8º°áŒ0
+^	java:S125»"<This block of commented-out lines of code should be removed.(ûí¡ÿÿÿÿÿ8‚º°áŒ0
+p
+java:S3776‰"RRefactor this method to reduce its Cognitive Complexity from 27 to the 15 allowed.(ßÊ³8‡º°áŒ0
+^	java:S125ê"<This block of commented-out lines of code should be removed.(¢ÊÓßøÿÿÿÿ8º°áŒ0
+P
+java:S1135ç"2Complete the task associated to this TODO comment.(½ëÕŒ8º°áŒ0
+I
+java:S1135›"2Complete the task associated to this TODO comment.(Ñı¸°
+L
+java:S2696"6Make the enclosing method "static" or remove this set.(ãÊe
+I
+java:S1135­"2Complete the task associated to this TODO comment.(˜âÅ»
+J
+java:S1128"4Remove this unused import 'android.content.Context'.(©Ê‰è
+O
+java:S1128"4Remove this unused import 'android.widget.TextView'.(„Ë‚ˆÿÿÿÿÿ
+O
+java:S1128"9Remove this unused import 'org.tensorflow.lite.DataType'.(»¨±
+m
+java:S1128"RRemove this unused import 'org.tensorflow.lite.support.tensorbuffer.TensorBuffer'.(üñôŸøÿÿÿÿ
+K
+java:S1128"0Remove this unused import 'java.io.IOException'.(ªº»Úıÿÿÿÿ
+K
+java:S1128"0Remove this unused import 'java.nio.ByteBuffer'.(¿¢×±úÿÿÿÿ
+H
+java:S1128"-Remove this unused import 'java.util.Arrays'.(î–˜Éüÿÿÿÿ
+E
+java:S1128"/Remove this unused import 'java.util.Iterator'.(¥ÍòÕ
+E
+java:S1128"*Remove this unused import 'java.util.Map'.(¼è½Òşÿÿÿÿ
+B
+java:S1068-",Remove this unused "wakeLock" private field.(òè¦Î
+I
+java:S10688"3Remove this unused "detectionThread" private field.(ªÅØê
+O
+java:S10689"4Remove this unused "detectionHandler" private field.(ú½™èúÿÿÿÿ
+Q
+java:S1068;"6Remove this unused "fastSamplingThread" private field.(ˆÄ†êøÿÿÿÿ
+M
+java:S1068<"7Remove this unused "fastSamplingHandler" private field.(®Çâ
+G
+java:S1068E"1Remove this unused "goodProximity" private field.(åù¥ç
+H
+java:S1068F"-Remove this unused "goodAccel" private field.(¤ß›€øÿÿÿÿ
+F
+java:S1068G"+Remove this unused "counter" private field.(¶®¡êşÿÿÿÿ
+I
+java:S1068O".Remove this unused "classifier" private field.(¼İÄÛüÿÿÿÿ
+c
+java:S1144ª"@Remove this unused private "initializeTimerFastSampling" method.(á×Øüÿÿÿÿ8“º°áŒ0
+W
+java:S1144½"4Remove this unused private "setFastSampling" method.(œ­¡øûÿÿÿÿ8“º°áŒ0
+V
+java:S1144É"3Remove this unused private "setLowSampling" method.(æê…ÿùÿÿÿÿ8“º°áŒ0

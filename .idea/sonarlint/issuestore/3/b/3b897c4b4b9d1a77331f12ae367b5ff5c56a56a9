@@ -1,0 +1,28 @@
+
+b
+java:S1192Æ"FDefine a constant instead of duplicating this literal "START" 3 times.(ÕõÔëúÿÿÿÿ
+c
+java:S1192J"HDefine a constant instead of duplicating this literal " times." 3 times.(¢¥‡¬ıÿÿÿÿ
+w
+java:S1192J"\Define a constant instead of duplicating this literal "You have picked your phone " 3 times.(¢¥‡¬ıÿÿÿÿ
+f	java:S117:"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(·öâ
+l	java:S117Ä"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(­ùû‹ÿÿÿÿÿ
+p
+java:S1104)"SMake builder a static final constant or non-public and provide accessors if needed.(±Ë½8Š¡ØàŒ0
+J
+java:S1444)"-Make this "public static builder" field final(±Ë½8Š¡ØàŒ0
+o	java:S116&"URename this field "CHANNEL_ID" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(÷¯ûÿıÿÿÿÿ
+l	java:S116+"WRename this field "PICKUP_LIMIT" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(£Û„Ò
+u	java:S116,"[Rename this field "already_notified" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(”Èˆşÿÿÿÿ
+b
+java:S1124)"EReorder the modifiers to comply with the Java Language Specification.(±Ë½8š¡ØàŒ0
+X
+java:S2696H"6Make the enclosing method "static" or remove this set.(ä½Àÿÿÿÿÿ8›ÖàŒ0
+I
+java:S1135ç"2Complete the task associated to this TODO comment.(˜âÅ»
+I
+java:S1135ì"2Complete the task associated to this TODO comment.(˜âÅ»
+T
+java:S1068""9Remove this unused "classificationService" private field.(Æò¨¹úÿÿÿÿ
+B
+java:S1068%"'Remove this unused "ctx" private field.(ÖÖ¾­şÿÿÿÿ

@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks,
         builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("DigitalWellBeing Alert")
                 .setContentText("You have picked your phone " + count + " times.")
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setSmallIcon(R.drawable.healthcare)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         createNotificationChannel();
@@ -87,7 +87,6 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks,
         return builder;
     }
 
-
     private void createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
@@ -97,8 +96,6 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks,
                     NotificationChannel( CHANNEL_ID , "NOTIFICATION_CHANNEL_NAME" , importance);
             notificationChannel.enableLights( true );
             notificationChannel.setLightColor( Color. RED );
-            notificationChannel.enableVibration( true );
-            notificationChannel.setVibrationPattern( new long []{});
             builder.setChannelId( CHANNEL_ID ) ;
 
             notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
