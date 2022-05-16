@@ -44,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks,
     boolean already_notified = false;
     private final SwitchHandler switchHandler = new SwitchHandler();
 
+    private BroadcastReceiver broadcastReceiver;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
