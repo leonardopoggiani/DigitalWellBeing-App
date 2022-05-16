@@ -81,52 +81,53 @@ public class SensorHandler extends Service implements SensorEventListener {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-        Log.d(TAG, "OnStartCommand SensorHandler");
         if (intent.getAction() != null && intent.getAction().compareTo("Command") == 0) {
-            String command = intent.getStringExtra("command_key");
-            switch (command) {
-                case "START":
-                    Log.d(TAG, "Start case");
-                    counter = 0;
-                    initializeSensorHandler();
-                    //Start the sensorListener with a low sampling frequency and initialize the detection timer
-                    if (startListener(Configuration.HIGH_SAMPLING_RATE)) {
-                        started = true;
-                        Log.d(TAG, "Detection Activated");
-                    } else
-                        Log.d(TAG, "Error in starting sensors listeners");
-                    break;
-                case "STOP":
-                    Log.d(TAG, "SensorHandlerService Stopped");
-                    if (sm != null) {
-                        stopListener();
-                        /*if (detectionThread != null) {
-                            detectionThread.quit();
-                            detectionThread = null;
-                            detectionHandler = null;
-                        }*/
+            Runnable toRun = () -> {
+                String command = intent.getStringExtra("command_key");
+                switch (command) {
+                    case "START":
+                        Log.d(TAG, "Start case");
+                        counter = 0;
+                        initializeSensorHandler();
+                        //Start the sensorListener with a low sampling frequency and initialize the detection timer
+                        if (startListener(Configuration.HIGH_SAMPLING_RATE)) {
+                            started = true;
+                            Log.d(TAG, "Detection Activated");
+                        } else
+                            Log.d(TAG, "Error in starting sensors listeners");
+                        break;
+                    case "STOP":
+                        Log.d(TAG, "SensorHandlerService Stopped");
+                        if (sm != null) {
+                            stopListener();
+                            /*if (detectionThread != null) {
+                                detectionThread.quit();
+                                detectionThread = null;
+                                detectionHandler = null;
+                            }*/
 
-                    } else
-                        Log.d(TAG, "SensorManager null");
-                    stopSelf();
-                    break;
-                default:
-                    Log.d(TAG, "Default Case");
-                    break;
-            }
-            //} else {
-            //Log.d(TAG, "SensorHandler activated");
-            // }
+                        } else
+                            Log.d(TAG, "SensorManager null");
+                        //stopSelf();
+                        break;
+                    default:
+                        Log.d(TAG, "Default Case");
+                        break;
+                }
+            };
+        Thread run = new Thread(toRun);
+        run.start();
+        Log.d(TAG, "OnStartCommand SensorHandler");
 
         }
-        else if(intent.getAction() != null && intent.getAction().compareTo("Classification_Result") == 0)
+       /* else if(intent.getAction() != null && intent.getAction().compareTo("Classification_Result") == 0)
         {
             intentClassResult = intent;
 
             if(intent.getStringExtra("activity").equals("PICKUP")) {
-                /*started = false;
-                goodProximity = false;
-                goodAccel = false;*/
+                //started = false;
+                //goodProximity = false;
+                //goodAccel = false;
 
                 if(serviceCallbacks != null) {
                     serviceCallbacks.setActivityAndCounter("PICKUP!");
@@ -137,7 +138,7 @@ public class SensorHandler extends Service implements SensorEventListener {
             }
 
 
-        }
+        }*/
         return Service.START_STICKY;
     }
 
