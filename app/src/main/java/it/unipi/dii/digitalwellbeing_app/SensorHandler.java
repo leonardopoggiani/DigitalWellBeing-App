@@ -118,6 +118,7 @@ public class SensorHandler extends Service implements SensorEventListener {
         run.start();
         Log.d(TAG, "OnStartCommand SensorHandler");
 
+
         }
 
         return Service.START_STICKY;
@@ -205,6 +206,7 @@ public class SensorHandler extends Service implements SensorEventListener {
         }
 
         //Altrimenti, attivo tutti prelevo da tutti i sensori per classifirare un pickup
+
         if(rate == Configuration.HIGH_SAMPLING_RATE &&
                 sm.registerListener(this, accelerometer, rate) &&
                 sm.registerListener(this, rotation, rate) &&

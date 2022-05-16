@@ -8,5 +8,9 @@
     <string name="something_text">Activity counter:</string>
     <string name="button">START</string>
     <string name="pickup_phone">Pickup phone</string>
+    <string name="not_active">Not active</string>
+    <string name="pickup_limit">Pickup limit:</string>
+    <string name="notifications">Vibration:</string>
+    <string name="activity">Activity</string>
 
 </resources>
