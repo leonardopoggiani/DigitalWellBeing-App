@@ -74,7 +74,6 @@ public class SensorHandler extends Service implements SensorEventListener {
     static boolean already_recognized = true;
     final float[] rotationMatrix = new float[9];
     final float[] orientationAngles = new float[3];
-    Intent intentClassResult;
 
     private ActivityClassifier classifier = new ActivityClassifier(this);
 
@@ -120,25 +119,7 @@ public class SensorHandler extends Service implements SensorEventListener {
         Log.d(TAG, "OnStartCommand SensorHandler");
 
         }
-       /* else if(intent.getAction() != null && intent.getAction().compareTo("Classification_Result") == 0)
-        {
-            intentClassResult = intent;
 
-            if(intent.getStringExtra("activity").equals("PICKUP")) {
-                //started = false;
-                //goodProximity = false;
-                //goodAccel = false;
-
-                if(serviceCallbacks != null) {
-                    serviceCallbacks.setActivityAndCounter("PICKUP!");
-                }
-            }
-            else if(!intent.getStringExtra("activity").equals("OTHER")) {
-                serviceCallbacks.setActivity("OTHER!");
-            }
-
-
-        }*/
         return Service.START_STICKY;
     }
 

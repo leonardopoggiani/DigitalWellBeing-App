@@ -31,8 +31,8 @@ public class ClassificationService extends Service {
 
         Runnable toRun = () -> {
             classifier = new ActivityClassifier(this);
-            intentResult = new Intent(this, PickupActivityService.class);
-            intentResult.setAction("Classification_Result");
+            //intentResult = new Intent(this, SensorHandler.class);
+            //intentResult.setAction("Classification_Result");
             intentData = intent;
             handleClassification();
         };
@@ -50,6 +50,8 @@ public class ClassificationService extends Service {
             toBeClassified = new TreeMap<>((HashMap<Long,Float[]>)intentData.getExtras().get("treeMap"));
             boolean activity = classifier.classifySamples(sampleArray, toBeClassified);
 
+            intentResult = new Intent("update_ui");
+
             if(activity) {
                 Log.d(TAG, "PICKUP");
                 intentResult.putExtra("activity","PICKUP");
@@ -60,7 +62,9 @@ public class ClassificationService extends Service {
                 intentResult.putExtra("activity","OTHER");
 
             }
-            startService(intentResult);
+            getApplicationContext().sendBroadcast(intentResult);
+
+            //startService(intentResult);
             //stopSelf();
     }
 

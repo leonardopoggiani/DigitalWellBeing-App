@@ -10,10 +10,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service
-            android:name=".PickupActivityService"
-            android:enabled="true"
-            android:exported="true"></service>
-        <service
             android:name=".SensorHandler"
             android:enabled="true"
             android:exported="false" />
