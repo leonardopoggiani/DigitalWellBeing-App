@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks,
     private static final String TAG = "DigitalWellBeing";
     boolean bound = false;
     private Context ctx;
-    int statusBarNotificationID;
+    public static int statusBarNotificationID;
     static public NotificationCompat.Builder builder;
     static public NotificationManager notificationManager;
     public static int PICKUP_LIMIT = Configuration.PICKUP_LIMIT_DEFAULT;

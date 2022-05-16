@@ -26,6 +26,7 @@ public class SwitchHandler implements View.OnClickListener{
     long[] vibrationPattern = new long []{ 100 , 200 , 300 , 400 , 500 , 400 , 300 , 200 , 400 };
     long[] noVibration = new long[]{};
     String TAG = "SwitchHandler";
+    int last_channel_id = Integer.parseInt(Configuration.CHANNEL_ID);
 
     @Override
     public void onClick(View v) {
@@ -34,25 +35,33 @@ public class SwitchHandler implements View.OnClickListener{
         if(vibration.isChecked()) {
             Log.d(TAG, "Vibration activated");
 
-            MainActivity.builder.setVibrate(vibrationPattern);
             vibration.setText("Activated");
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                MainActivity.notificationManager.deleteNotificationChannel(Configuration.CHANNEL_ID);
+                MainActivity.notificationManager.deleteNotificationChannel(String.valueOf(last_channel_id));
+                last_channel_id++;
 
                 int importance = NotificationManager.IMPORTANCE_HIGH;
                 NotificationChannel notificationChannel = new
-                        NotificationChannel(Configuration.CHANNEL_ID, Configuration.ANDROID_CHANNEL_NAME, importance);
-                MainActivity.builder.setChannelId(Configuration.CHANNEL_ID);
-
+                        NotificationChannel(String.valueOf(last_channel_id), Configuration.ANDROID_CHANNEL_NAME, importance);
+                MainActivity.builder.setChannelId(String.valueOf(last_channel_id));
+                notificationChannel.enableVibration(true);
+                notificationChannel.setVibrationPattern(vibrationPattern);
                 MainActivity.notificationManager.createNotificationChannel(notificationChannel);
 
-                MainActivity.builder.setVibrate(vibrationPattern);
+                MainActivity.notificationManager.notify(MainActivity.statusBarNotificationID, MainActivity.builder.build());
                 vibration.setText("Activated");
+            } else {
+                MainActivity.builder.setVibrate(vibrationPattern);
             }
         } else {
-            MainActivity.builder.setVibrate(noVibration);
             vibration.setText("Not active");
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                MainActivity.notificationManager.deleteNotificationChannel(String.valueOf(last_channel_id));
+            } else {
+                MainActivity.builder.setVibrate(noVibration);
+            }
         }
     }
 }
