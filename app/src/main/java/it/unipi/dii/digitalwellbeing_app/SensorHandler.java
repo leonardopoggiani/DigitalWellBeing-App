@@ -42,7 +42,6 @@ public class SensorHandler extends Service implements SensorEventListener {
         }
     }
 
-    private PowerManager.WakeLock wakeLock;
 
     private SensorManager sm;
     private Sensor accelerometer;
@@ -58,8 +57,6 @@ public class SensorHandler extends Service implements SensorEventListener {
     //Timer used to start and stop the sampling with higher rate on the smartwatch
     private HandlerThread fastSamplingThread;
     private Handler fastSamplingHandler;
-
-    private ServiceCallbacks serviceCallbacks;
 
 
     private static final String TAG = "SensorHandler";
@@ -124,52 +121,6 @@ public class SensorHandler extends Service implements SensorEventListener {
         return Service.START_STICKY;
     }
 
-
-
-    //Initialize the Detection Timer. When it will expire the sampling operations will be stopped
-    /*private void initializeDetectionTimer() {
-        Log.d(TAG, "Timer "+Configuration.DETECTION_DELAY/60000+" minutes started");
-        detectionThread = new HandlerThread("SensorHandler");
-        detectionThread.start();
-        detectionHandler = new Handler(detectionThread.getLooper());
-        detectionHandler.postDelayed(new Runnable() {
-            public void run() {
-                Log.d(TAG, "run del thread");
-                if(started) {
-                    wakeLock.release();
-                    Log.d(TAG, "wakeLock released");
-                    fastSamplingThread.quit();
-                    fastSamplingThread = null;
-                    fastSamplingHandler = null;
-
-                }
-                if(stopListener())
-                    Log.d(TAG, "Detection stopped");
-                //stopSelf();
-    }*/
-        //},Configuration.DETECTION_DELAY);
-
-
-    //Initialize the Fast Sampling Timer. When it will expire the sampling rate will be decreased and
-
-    private void initializeTimerFastSampling() {
-        //wakeLock.acquire(Configuration.FAST_SAMPLING_DELAY);
-        //fastSamplingThread = new HandlerThread("SensorHandler");
-        //fastSamplingThread.start();
-        //fastSamplingHandler = new Handler(fastSamplingThread.getLooper());
-        //fastSamplingHandler.postDelayed(new Runnable() {
-            //public void run() {
-                //wakeLock.release();
-
-                if(stopListener()) {
-                    Log.d(TAG, "Stop listener");
-                }
-                else
-                    Log.d(TAG, "Errors in storing collected data");
-                startListener(SensorManager.SENSOR_DELAY_NORMAL);
-                Log.d(TAG, "Sampling rate decreased");
-    }
-        //},Configuration.FAST_SAMPLING_DELAY);
 
     private void setFastSampling() {
 
@@ -335,7 +286,7 @@ public class SensorHandler extends Service implements SensorEventListener {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return binder;
+        return null;
     }
 
     @Override
@@ -414,8 +365,5 @@ public class SensorHandler extends Service implements SensorEventListener {
         // TODO document why this method is empty
     }
 
-    public void setCallbacks(ServiceCallbacks callbacks) {
-        serviceCallbacks = callbacks;
-    }
 
 }

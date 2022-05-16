@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks,
         registerBroadcastReceiver();
 
         Intent intentSensorHandler = new Intent(this, SensorHandler.class);
-        bindService(intentSensorHandler, serviceConnection, Context.BIND_AUTO_CREATE);
+        //bindService(intentSensorHandler, serviceConnection, Context.BIND_AUTO_CREATE);
 
         Button start = (Button) findViewById(R.id.start);
         start.setOnClickListener(this);
@@ -107,9 +107,8 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks,
         }
     }
 
-    /**
-     * Callbacks for service binding, passed to bindService()
-     */
+
+    /*
     private ServiceConnection serviceConnection = new ServiceConnection() {
 
         @Override
@@ -126,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks,
             bound = false;
         }
 
-    };
+    };*/
 
 
     public void setActivityAndCounter(String activity) {
@@ -187,8 +186,6 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks,
     }
 
 
-
-    @Override
     public void setActivity(String s) {
         TextView tv = findViewById(R.id.activity);
 
@@ -231,6 +228,11 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks,
             MainActivity.PICKUP_LIMIT = 50;
             limit.setText("50");
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
