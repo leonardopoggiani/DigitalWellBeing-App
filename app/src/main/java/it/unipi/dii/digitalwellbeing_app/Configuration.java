@@ -22,7 +22,7 @@ public class Configuration {
     static final double Y_LOWER_BOUND_POCKET_0 = -9.6;
     static final double Y_UPPER_BOUND_POCKET_0 = -9.5;
     static final double Z_LOWER_BOUND_POCKET_0 = -1.1;
-
+    static final double Z_UPPER_BOUND_POCKET_0 = -1.1;
 
     //Telefono in tasca sottosopra display verso l'esterno
     //Forse sbagliati
