@@ -135,11 +135,9 @@ public class SensorHandler extends Service implements SensorEventListener {
             intentClassResult = intent;
 
             if(intent.getStringExtra("activity").equals("PICKUP")) {
-                if(serviceCallbacks != null) {
-                    serviceCallbacks.setActivityAndCounter("PICKUP!");
-                }
+                serviceCallbacks.setActivityAndCounter("PICKUP!");
             }
-            else if(!intent.getStringExtra("activity").equals("OTHER")) {
+            else if(intent.getStringExtra("activity").equals("OTHER")) {
                 serviceCallbacks.setActivity("OTHER!");
             }
 
@@ -230,6 +228,7 @@ public class SensorHandler extends Service implements SensorEventListener {
         }
 
         //Altrimenti, attivo tutti prelevo da tutti i sensori per classifirare un pickup
+
         if(rate == Configuration.HIGH_SAMPLING_RATE &&
                 sm.registerListener(this, accelerometer, rate) &&
                 sm.registerListener(this, rotation, rate) &&

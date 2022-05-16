@@ -1,6 +1,7 @@
 package it.unipi.dii.digitalwellbeing_app;
 
 public class Configuration {
+    public static final int PICKUP_LIMIT_DEFAULT = 50;
 
     // TODO Range values for accelerometer in pocket
 
