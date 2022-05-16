@@ -6,9 +6,11 @@ import androidx.core.app.NotificationCompat;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -42,10 +44,13 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks,
     boolean already_notified = false;
     private final SwitchHandler switchHandler = new SwitchHandler();
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        registerBroadcastReceiver();
 
         Intent intentSensorHandler = new Intent(this, SensorHandler.class);
         bindService(intentSensorHandler, serviceConnection, Context.BIND_AUTO_CREATE);
@@ -122,7 +127,6 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks,
     };
 
 
-    @Override
     public void setActivityAndCounter(String activity) {
         new Handler(Looper.getMainLooper()).post(() -> {
             TextView tv = findViewById(R.id.activity);
@@ -166,11 +170,21 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks,
         });
     }
 
-    @Override
-    public String getActivity() {
-        TextView tv = findViewById(R.id.activity);
-        return tv.getText().toString();
+    private void registerBroadcastReceiver(){
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.i(TAG, "onReceive della broadcast");
+                if(intent.getAction() != null && intent.getAction().equals("update_ui")){
+                    String activity = intent.getStringExtra("activity");
+                   setActivityAndCounter(activity);
+                }
+            }
+        };
+        registerReceiver(broadcastReceiver, new IntentFilter("update_ui"));
     }
+
+
 
     @Override
     public void setActivity(String s) {

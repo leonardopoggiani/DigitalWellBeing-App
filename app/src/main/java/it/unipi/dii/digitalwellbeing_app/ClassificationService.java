@@ -17,18 +17,27 @@ public class ClassificationService extends Service {
     private String TAG = "ClassificationService";
     private ActivityClassifier classifier;
 
+    private ServiceCallbacks serviceCallbacks;
+
+
+
     Intent intentResult;
     Intent intentData;
+
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "Started");
 
-        classifier = new ActivityClassifier(this);
-        intentResult = new Intent(this, SensorHandler.class);
-        intentResult.setAction("Classification_Result");
-        intentData = intent;
-        handleClassification();
+        Runnable toRun = () -> {
+            classifier = new ActivityClassifier(this);
+            //intentResult = new Intent(this, SensorHandler.class);
+            //intentResult.setAction("Classification_Result");
+            intentData = intent;
+            handleClassification();
+        };
+        Thread run = new Thread(toRun);
+        run.start();
         return Service.START_STICKY;
     }
 
@@ -41,6 +50,8 @@ public class ClassificationService extends Service {
             toBeClassified = new TreeMap<>((HashMap<Long,Float[]>)intentData.getExtras().get("treeMap"));
             boolean activity = classifier.classifySamples(sampleArray, toBeClassified);
 
+            intentResult = new Intent("update_ui");
+
             if(activity) {
                 Log.d(TAG, "PICKUP");
                 intentResult.putExtra("activity","PICKUP");
@@ -51,8 +62,10 @@ public class ClassificationService extends Service {
                 intentResult.putExtra("activity","OTHER");
 
             }
-            startService(intentResult);
-            stopSelf();
+            getApplicationContext().sendBroadcast(intentResult);
+
+            //startService(intentResult);
+            //stopSelf();
     }
 
 
@@ -60,6 +73,7 @@ public class ClassificationService extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
+
 
 
 }
