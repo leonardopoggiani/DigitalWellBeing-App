@@ -35,12 +35,10 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks,
     private static final String TAG = "DigitalWellBeing";
     boolean bound = false;
     private Context ctx;
-    String CHANNEL_ID = "notification";
     int statusBarNotificationID;
-    public static final String ANDROID_CHANNEL_NAME = "ANDROID CHANNEL";
     static public NotificationCompat.Builder builder;
-    NotificationManager notificationManager;
-    int PICKUP_LIMIT = Configuration.PICKUP_LIMIT_DEFAULT;
+    static public NotificationManager notificationManager;
+    public static int PICKUP_LIMIT = Configuration.PICKUP_LIMIT_DEFAULT;
     boolean already_notified = false;
     private final SwitchHandler switchHandler = new SwitchHandler();
 
@@ -69,18 +67,15 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks,
         CharSequence counter = tv2.getText();
         int count = Integer.parseInt(counter.toString());
 
-        builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+        builder = new NotificationCompat.Builder(this, Configuration.CHANNEL_ID)
                 .setContentTitle("DigitalWellBeing Alert")
                 .setContentText("You have picked your phone " + count + " times.")
                 .setSmallIcon(R.drawable.healthcare)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         createNotificationChannel();
-
-        builder.setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND)
-                .setVibrate(new long[]{0L});
-
         notificationManager.notify(statusBarNotificationID, builder.build());
+
     }
 
     public NotificationCompat.Builder getBuilder() {
@@ -91,13 +86,10 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks,
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            int importance = NotificationManager. IMPORTANCE_HIGH;
+            int importance = NotificationManager.IMPORTANCE_NONE;
             NotificationChannel notificationChannel = new
-                    NotificationChannel( CHANNEL_ID , "NOTIFICATION_CHANNEL_NAME" , importance);
-            notificationChannel.enableLights( true );
-            notificationChannel.setLightColor( Color. RED );
-            builder.setChannelId( CHANNEL_ID ) ;
-
+                    NotificationChannel(Configuration.CHANNEL_ID , Configuration.ANDROID_CHANNEL_NAME , importance);
+            builder.setChannelId(Configuration.CHANNEL_ID) ;
             notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
             assert notificationManager != null;
@@ -202,7 +194,6 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks,
             startIntent.putExtra("command_key", "START");
             startService(startIntent);
             start_button.setText("STOP");
-
         } else if(start_button.getText() == "STOP") {
             Log.d(TAG, "Stop sensing");
             Intent stopIntent = new Intent(this, SensorHandler.class);
@@ -219,9 +210,9 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks,
         limit.setText("" + progress*10);
 
         if(progress != 0) {
-            PICKUP_LIMIT = progress * 10;
+            MainActivity.PICKUP_LIMIT = progress * 10;
         } else {
-            PICKUP_LIMIT = 50;
+            MainActivity.PICKUP_LIMIT = 50;
             limit.setText("50");
         }
     }
@@ -235,8 +226,6 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks,
     public void onStopTrackingTouch(SeekBar seekBar) {
         // TODO document why this method is empty
     }
-
-
 }
 
 

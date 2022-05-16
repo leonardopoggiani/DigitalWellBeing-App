@@ -2,6 +2,8 @@ package it.unipi.dii.digitalwellbeing_app;
 
 public class Configuration {
     public static final int PICKUP_LIMIT_DEFAULT = 50;
+    public static final String CHANNEL_ID = "NOTIFICATION";
+    public static final CharSequence ANDROID_CHANNEL_NAME = "ANDROID CHANNEL";
 
     // TODO Range values for accelerometer in pocket
 
