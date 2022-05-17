@@ -18,6 +18,7 @@ public class ActivityClassifier {
 
     private static final String TAG = "PickupClassifier";
     private Context ctx;
+    static boolean pocket = false;
 
     public ActivityClassifier(Context context){
         this.ctx = context;
@@ -25,7 +26,7 @@ public class ActivityClassifier {
 
     boolean classifySamples(Float[] toClassify, TreeMap<Long, Float[]> toBeClassified) {
         // classify the samples
-        Boolean pickup = false;
+        boolean pickup = false;
         TensorBuffer inputFeature0 = null;
         float[] data = new float[18];
 
@@ -50,10 +51,13 @@ public class ActivityClassifier {
             TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
             data = outputFeature0.getFloatArray();
 
-            if (data[0] > 0.85) {
-                pickup = !SensorHandler.already_recognized;
-            } else {
-                pickup = false;
+            if(!pocket) {
+                pocket = (data[0] > 0.85) && (SensorHandler.already_recognized);
+            }
+
+            if(pocket && !SensorHandler.already_recognized) {
+                pickup = true;
+                pocket = false;
             }
 
             Log.d(TAG, "predictActivities: output array: " + Arrays.toString(outputFeature0.getFloatArray()));
@@ -64,6 +68,7 @@ public class ActivityClassifier {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return pickup;
     }
 }
