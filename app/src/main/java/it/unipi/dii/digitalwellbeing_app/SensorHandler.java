@@ -11,21 +11,11 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
-import android.os.PowerManager;
 import android.util.Log;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
-import org.tensorflow.lite.DataType;
-import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
-
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
 
@@ -206,7 +196,6 @@ public class SensorHandler extends Service implements SensorEventListener {
 
         for(int i = i1; i <= i3 ; i++){
             if(toBeClassified.size() != 0 && !isFull()) {
-
                 if(Objects.requireNonNull(toBeClassified.get(toBeClassified.lastKey()))[i] != null) {
                     Objects.requireNonNull(toBeClassified.get(toBeClassified.lastKey()))[i] =
                             (Objects.requireNonNull(toBeClassified.get(toBeClassified.lastKey()))[i] + event.values[i % 3]) / 2;
@@ -228,7 +217,7 @@ public class SensorHandler extends Service implements SensorEventListener {
 
         // si puó prendere un campione ogni 10 (non abbiamo bisogno di tanti campioni per classificare)
         // oppure si puó pensare di aggregare questi campioni in qualche modo (media?)
-        if(toBeClassified.size() >= 50) {
+        if(toBeClassified.size() >= Configuration.SAMPLING_WINDOW) {
             Collection<Float[]> values = toBeClassified.values();
             Float[] toClassify = new Float[18];
             int[] count = new int[18];
@@ -345,9 +334,7 @@ public class SensorHandler extends Service implements SensorEventListener {
             } else if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
                 Log.d(TAG, "Proximity: " + event.values[0]);
                 //TODO aggiungere controllo anche sui dati dell'accelerometro sia per settare already_recognized ma anche per il samplig fast
-                if (event.values[0] == 0.0) {
-                    already_recognized = false;
-                }
+                already_recognized = event.values[0] == 0.0;
             }
         }
     }

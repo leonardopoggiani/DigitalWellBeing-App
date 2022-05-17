@@ -1,9 +1,0 @@
-
-z
-java:S4165<"dRemove this useless assignment; "pickup" already holds the assigned value along all execution paths.(ÏÅµß
-P
-java:S1172"5Remove this unused method parameter "toBeClassified".(ğ­Ùÿÿÿÿÿ
-t
-java:S3012'"YUse "Arrays.copyOf", "Arrays.asList", "Collections.addAll" or "System.arraycopy" instead.(ÏÈ‹…úÿÿÿÿ
-L
-java:S2696:"6Make the enclosing method "static" or remove this set.(Ö÷’‡

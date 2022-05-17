@@ -4,6 +4,7 @@ public class Configuration {
     public static final int PICKUP_LIMIT_DEFAULT = 50;
     public static final String CHANNEL_ID = "1";
     public static final CharSequence ANDROID_CHANNEL_NAME = "ANDROID CHANNEL";
+    public static final int SAMPLING_WINDOW = 150;
 
     // TODO Range values for accelerometer in pocket
 

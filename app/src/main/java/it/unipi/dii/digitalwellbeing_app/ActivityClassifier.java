@@ -50,12 +50,8 @@ public class ActivityClassifier {
             TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
             data = outputFeature0.getFloatArray();
 
-            if (data[0] > 0.5) {
-                if(!SensorHandler.already_recognized) {
-                    pickup = true;
-                }
-
-                SensorHandler.already_recognized = true;
+            if (data[0] > 0.85) {
+                pickup = !SensorHandler.already_recognized;
             } else {
                 pickup = false;
             }
