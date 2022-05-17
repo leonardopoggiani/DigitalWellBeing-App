@@ -362,9 +362,43 @@ public class SensorHandler extends Service implements SensorEventListener {
 
 
     public boolean checkRangePocket(SensorEvent event) {
-        return (event.values[0] >= Configuration.X_LOWER_BOUND_DOWNWARDS_LEG && event.values[0] <= Configuration.X_UPPER_BOUND_DOWNWARDS_LEG) &&
+        return ((event.values[0] >= Configuration.X_LOWER_BOUND_DOWNWARDS_LEG && event.values[0] <= Configuration.X_UPPER_BOUND_DOWNWARDS_LEG) &&
                 (event.values[1] >= Configuration.Y_LOWER_BOUND_DOWNWARDS_LEG && event.values[1] <= Configuration.Y_UPPER_BOUND_DOWNWARDS_LEG) &&
-                (event.values[2] >= Configuration.Z_LOWER_BOUND_DOWNWARDS_LEG && event.values[2] <= Configuration.Z_UPPER_BOUND_DOWNWARDS_LEG);
+                (event.values[2] >= Configuration.Z_LOWER_BOUND_DOWNWARDS_LEG && event.values[2] <= Configuration.Z_UPPER_BOUND_DOWNWARDS_LEG)) ||
+                ((event.values[0] >= Configuration.X_LOWER_BOUND_UPWARDS_LEG && event.values[0] <= Configuration.X_UPPER_BOUND_UPWARDS_LEG) &&
+                (event.values[1] >= Configuration.Y_LOWER_BOUND_UPWARDS_LEG && event.values[1] <= Configuration.Y_UPPER_BOUND_UPWARDS_LEG) &&
+                (event.values[2] >= Configuration.Z_LOWER_BOUND_UPWARDS_LEG && event.values[2] <= Configuration.Z_UPPER_BOUND_UPWARDS_LEG)) ||
+                ((event.values[0] >= Configuration.X_LOWER_BOUND_UPWARDS_POCKET && event.values[0] <= Configuration.X_UPPER_BOUND_UPWARDS_POCKET) &&
+                (event.values[1] >= Configuration.Y_LOWER_BOUND_UPWARDS_POCKET && event.values[1] <= Configuration.Y_UPPER_BOUND_UPWARDS_POCKET) &&
+                (event.values[2] >= Configuration.Z_LOWER_BOUND_UPWARDS_POCKET && event.values[2] <= Configuration.Z_UPPER_BOUND_UPWARDS_POCKET)) ||
+                ((event.values[0] >= Configuration.X_LOWER_BOUND_DOWNWARDS_POCKET && event.values[0] <= Configuration.X_UPPER_BOUND_DOWNWARDS_POCKET) &&
+                (event.values[1] >= Configuration.Y_LOWER_BOUND_DOWNWARDS_POCKET && event.values[1] <= Configuration.Y_UPPER_BOUND_DOWNWARDS_POCKET) &&
+                (event.values[2] >= Configuration.Z_LOWER_BOUND_DOWNWARDS_POCKET && event.values[2] <= Configuration.Z_UPPER_BOUND_DOWNWARDS_POCKET)) ||
+                ((event.values[0] >= Configuration.X_LOWER_BOUND_DOWNWARDS_LEFT_LEG_SIT && event.values[0] <= Configuration.X_UPPER_BOUND_DOWNWARDS_LEFT_LEG_SIT) &&
+                (event.values[1] >= Configuration.Y_LOWER_BOUND_DOWNWARDS_LEFT_LEG_SIT && event.values[1] <= Configuration.Y_UPPER_BOUND_DOWNWARDS_LEFT_LEG_SIT) &&
+                (event.values[2] >= Configuration.Z_LOWER_BOUND_DOWNWARDS_LEFT_LEG_SIT && event.values[2] <= Configuration.Z_UPPER_BOUND_DOWNWARDS_LEFT_LEG_SIT)) ||
+                ((event.values[0] >= Configuration.X_LOWER_BOUND_DOWNWARDS_RIGHT_LEG_SIT && event.values[0] <= Configuration.X_UPPER_BOUND_DOWNWARDS_RIGHT_LEG_SIT) &&
+                (event.values[1] >= Configuration.Y_LOWER_BOUND_DOWNWARDS_RIGHT_LEG_SIT && event.values[1] <= Configuration.Y_UPPER_BOUND_DOWNWARDS_RIGHT_LEG_SIT) &&
+                (event.values[2] >= Configuration.Z_LOWER_BOUND_DOWNWARDS_RIGHT_LEG_SIT && event.values[2] <= Configuration.Z_UPPER_BOUND_DOWNWARDS_RIGHT_LEG_SIT)) ||
+                ((event.values[0] >= Configuration.X_LOWER_BOUND_DOWNWARDS_LEFT_POCKET_SIT && event.values[0] <= Configuration.X_UPPER_BOUND_DOWNWARDS_LEFT_POCKET_SIT) &&
+                (event.values[1] >= Configuration.Y_LOWER_BOUND_DOWNWARDS_LEFT_POCKET_SIT && event.values[1] <= Configuration.Y_UPPER_BOUND_DOWNWARDS_LEFT_POCKET_SIT) &&
+                (event.values[2] >= Configuration.Z_LOWER_BOUND_DOWNWARDS_LEFT_POCKET_SIT && event.values[2] <= Configuration.Z_UPPER_BOUND_DOWNWARDS_LEFT_POCKET_SIT)) ||
+                ((event.values[0] >= Configuration.X_LOWER_BOUND_DOWNWARDS_RIGHT_POCKET_SIT && event.values[0] <= Configuration.X_UPPER_BOUND_DOWNWARDS_RIGHT_POCKET_SIT) &&
+                (event.values[1] >= Configuration.Y_LOWER_BOUND_DOWNWARDS_RIGHT_POCKET_SIT && event.values[1] <= Configuration.Y_UPPER_BOUND_DOWNWARDS_RIGHT_POCKET_SIT) &&
+                (event.values[2] >= Configuration.Z_LOWER_BOUND_DOWNWARDS_RIGHT_POCKET_SIT && event.values[2] <= Configuration.Z_UPPER_BOUND_DOWNWARDS_RIGHT_POCKET_SIT)) ||
+                ((event.values[0] >= Configuration.X_LOWER_BOUND_UPWARDS_LEFT_LEG_SIT && event.values[0] <= Configuration.X_UPPER_BOUND_UPWARDS_LEFT_LEG_SIT) &&
+                (event.values[1] >= Configuration.Y_LOWER_BOUND_UPWARDS_LEFT_LEG_SIT && event.values[1] <= Configuration.Y_UPPER_BOUND_UPWARDS_LEFT_LEG_SIT) &&
+                (event.values[2] >= Configuration.Z_LOWER_BOUND_UPWARDS_LEFT_LEG_SIT && event.values[2] <= Configuration.Z_UPPER_BOUND_UPWARDS_LEFT_LEG_SIT)) ||
+                ((event.values[0] >= Configuration.X_LOWER_BOUND_UPWARDS_RIGHT_LEG_SIT && event.values[0] <= Configuration.X_UPPER_BOUND_UPWARDS_RIGHT_LEG_SIT) &&
+                (event.values[1] >= Configuration.Y_LOWER_BOUND_UPWARDS_RIGHT_LEG_SIT && event.values[1] <= Configuration.Y_UPPER_BOUND_UPWARDS_RIGHT_LEG_SIT) &&
+                (event.values[2] >= Configuration.Z_LOWER_BOUND_UPWARDS_RIGHT_LEG_SIT && event.values[2] <= Configuration.Z_UPPER_BOUND_UPWARDS_RIGHT_LEG_SIT)) ||
+                ((event.values[0] >= Configuration.X_LOWER_BOUND_UPWARDS_LEFT_POCKET_SIT && event.values[0] <= Configuration.X_UPPER_BOUND_UPWARDS_LEFT_POCKET_SIT) &&
+                (event.values[1] >= Configuration.Y_LOWER_BOUND_UPWARDS_LEFT_POCKET_SIT && event.values[1] <= Configuration.Y_UPPER_BOUND_UPWARDS_LEFT_POCKET_SIT) &&
+                (event.values[2] >= Configuration.Z_LOWER_BOUND_UPWARDS_LEFT_POCKET_SIT && event.values[2] <= Configuration.Z_UPPER_BOUND_UPWARDS_LEFT_POCKET_SIT)) ||
+                ((event.values[0] >= Configuration.X_LOWER_BOUND_UPWARDS_RIGHT_POCKET_SIT && event.values[0] <= Configuration.X_UPPER_BOUND_UPWARDS_RIGHT_POCKET_SIT) &&
+                (event.values[1] >= Configuration.Y_LOWER_BOUND_UPWARDS_RIGHT_POCKET_SIT && event.values[1] <= Configuration.Y_UPPER_BOUND_UPWARDS_RIGHT_POCKET_SIT) &&
+                (event.values[2] >= Configuration.Z_LOWER_BOUND_UPWARDS_RIGHT_POCKET_SIT && event.values[2] <= Configuration.Z_UPPER_BOUND_UPWARDS_RIGHT_POCKET_SIT));
+
     }
 
     public boolean checkGoodInPocketValue(SensorEvent event) {
