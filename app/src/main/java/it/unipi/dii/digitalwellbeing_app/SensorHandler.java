@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 
@@ -92,8 +93,9 @@ public class SensorHandler extends Service implements SensorEventListener {
                         break;
                 }
             };
-             fastRun = new Thread(fastToRun);
-             fastRun.start();
+
+            fastRun = new Thread(fastToRun);
+            fastRun.start();
 
             Log.d(TAG, "OnStartCommand SensorHandler");
         }
@@ -117,7 +119,7 @@ public class SensorHandler extends Service implements SensorEventListener {
 
     private void setFastSampling() {
 
-        if(stopListener()) {
+        if(Boolean.TRUE.equals(stopListener())) {
             Log.d(TAG, "Stop slow listener");
         }
         else
@@ -130,7 +132,7 @@ public class SensorHandler extends Service implements SensorEventListener {
 
     private void setLowSampling() {
 
-       if(stopListener()) {
+        if(stopListener()) {
             Log.d(TAG, "Stop fast listener");
         }
         else
@@ -170,9 +172,7 @@ public class SensorHandler extends Service implements SensorEventListener {
             started = true;
             Log.d(TAG,"Fast Sampling activated");
 
-        }
-
-        else {
+        } else {
             //registerListener on some sensor could be failed so the rate must be reset on low frequency rate
             stopListener();
             started = false;
@@ -344,9 +344,35 @@ public class SensorHandler extends Service implements SensorEventListener {
                 //TODO aggiungere controllo anche sui dati dell'accelerometro sia per settare already_recognized ma anche per il samplig fast
                 already_recognized = event.values[0] == 0.0;
             }
+        } else {
+            if(event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
+                WindowManager.LayoutParams params = MainActivity.getInstance().getWindow().getAttributes();
+
+                if(event.values[0] == 0.0) {
+                    Log.d(TAG, "Screen off");
+                    params.flags |= WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
+                    MainActivity.getInstance().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                    params.screenBrightness = 0f;
+                } else {
+                    Log.d(TAG, "Screen on");
+                    MainActivity.getInstance().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                    params.flags |= WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+                    params.screenBrightness = -1f;
+                }
+                MainActivity.getInstance().getWindow().setAttributes(params);
+            }
         }
     }
 
+    private void enableActivity(Boolean isEnabled) {
+        if (!isEnabled) {
+            MainActivity.getInstance().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        }
+        else {
+            MainActivity.getInstance().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        }
+    }
 
     public boolean checkRangePocket(SensorEvent event) {
         return ((event.values[0] >= Configuration.X_LOWER_BOUND_DOWNWARDS_LEG && event.values[0] <= Configuration.X_UPPER_BOUND_DOWNWARDS_LEG) &&

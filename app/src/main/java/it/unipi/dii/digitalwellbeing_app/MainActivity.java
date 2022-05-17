@@ -3,6 +3,7 @@ package it.unipi.dii.digitalwellbeing_app;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 
+import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
@@ -10,12 +11,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.hardware.SensorEvent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -39,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static int PICKUP_LIMIT = Configuration.PICKUP_LIMIT_DEFAULT;
     boolean already_notified = false;
     private final SwitchHandler switchHandler = new SwitchHandler();
-
+    private static MainActivity instance;
     private BroadcastReceiver broadcastReceiver;
 
 
@@ -47,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        instance = this;
 
         registerBroadcastReceiver();
 
@@ -78,7 +82,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         createNotificationChannel();
         notificationManager.notify(statusBarNotificationID, builder.build());
+    }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+    }
+
+    public static MainActivity getInstance() {
+        return instance;
     }
 
     public NotificationCompat.Builder getBuilder() {
@@ -102,7 +114,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         }
     }
-
 
     /*
     private ServiceConnection serviceConnection = new ServiceConnection() {
@@ -197,7 +208,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button start_button = findViewById(R.id.start);
 
         if(start_button.getText().toString().equals("START")) {
-            Log.d(TAG, "Start Smartwatch sensing");
             Intent startIntent = new Intent(this, SensorHandler.class);
             startIntent.setAction("Command");
             startIntent.putExtra("command_key", "START");
