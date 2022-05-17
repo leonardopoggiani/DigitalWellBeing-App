@@ -9,3 +9,13 @@ y
 Iapp/src/main/java/it/unipi/dii/digitalwellbeing_app/ServiceCallbacks.java,c/1/c1252fd9a5cacb0f8d12e873d2466c090958712c
 y
 Iapp/src/main/java/it/unipi/dii/digitalwellbeing_app/ui/SwitchHandler.java,b/2/b25f5618586351fa86544e65f0870a50d9d82a9d
+v
+Fapp/src/main/java/it/unipi/dii/digitalwellbeing_app/Configuration.java,f/2/f2182d5fd6ea583332bb7961c136cf55905e5568
+u
+Eapp/src/main/java/it/unipi/dii/digitalwellbeing_app/MainActivity.java,3/b/3b897c4b4b9d1a77331f12ae367b5ff5c56a56a9
+~
+Napp/src/main/java/it/unipi/dii/digitalwellbeing_app/ClassificationService.java,a/7/a7c227ad04383c4b6847bcc1ea3a3d4a08577b66
+v
+Fapp/src/main/java/it/unipi/dii/digitalwellbeing_app/SensorHandler.java,6/b/6bd8c5206fa722ed5407edb205ada25f38d21cdd
+{
+Kapp/src/main/java/it/unipi/dii/digitalwellbeing_app/ActivityClassifier.java,f/7/f7284dd13486909d5973139c7fc09421c8ce57ca
