@@ -3,20 +3,16 @@ package it.unipi.dii.digitalwellbeing_app;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.content.ServiceConnection;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
@@ -30,7 +26,7 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import it.unipi.dii.digitalwellbeing_app.ui.SwitchHandler;
 
-public class MainActivity extends AppCompatActivity implements ServiceCallbacks, View.OnClickListener, SeekBar.OnSeekBarChangeListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, SeekBar.OnSeekBarChangeListener{
 
     private SensorHandler sensorHandlerService;
     private ClassificationService classificationService;

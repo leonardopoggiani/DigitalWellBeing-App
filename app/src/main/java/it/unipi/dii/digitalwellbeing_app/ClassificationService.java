@@ -17,10 +17,6 @@ public class ClassificationService extends Service {
     private String TAG = "ClassificationService";
     private ActivityClassifier classifier;
 
-    private ServiceCallbacks serviceCallbacks;
-
-
-
     Intent intentResult;
     Intent intentData;
 
@@ -31,8 +27,6 @@ public class ClassificationService extends Service {
 
         Runnable toRun = () -> {
             classifier = new ActivityClassifier(this);
-            //intentResult = new Intent(this, SensorHandler.class);
-            //intentResult.setAction("Classification_Result");
             intentData = intent;
             handleClassification();
         };
