@@ -19,6 +19,7 @@ public class ClassificationService extends Service {
 
     Intent intentResult;
     Intent intentData;
+    Intent intentSamplingRate;
 
 
     @Override
@@ -45,17 +46,22 @@ public class ClassificationService extends Service {
             boolean activity = classifier.classifySamples(sampleArray, toBeClassified);
 
             intentResult = new Intent("update_ui");
+            intentSamplingRate = new Intent(getApplicationContext(), SensorHandler.class);
+            intentSamplingRate.setAction("samplingRate");
 
             if(activity) {
                 Log.d(TAG, "PICKUP");
                 intentResult.putExtra("activity","PICKUP");
+                intentSamplingRate.putExtra("activity", "PICKUP");
+                startService(intentSamplingRate);
 
             }
-            else if(!activity) {
+            else {
                 Log.d(TAG,"OTHERS");
                 intentResult.putExtra("activity","OTHER");
 
             }
+
             getApplicationContext().sendBroadcast(intentResult);
 
             //startService(intentResult);
