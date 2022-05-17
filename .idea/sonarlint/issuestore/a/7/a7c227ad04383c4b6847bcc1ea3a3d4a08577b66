@@ -1,8 +1,12 @@
 
 T
-java:S25891"7Remove this expression which always evaluates to "true"(ÈÖù8ÒâßŒ0
+java:S2589<"7Remove this expression which always evaluates to "true"(ÈÖù8ÒâßŒ0
 j	java:S116"NRename this field "TAG" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(…²ÿö8ÚåÊ¹Œ0
+]	java:S125""<This block of commented-out lines of code should be removed.(ç«é¢úÿÿÿÿ8»¶©†0
+X	java:S125C"<This block of commented-out lines of code should be removed.(’èïÍ8Ì¶©†0
 X
 java:S1128"6Remove this unused import 'android.app.IntentService'.(÷ãİ±ûÿÿÿÿ8ÛâßŒ0
 P
 java:S1128".Remove this unused import 'android.os.Binder'.(ïîÍşÿÿÿÿ8ÜâßŒ0
+V
+java:S1068"4Remove this unused "serviceCallbacks" private field.(ú˜Üÿÿÿÿÿ8Ñ¶©†0
