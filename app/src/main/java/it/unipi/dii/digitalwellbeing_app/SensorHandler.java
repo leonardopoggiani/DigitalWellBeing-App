@@ -62,10 +62,12 @@ public class SensorHandler extends Service implements SensorEventListener {
     private static final String TAG = "SensorHandler";
 
     //Used to find out if the fast sampling is in progress
-    private boolean started;
-    private boolean goodProximity;
-    private boolean goodAccel;
+    private boolean started = false;
+    private boolean goodProximity = false;
+    private boolean goodAccel = false;
     private int counter;
+    private boolean startCheckPosition = true;
+
 
     TreeMap<Long,Float[]> toBeClassified = new TreeMap<>();
     static boolean already_recognized = true;
@@ -86,8 +88,8 @@ public class SensorHandler extends Service implements SensorEventListener {
                         counter = 0;
                         initializeSensorHandler();
                         //Start the sensorListener with a low sampling frequency and initialize the detection timer
-                        if (startListener(Configuration.HIGH_SAMPLING_RATE)) {
-                            started = true;
+                        if (startListener(Configuration.LOW_SAMPLING_RATE)) {
+                            started = false;
                             Log.d(TAG, "Detection Activated");
                         } else
                             Log.d(TAG, "Error in starting sensors listeners");
@@ -96,15 +98,8 @@ public class SensorHandler extends Service implements SensorEventListener {
                         Log.d(TAG, "SensorHandlerService Stopped");
                         if (sm != null) {
                             stopListener();
-                            /*if (detectionThread != null) {
-                                detectionThread.quit();
-                                detectionThread = null;
-                                detectionHandler = null;
-                            }*/
-
                         } else
                             Log.d(TAG, "SensorManager null");
-                        //stopSelf();
                         break;
                     default:
                         Log.d(TAG, "Default Case");
@@ -125,7 +120,7 @@ public class SensorHandler extends Service implements SensorEventListener {
     private void setFastSampling() {
 
         if(stopListener()) {
-            Log.d(TAG, "Stop listener");
+            Log.d(TAG, "Stop slow listener");
         }
         else
             Log.d(TAG, "Errors in storing collected data");
@@ -137,7 +132,7 @@ public class SensorHandler extends Service implements SensorEventListener {
     private void setLowSampling() {
 
         if(stopListener()) {
-            Log.d(TAG, "Stop listener");
+            Log.d(TAG, "Stop fast listener");
         }
         else
             Log.d(TAG, "Errors in storing collected data");
@@ -259,7 +254,12 @@ public class SensorHandler extends Service implements SensorEventListener {
             intentClassification.setAction("Classify");
             Log.d(TAG, "Start Service");
             startService(intentClassification);
+            startCheckPosition = true;
             toBeClassified.clear();
+        }
+        else
+        {
+            startCheckPosition = false;
         }
     }
 
@@ -292,37 +292,30 @@ public class SensorHandler extends Service implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
 
-        //TODO controllo nel caso in cui sia attivo il low sampling se sta per iniziare un'estrazione
-
-        //Il fast sampling non è attivo
-        /*if(!started){
-            if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-                if(!goodAccel)
-                {
-                    goodAccel = checkRangePocket(event);
-
-                }
+        if(startCheckPosition) {
+            if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
+                goodProximity = checkGoodInPocketValue(event);
             }
-            else if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
-                if(!goodProximity)
-                {
-                    if (event.values[0] == 0.0) {
-                        goodProximity = true;
-                    }
-
+            if (goodProximity) {
+                if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+                    goodAccel = checkGoodInPocketValue(event);
                 }
 
             }
-            if(goodProximity && goodAccel)
-            {
+
+            if (goodProximity && goodAccel && !started) {
                 started = true;
                 setFastSampling();
                 return;
             }
-
-        }*/
+            else if((!goodProximity || !goodAccel) && started) {
+                setLowSampling();
+                return;
+            }
+        }
 
         if(started) {
+
             if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
                 addMapValues(event, 0, 1, 2);
             } else if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
@@ -354,9 +347,21 @@ public class SensorHandler extends Service implements SensorEventListener {
 
 
     public boolean checkRangePocket(SensorEvent event) {
-        return (event.values[0] >= Configuration.X_LOWER_BOUND_POCKET && event.values[0] <= Configuration.X_UPPER_BOUND_POCKET) &&
-                (event.values[1] >= Configuration.Y_LOWER_BOUND_POCKET && event.values[1] <= Configuration.Y_UPPER_BOUND_POCKET) &&
-                (event.values[2] >= Configuration.Z_LOWER_BOUND_POCKET && event.values[2] <= Configuration.Z_UPPER_BOUND_POCKET);
+        return (event.values[0] >= Configuration.X_LOWER_BOUND_DOWNWARDS_LEG && event.values[0] <= Configuration.X_UPPER_BOUND_DOWNWARDS_LEG) &&
+                (event.values[1] >= Configuration.Y_LOWER_BOUND_DOWNWARDS_LEG && event.values[1] <= Configuration.Y_UPPER_BOUND_DOWNWARDS_LEG) &&
+                (event.values[2] >= Configuration.Z_LOWER_BOUND_DOWNWARDS_LEG && event.values[2] <= Configuration.Z_UPPER_BOUND_DOWNWARDS_LEG);
+    }
+
+    public boolean checkGoodInPocketValue(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+                return checkRangePocket(event);
+        }
+        else if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
+                if (event.values[0] == 0.0) {
+                    return true;
+                }
+        }
+        return false;
     }
 
 
