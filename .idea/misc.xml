@@ -11,6 +11,7 @@
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.3205" />
         <entry key="app/src/main/res/drawable/rounded_corners_30dp.xml" value="0.2385" />
         <entry key="app/src/main/res/drawable/rounded_rectangle.xml" value="0.2595" />
+        <entry key="app/src/main/res/drawable/rounder_corners_30dp_dark.xml" value="0.184" />
         <entry key="app/src/main/res/font/euclid_circular.xml" value="0.2625" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="app/src/main/res/layout/home_card.xml" value="0.33" />

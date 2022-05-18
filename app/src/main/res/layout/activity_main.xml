@@ -1,92 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <include
-        android:id="@+id/home_card"
-        layout="@layout/home_card"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="-16dp" />
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/tabCard"
-        style="@style/SettingsMenuCard"
-        android:layout_width="367dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="49dp"
-        app:layout_constraintBottom_toTopOf="@+id/start"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-        <SeekBar
-            android:id="@+id/limit_seekbar"
-            style="@style/Widget.AppCompat.SeekBar.Discrete"
-            android:layout_width="195dp"
-            android:layout_height="21dp"
-            android:layout_marginStart="72dp"
-            android:layout_marginTop="68dp"
-            android:max="10"
-            android:progress="3"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <include
+            android:id="@+id/home_card"
+            layout="@layout/home_card"
+            android:layout_marginBottom="380dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:layout_editor_absoluteX="16dp" />
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/tabCard"
+            style="@style/SettingsMenuCard"
+            android:layout_width="365dp"
+            android:layout_height="283dp"
+            android:layout_marginBottom="28dp"
+            app:layout_constraintBottom_toTopOf="@+id/start"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.49"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <SeekBar
+                android:id="@+id/limit_seekbar"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                android:layout_width="195dp"
+                android:layout_height="21dp"
+                android:layout_marginStart="72dp"
+                android:layout_marginTop="68dp"
+                android:max="10"
+                android:progress="3"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="136dp"
+                android:layout_marginTop="28dp"
+                android:text="@string/pickup_limit"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="144dp"
+                android:layout_marginTop="120dp"
+                android:text="@string/notifications"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/notification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="120dp"
+                android:layout_marginTop="148dp"
+                android:minHeight="48dp"
+                android:text="@string/not_active"
+                android:textColor="@color/grey_normal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/limit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="204dp"
+                android:layout_marginTop="68dp"
+                android:text="@string/_0"
+                app:layout_constraintStart_toStartOf="@+id/limit_seekbar"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchtheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="112dp"
+                android:layout_marginTop="216dp"
+                android:text="@string/dark_theme"
+                android:textColor="@color/grey_normal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Button
+            android:id="@+id/start"
+            style="@style/RoundedButton"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="124dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/pickup_limit"
+            android:layout_gravity="bottom"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="556dp"
+            android:elevation="10dp"
+            android:text="@string/start"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/home_card" />
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="124dp"
-            android:layout_marginTop="140dp"
-            android:text="@string/notifications"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/notification"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="120dp"
-            android:layout_marginTop="180dp"
-            android:minHeight="48dp"
-            android:text="@string/not_active"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/limit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="204dp"
-            android:layout_marginTop="68dp"
-            android:text="@string/_0"
-            app:layout_constraintStart_toStartOf="@+id/limit_seekbar"
-            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <Button
-        android:id="@+id/start"
-        style="@style/RoundedButton"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="544dp"
-        android:elevation="10dp"
-        android:text="@string/start"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/home_card" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
-
+</ScrollView>

@@ -1,6 +1,7 @@
 package it.unipi.dii.digitalwellbeing_app;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.NotificationCompat;
 
 import android.app.Activity;
@@ -30,6 +31,7 @@ import android.widget.Toast;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
+import it.unipi.dii.digitalwellbeing_app.ui.DarkModeHandler;
 import it.unipi.dii.digitalwellbeing_app.ui.SwitchHandler;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, SeekBar.OnSeekBarChangeListener{
@@ -45,14 +47,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static int PICKUP_LIMIT = Configuration.PICKUP_LIMIT_DEFAULT;
     boolean already_notified = false;
     private final SwitchHandler switchHandler = new SwitchHandler();
+    private final DarkModeHandler darkModeHandler = new DarkModeHandler();
+
     private static MainActivity instance;
     private BroadcastReceiver broadcastReceiver;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        SwitchMaterial switchtheme = findViewById(R.id.switchtheme);
+        switchtheme.setOnClickListener(darkModeHandler);
+
         instance = this;
 
         Button start = (Button) findViewById(R.id.start);
