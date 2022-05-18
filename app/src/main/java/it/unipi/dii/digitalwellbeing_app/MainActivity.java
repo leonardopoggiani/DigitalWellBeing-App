@@ -6,6 +6,8 @@ import androidx.core.app.NotificationCompat;
 import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +18,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -52,11 +55,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         instance = this;
 
-        registerBroadcastReceiver();
-
-        Intent intentSensorHandler = new Intent(this, SensorHandler.class);
-        //bindService(intentSensorHandler, serviceConnection, Context.BIND_AUTO_CREATE);
-
         Button start = (Button) findViewById(R.id.start);
         start.setOnClickListener(this);
 
@@ -74,11 +72,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         CharSequence counter = tv2.getText();
         int count = Integer.parseInt(counter.toString());
 
+        registerBroadcastReceiver();
+
+        Intent intentSensorHandler = new Intent(this, SensorHandler.class);
+        //bindService(intentSensorHandler, serviceConnection, Context.BIND_AUTO_CREATE);
+
+        // Create an Intent for the activity you want to start
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, (int)System.currentTimeMillis(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
         builder = new NotificationCompat.Builder(this, Configuration.CHANNEL_ID)
                 .setContentTitle("DigitalWellBeing Alert")
+                .setContentIntent(pendingIntent)
                 .setContentText("You have picked your phone " + count + " times.")
                 .setSmallIcon(R.drawable.healthcare)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setOngoing(true);
 
         createNotificationChannel();
         notificationManager.notify(statusBarNotificationID, builder.build());
