@@ -1,0 +1,34 @@
+
+K
+java:S1066¯"/Merge this if statement with the enclosing one.(ßãÂêÿÿÿÿÿ
+K
+java:S1066¦"/Merge this if statement with the enclosing one.(¥ãÌÿÿÿÿÿ
+A
+java:S5411‡"*Use the primitive boolean expression here.(šäÍ 
+F
+java:S5411ğ"*Use the primitive boolean expression here.(‹‹´³şÿÿÿÿ
+s
+java:S30088"]Rename this field "already_recognized" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ä‘ìø
+q
+java:S14502"VRemove the "counter" field and declare it as a local variable in the relevant methods.(¶®¡êşÿÿÿÿ
+h
+java:S3776?"RRefactor this method to reduce its Cognitive Complexity from 17 to the 15 allowed.(ªĞªÄ
+i
+java:S3776Ë"RRefactor this method to reduce its Cognitive Complexity from 27 to the 15 allowed.(ßÊ³
+n
+java:S3776¨"RRefactor this method to reduce its Cognitive Complexity from 27 to the 15 allowed.(¡¯âşÿÿÿÿ
+W	java:S125»"<This block of commented-out lines of code should be removed.(±˜Ş„üÿÿÿÿ
+R
+java:S2696Ù"6Make the enclosing method "static" or remove this set.(ÅÖî©üÿÿÿÿ
+I
+java:S1135Ø"2Complete the task associated to this TODO comment.(Ñı¸°
+h
+java:S3776ù"RRefactor this method to reduce its Cognitive Complexity from 23 to the 15 allowed.(ÕÉ3
+I
+java:S1135°"2Complete the task associated to this TODO comment.(˜âÅ»
+F
+java:S10682"+Remove this unused "counter" private field.(¶®¡êşÿÿÿÿ
+I
+java:S1068<".Remove this unused "classifier" private field.(¼İÄÛüÿÿÿÿ
+O
+java:S1144ï"3Remove this unused private "enableActivity" method.(†´üøÿÿÿÿ
