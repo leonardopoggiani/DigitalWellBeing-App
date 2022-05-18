@@ -343,24 +343,10 @@ public class SensorHandler extends Service implements SensorEventListener {
                 Log.d(TAG, "Proximity: " + event.values[0]);
                 //TODO aggiungere controllo anche sui dati dell'accelerometro sia per settare already_recognized ma anche per il samplig fast
                 already_recognized = event.values[0] == 0.0;
+                disableTouch(event);
             }
         } else {
-            if(event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
-                WindowManager.LayoutParams params = MainActivity.getInstance().getWindow().getAttributes();
-
-                if(event.values[0] == 0.0) {
-                    Log.d(TAG, "Screen off");
-                    params.flags |= WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
-                    MainActivity.getInstance().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                    params.screenBrightness = 0f;
-                } else {
-                    Log.d(TAG, "Screen on");
-                    MainActivity.getInstance().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    params.flags |= WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
-                    params.screenBrightness = -1f;
-                }
-                MainActivity.getInstance().getWindow().setAttributes(params);
-            }
+            disableTouch(event);
         }
     }
 
@@ -432,5 +418,23 @@ public class SensorHandler extends Service implements SensorEventListener {
         // TODO document why this method is empty
     }
 
+    private void disableTouch(SensorEvent event) {
+        if(event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
+            WindowManager.LayoutParams params = MainActivity.getInstance().getWindow().getAttributes();
+
+            if(event.values[0] == 0.0) {
+                Log.d(TAG, "Screen off");
+                params.flags |= WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
+                MainActivity.getInstance().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                params.screenBrightness = 0f;
+            } else {
+                Log.d(TAG, "Screen on");
+                MainActivity.getInstance().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                params.flags |= WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+                params.screenBrightness = -1f;
+            }
+            MainActivity.getInstance().getWindow().setAttributes(params);
+        }
+    }
 
 }

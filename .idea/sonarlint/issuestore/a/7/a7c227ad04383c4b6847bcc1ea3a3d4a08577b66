@@ -1,7 +1,0 @@
-
-e
-java:S11926"IDefine a constant instead of duplicating this literal "activity" 3 times.(ÕËÂ8â¤—0
-d
-java:S11925"GDefine a constant instead of duplicating this literal "PICKUP" 3 times.(¿‰Á‰8â¤—0
-j	java:S116"NRename this field "TAG" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(…²ÿö8ÚåÊ¹Œ0
-X	java:S125C"<This block of commented-out lines of code should be removed.(’èïÍ8Ì¶©†0
