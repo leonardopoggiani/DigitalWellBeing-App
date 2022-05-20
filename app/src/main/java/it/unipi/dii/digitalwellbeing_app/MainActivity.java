@@ -96,9 +96,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         registerBroadcastReceiver();
 
-        Intent intentSensorHandler = new Intent(this, SensorHandler.class);
-        //bindService(intentSensorHandler, serviceConnection, Context.BIND_AUTO_CREATE);
-
         // Create an Intent for the activity you want to start
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -126,10 +123,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return instance;
     }
 
-    public NotificationCompat.Builder getBuilder() {
-        return builder;
-    }
-
     private void createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
@@ -147,26 +140,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         }
     }
-
-    /*
-    private ServiceConnection serviceConnection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            // cast the IBinder and get SensorHandler Service instance
-            SensorHandler.LocalBinder binder = (SensorHandler.LocalBinder) service;
-            sensorHandlerService = binder.getService();
-            bound = true;
-            sensorHandlerService.setCallbacks(MainActivity.this); // register
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-            bound = false;
-        }
-
-    };*/
-
 
     public void setActivityAndCounter(String activity) {
         new Handler(Looper.getMainLooper()).post(() -> {

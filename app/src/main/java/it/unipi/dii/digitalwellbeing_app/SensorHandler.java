@@ -24,14 +24,6 @@ import java.util.TreeMap;
 
 public class SensorHandler extends Service implements SensorEventListener {
 
-    //Class used for the client Binder
-    public class LocalBinder extends Binder {
-        SensorHandler getService() {
-            return SensorHandler.this;
-        }
-    }
-
-
     private SensorManager sm;
     private Sensor accelerometer;
     private Sensor proximity;
@@ -132,7 +124,7 @@ public class SensorHandler extends Service implements SensorEventListener {
 
     private void setLowSampling() {
 
-        if(stopListener()) {
+        if(Boolean.TRUE.equals(stopListener())) {
             Log.d(TAG, "Stop fast listener");
         }
         else
@@ -159,7 +151,6 @@ public class SensorHandler extends Service implements SensorEventListener {
         }
 
         //Altrimenti, attivo tutti prelevo da tutti i sensori per classifirare un pickup
-
         if(rate == Configuration.HIGH_SAMPLING_RATE &&
                 sm.registerListener(this, accelerometer, rate) &&
                 sm.registerListener(this, rotation, rate) &&
@@ -203,9 +194,6 @@ public class SensorHandler extends Service implements SensorEventListener {
     private void addMapValues(SensorEvent event, int i1, int i2, int i3) {
         boolean ret = false;
 
-        // puó succedere che arrivino due valori di accelerometro consecutivi, si potrebbe fare quindi la media anziché scartare il valore
-        // la media sarebbe sempre tra due campioni non molto distanti tra loro, accettabile come approssimazione?
-
         for(int i = i1; i <= i3 ; i++){
             if(toBeClassified.size() != 0 && !isFull()) {
                 if(Objects.requireNonNull(toBeClassified.get(toBeClassified.lastKey()))[i] != null) {
@@ -227,8 +215,6 @@ public class SensorHandler extends Service implements SensorEventListener {
             Objects.requireNonNull(toBeClassified.get(event.timestamp))[i3] = event.values[2];
         }
 
-        // si puó prendere un campione ogni 10 (non abbiamo bisogno di tanti campioni per classificare)
-        // oppure si puó pensare di aggregare questi campioni in qualche modo (media?)
         if(toBeClassified.size() >= Configuration.SAMPLING_WINDOW) {
             Collection<Float[]> values = toBeClassified.values();
             Float[] toClassify = new Float[18];
@@ -275,7 +261,6 @@ public class SensorHandler extends Service implements SensorEventListener {
         return true;
     }
 
-
     //Called when detection period of 5 minutes is finished or when changing the sampling period
     protected Boolean stopListener(){
         if(sm != null)
@@ -283,8 +268,6 @@ public class SensorHandler extends Service implements SensorEventListener {
         started = false;
         return true;
     }
-
-
 
     @Nullable
     @Override
@@ -303,7 +286,6 @@ public class SensorHandler extends Service implements SensorEventListener {
                 if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
                     goodAccel = checkGoodInPocketValue(event);
                 }
-
             }
 
             if (goodProximity && goodAccel && !started) {
@@ -312,14 +294,9 @@ public class SensorHandler extends Service implements SensorEventListener {
                 return;
 
             }
-            /*else if((!goodProximity || !goodAccel) && started) {
-                setLowSampling();
-                return;
-            }*/
         }
 
         if(started) {
-
             if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
                 addMapValues(event, 0, 1, 2);
             } else if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
@@ -340,23 +317,11 @@ public class SensorHandler extends Service implements SensorEventListener {
 
                 addMapValues(event, 15, 16, 17);
             } else if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
-                Log.d(TAG, "Proximity: " + event.values[0]);
-                //TODO aggiungere controllo anche sui dati dell'accelerometro sia per settare already_recognized ma anche per il samplig fast
                 already_recognized = event.values[0] == 0.0;
                 disableTouch(event);
             }
         } else {
             disableTouch(event);
-        }
-    }
-
-    private void enableActivity(Boolean isEnabled) {
-        if (!isEnabled) {
-            MainActivity.getInstance().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        }
-        else {
-            MainActivity.getInstance().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         }
     }
 
@@ -402,33 +367,27 @@ public class SensorHandler extends Service implements SensorEventListener {
 
     public boolean checkGoodInPocketValue(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-                return checkRangePocket(event);
+            return checkRangePocket(event);
         }
         else if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
-                if (event.values[0] == 0.0) {
-                    return true;
-                }
+            return event.values[0] == 0.0;
         }
         return false;
     }
 
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        // TODO document why this method is empty
-    }
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 
     private void disableTouch(SensorEvent event) {
         if(event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
             WindowManager.LayoutParams params = MainActivity.getInstance().getWindow().getAttributes();
 
             if(event.values[0] == 0.0) {
-                Log.d(TAG, "Screen off");
                 params.flags |= WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
                 MainActivity.getInstance().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 params.screenBrightness = 0f;
             } else {
-                Log.d(TAG, "Screen on");
                 MainActivity.getInstance().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 params.flags |= WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
                 params.screenBrightness = -1f;
