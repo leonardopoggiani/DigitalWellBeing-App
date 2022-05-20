@@ -1,10 +1,15 @@
 package it.unipi.dii.digitalwellbeing_app;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.ForegroundServiceStartNotAllowedException;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -13,6 +18,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.hardware.SensorEvent;
 import android.os.Build;
@@ -39,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private SensorHandler sensorHandlerService;
     private ClassificationService classificationService;
     private static final String TAG = "DigitalWellBeing";
+    public static final int REQUEST_CODE_PERMISSIONS = 100;
     boolean bound = false;
     private Context ctx;
     public static int statusBarNotificationID;
@@ -229,17 +236,61 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         imageView.setImageResource(R.drawable.other);
     }
 
+    public void startScanning(){
+        checkPermissions();
+        Intent intent = BeaconForegroundService.createIntent(this);
+        startService(intent);
+    }
+
+    public void stopScanning(){
+        Intent intent = BeaconForegroundService.createIntent(this);
+        stopService(intent);
+    }
+
+    private void checkPermissions() {
+        String[] requiredPermissions = Build.VERSION.SDK_INT < Build.VERSION_CODES.S
+                ? new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}
+                : new String[]{ android.Manifest.permission.BLUETOOTH_SCAN, android.Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.ACCESS_FINE_LOCATION };
+        if(isAnyOfPermissionsNotGranted(requiredPermissions)) {
+            ActivityCompat.requestPermissions(this, requiredPermissions, REQUEST_CODE_PERMISSIONS);
+        }
+    }
+
+    private boolean isAnyOfPermissionsNotGranted(String[] requiredPermissions){
+        for(String permission: requiredPermissions){
+            int checkSelfPermissionResult = ContextCompat.checkSelfPermission(this, permission);
+            if(PackageManager.PERMISSION_GRANTED != checkSelfPermissionResult){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (REQUEST_CODE_PERMISSIONS == requestCode) {
+                Toast.makeText(this, "Permissions granted!", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(this, "Location permissions are mandatory to use BLE features on Android 6.0 or higher", Toast.LENGTH_LONG).show();
+        }
+    }
+
     @Override
     public void onClick(View v) {
         Button start_button = findViewById(R.id.start);
 
         if(start_button.getText().toString().equals("START")) {
+            startScanning();
             Intent startIntent = new Intent(this, SensorHandler.class);
             startIntent.setAction("Command");
             startIntent.putExtra("command_key", "START");
             startService(startIntent);
             start_button.setText("STOP");
         } else if(start_button.getText() == "STOP") {
+            stopScanning();
             Log.d(TAG, "Stop sensing");
             Intent stopIntent = new Intent(this, SensorHandler.class);
             stopIntent.setAction("Command");
@@ -276,6 +327,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onStopTrackingTouch(SeekBar seekBar) {
         // TODO document why this method is empty
     }
+
+    private final BroadcastReceiver scanningBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Device discovered!
+            //int devicesCount = intent.getIntExtra(BackgroundScanService.EXTRA_DEVICES_COUNT, 0);
+            //RemoteBluetoothDevice device = intent.getParcelableExtra(BackgroundScanService.EXTRA_DEVICE);
+            //statusText.setText(String.format("Total discovered devices: %d\n\nLast scanned device:\n%s", devicesCount, device.toString()));
+            Toast.makeText(context, "Beacon detected", Toast.LENGTH_LONG).show();
+        }
+    };
 }
 
 
