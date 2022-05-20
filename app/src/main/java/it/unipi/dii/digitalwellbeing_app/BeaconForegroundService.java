@@ -163,7 +163,7 @@ public class BeaconForegroundService extends Service {
                             .setContentText("User detected")
                             .setContentTitle("Devices detected in your zone")
                             .setAutoCancel(true)
-                            .setSmallIcon(android.R.drawable.sym_action_chat)
+                            .setSmallIcon(R.drawable.healthcare)
                             .build();
 
                     NotificationManager notificationManager=(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -232,7 +232,7 @@ public class BeaconForegroundService extends Service {
                 .setContentTitle("Scan service")
                 .setContentText("Actively scanning iBeacons")
                 .addAction(action)
-                .setSmallIcon(android.R.mipmap.sym_def_app_icon)
+                .setSmallIcon(R.drawable.healthcare)
                 .setContentIntent(pendingIntent)
                 .build();
 
