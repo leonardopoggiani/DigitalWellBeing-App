@@ -176,6 +176,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 TextView tv3 = findViewById(R.id.activity_number);
                 tv3.setText(String.valueOf(count));
                 Log.d(TAG, String.valueOf(count));
+
+                TextView tv4 = findViewById(R.id.perc);
+                int percentuale = Integer.parseInt((String) tv4.getText());
+                int how_many_in_groups = (percentuale * (count - 1)) / 100;
+
+                if(group == 0) {
+                    tv4.setText(String.valueOf( ( (how_many_in_groups) * 100) / count) );
+                } else {
+                    // sono in un gruppo
+                    tv4.setText(String.valueOf( ( (how_many_in_groups + 1) * 100) / count) );
+                }
             }
 
         });
@@ -196,20 +207,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 } else if(intent.getAction() != null && intent.getAction().equals("group_detection") ){
                     int device_count = intent.getIntExtra("device_count", 0);
-                    setGroup(device_count);
                     Log.d(TAG, "device count");
+                    group = device_count;
                 }
             }
         };
         registerReceiver(broadcastReceiver, new IntentFilter("update_ui"));
         registerReceiver(broadcastReceiver, new IntentFilter("group_detection"));
-    }
-
-    private void setGroup(int device_count) {
-        Log.d(TAG, "Setting group");
-        TextView tv = findViewById(R.id.activity_number);
-
-        tv.setText(device_count);
     }
 
     public void setActivity(String s) {
