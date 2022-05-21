@@ -375,7 +375,6 @@ public class SensorHandler extends Service implements SensorEventListener {
         return false;
     }
 
-
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 
@@ -392,6 +391,7 @@ public class SensorHandler extends Service implements SensorEventListener {
                 params.flags |= WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
                 params.screenBrightness = -1f;
             }
+
             MainActivity.getInstance().getWindow().setAttributes(params);
         }
     }

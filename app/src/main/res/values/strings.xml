@@ -13,5 +13,6 @@
     <string name="notifications">Vibration:</string>
     <string name="activity">Activity</string>
     <string name="dark_theme">Dark theme</string>
+    <string name="group_number">0</string>
 
 </resources>

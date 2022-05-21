@@ -8,27 +8,21 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.ForegroundServiceStartNotAllowedException;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.hardware.SensorEvent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -55,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     boolean already_notified = false;
     private final SwitchHandler switchHandler = new SwitchHandler();
     private final DarkModeHandler darkModeHandler = new DarkModeHandler();
+    private int group = 0;
 
     private static MainActivity instance;
     private BroadcastReceiver broadcastReceiver;
@@ -178,6 +173,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
 
                 tv2.setText(String.valueOf(count));
+                TextView tv3 = findViewById(R.id.activity_number);
+                tv3.setText(String.valueOf(count));
                 Log.d(TAG, String.valueOf(count));
             }
 
@@ -191,13 +188,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Log.i(TAG, "onReceive della broadcast");
                 if(intent.getAction() != null && intent.getAction().equals("update_ui")){
                     String activity = intent.getStringExtra("activity");
-                   setActivityAndCounter(activity);
+                    Log.d(TAG, activity);
+                    if(activity.equals("OTHER")) {
+                        setActivity(activity);
+                    } else {
+                        setActivityAndCounter(activity);
+                    }
+                } else if(intent.getAction() != null && intent.getAction().equals("group_detection") ){
+                    int device_count = intent.getIntExtra("device_count", 0);
+                    setGroup(device_count);
+                    Log.d(TAG, "device count");
                 }
             }
         };
         registerReceiver(broadcastReceiver, new IntentFilter("update_ui"));
+        registerReceiver(broadcastReceiver, new IntentFilter("group_detection"));
     }
 
+    private void setGroup(int device_count) {
+        Log.d(TAG, "Setting group");
+        TextView tv = findViewById(R.id.activity_number);
+
+        tv.setText(device_count);
+    }
 
     public void setActivity(String s) {
         TextView tv = findViewById(R.id.activity);
@@ -276,14 +289,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         TextView limit = findViewById(R.id.limit);
-        limit.setText("" + progress*10);
+        limit.setText("" + (progress*10 + 10) );
 
-        if(progress != 0) {
-            MainActivity.PICKUP_LIMIT = progress * 10;
-        } else {
-            MainActivity.PICKUP_LIMIT = 50;
-            limit.setText("50");
-        }
+        MainActivity.PICKUP_LIMIT = progress*10 + 10;
     }
 
     @Override
@@ -292,14 +300,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-        // TODO document why this method is empty
-    }
+    public void onStartTrackingTouch(SeekBar seekBar) {}
 
     @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-        // TODO document why this method is empty
-    }
+    public void onStopTrackingTouch(SeekBar seekBar) {}
 
     private final BroadcastReceiver scanningBroadcastReceiver = new BroadcastReceiver() {
         @Override

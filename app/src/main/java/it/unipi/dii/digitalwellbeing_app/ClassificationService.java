@@ -36,7 +36,6 @@ public class ClassificationService extends Service {
         return Service.START_STICKY;
     }
 
-
     private void handleClassification() {
 
             Log.d(TAG, "Handle Classification!");

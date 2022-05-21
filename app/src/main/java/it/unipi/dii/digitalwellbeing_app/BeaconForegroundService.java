@@ -171,8 +171,10 @@ public class BeaconForegroundService extends Service {
                     notificationManager.notify(String.valueOf(userDetected).hashCode(),notification);
 
                     Intent intentCount = new Intent(getApplicationContext(), ClassificationService.class);
-                    intent.putExtra("device_count", userDetected);
-                    startService(intentCount);  //sendBroadcast(intentCount); 
+                    intentCount.putExtra("device_count", userDetected);
+                    intentCount.setAction("group_detection");
+                    // startService(intentCount);
+                    sendBroadcast(intentCount);
 
                 }
             }
