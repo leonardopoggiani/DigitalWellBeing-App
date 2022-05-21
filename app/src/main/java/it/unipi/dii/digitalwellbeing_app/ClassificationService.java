@@ -54,12 +54,10 @@ public class ClassificationService extends Service {
                 intentResult.putExtra("activity","PICKUP");
                 intentSamplingRate.putExtra("activity", "PICKUP");
                 startService(intentSamplingRate);
-
             }
             else {
                 Log.d(TAG,"OTHERS");
                 intentResult.putExtra("activity","OTHER");
-
             }
 
             getApplicationContext().sendBroadcast(intentResult);
@@ -73,7 +71,5 @@ public class ClassificationService extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
-
-
 
 }
