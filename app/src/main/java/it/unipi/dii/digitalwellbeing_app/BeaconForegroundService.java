@@ -103,10 +103,10 @@ public class BeaconForegroundService extends Service {
     }
 
     private boolean checkCondition(Beacon b){
-        if(notfound) return false;
+        //if(notfound) return false;
         if(!b.getId().equals(lastbeacon.getId())) return false;
-        if (b.getUserDevice().equals(lastbeacon.getUserDevice())) return false;
-        if (b.getTimestamp() < lastbeacon.getTimestamp() - 300000 || b.getTimestamp() > lastbeacon.getTimestamp() + 300000 ) return false;
+        //if (b.getUserDevice().equals(lastbeacon.getUserDevice())) return false;
+        //if (b.getTimestamp() < lastbeacon.getTimestamp() - 300000 || b.getTimestamp() > lastbeacon.getTimestamp() + 300000 ) return false;
         if (!b.getProximity().equals(lastbeacon.getProximity())) return false;
         return true;
     }
@@ -131,7 +131,7 @@ public class BeaconForegroundService extends Service {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                //Toast.makeText(getApplicationContext(), "Qualcuno ha scritto nel db", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Qualcuno ha scritto nel db", Toast.LENGTH_SHORT).show();
                 beacon_list.clear();
                 Beacon beacon = new Beacon();
                 for (DataSnapshot postSnapshot : dataSnapshot.child("Beacon").getChildren()) {
