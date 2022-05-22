@@ -13,3 +13,17 @@ Kapp/src/main/java/it/unipi/dii/digitalwellbeing_app/ui/DarkModeHandler.java,d/
 app/build.gradle,f/4/f4a01d6a4fcb971362ec00a83903fd3902f52164
 
 Oapp/src/main/java/it/unipi/dii/digitalwellbeing_app/InitializeKontaktIOSDK.java,6/4/64c72c2ab3d9ccd99d125721bcd1cbbcb07eb280
+o
+?app/src/main/java/it/unipi/dii/digitalwellbeing_app/Beacon.java,1/c/1c8cda7bc8bc51cd5ca0b1409436fb1276f1bde5
+{
+Kapp/src/main/java/it/unipi/dii/digitalwellbeing_app/ActivityClassifier.java,f/7/f7284dd13486909d5973139c7fc09421c8ce57ca
+~
+Napp/src/main/java/it/unipi/dii/digitalwellbeing_app/ClassificationService.java,a/7/a7c227ad04383c4b6847bcc1ea3a3d4a08577b66
+y
+Iapp/src/main/java/it/unipi/dii/digitalwellbeing_app/ui/SwitchHandler.java,b/2/b25f5618586351fa86544e65f0870a50d9d82a9d
+v
+Fapp/src/main/java/it/unipi/dii/digitalwellbeing_app/SensorHandler.java,6/b/6bd8c5206fa722ed5407edb205ada25f38d21cdd
+€
+Papp/src/main/java/it/unipi/dii/digitalwellbeing_app/BeaconForegroundService.java,f/3/f316a9cb3fff527cf3f17e8951935d37db4bca65
+u
+Eapp/src/main/java/it/unipi/dii/digitalwellbeing_app/MainActivity.java,3/b/3b897c4b4b9d1a77331f12ae367b5ff5c56a56a9

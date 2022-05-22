@@ -1,0 +1,30 @@
+
+g	java:S117 "QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ó¢Ô™
+D
+java:S1604ˆ"(Make this anonymous inner class a lambda(‹¶’úÿÿÿÿ
+k	java:S116@"VRename this field "beacon_list" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ô­ŞÚ
+k
+java:S1450<"VRemove the "channel" field and declare it as a local variable in the relevant methods.(¡•³)
+{
+java:S1450>"eRemove the "notificationForeground" field and declare it as a local variable in the relevant methods.(¸æÊ¸
+x
+java:S1450="bRemove the "notificationManager" field and declare it as a local variable in the relevant methods.(–š¼Ë
+V	java:S1252"<This block of commented-out lines of code should be removed.(Ä¯ Üûÿÿÿÿ
+Q	java:S125K"<This block of commented-out lines of code should be removed.(Ô‚£”
+Q	java:S125U"<This block of commented-out lines of code should be removed.(œÄé•
+W
+java:S1126n"AReplace this if-then-else statement by a single return statement.(õÔ¬Ÿ
+R	java:S125†"<This block of commented-out lines of code should be removed.(Û‚”¦
+R	java:S125”"<This block of commented-out lines of code should be removed.(¿ô‚¶
+W	java:S125›"<This block of commented-out lines of code should be removed.(½ş÷şÿÿÿÿ
+^
+java:S1117©"GRename "notificationManager" which hides the field declared at line 61.(øÔª
+W	java:S125°"<This block of commented-out lines of code should be removed.(òÜş¶úÿÿÿÿ
+W	java:S125Œ"<This block of commented-out lines of code should be removed.(ş‹‘Úşÿÿÿÿ
+W
+java:S1854¤";Remove this useless assignment to local variable "pushKey".(ßòÎÚÿÿÿÿÿ
+D
+java:S1172¢".Remove this unused method parameter "context".(÷‘È	
+H
+java:S1481¤",Remove this unused "pushKey" local variable.(ßòÎÚÿÿÿÿÿ
+R	java:S125¦"<This block of commented-out lines of code should be removed.( ¸«ï

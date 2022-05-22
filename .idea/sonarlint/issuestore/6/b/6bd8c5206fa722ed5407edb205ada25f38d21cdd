@@ -1,0 +1,23 @@
+
+K
+java:S1066"/Merge this if statement with the enclosing one.(ßãÂêÿÿÿÿÿ
+s
+java:S30080"]Rename this field "already_recognized" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ä‘ìø
+
+java:S1186û"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(¢çßÌùÿÿÿÿ
+q
+java:S1450*"VRemove the "counter" field and declare it as a local variable in the relevant methods.(¶®¡êşÿÿÿÿ
+h
+java:S37767"RRefactor this method to reduce its Cognitive Complexity from 17 to the 15 allowed.(ªĞªÄ
+i
+java:S3776Â"RRefactor this method to reduce its Cognitive Complexity from 27 to the 15 allowed.(ßÊ³
+n
+java:S3776—"RRefactor this method to reduce its Cognitive Complexity from 21 to the 15 allowed.(¡¯âşÿÿÿÿ
+R
+java:S2696À"6Make the enclosing method "static" or remove this set.(ÅÖî©üÿÿÿÿ
+h
+java:S3776È"RRefactor this method to reduce its Cognitive Complexity from 23 to the 15 allowed.(ÕÉ3
+F
+java:S1068*"+Remove this unused "counter" private field.(¶®¡êşÿÿÿÿ
+I
+java:S10684".Remove this unused "classifier" private field.(¼İÄÛüÿÿÿÿ

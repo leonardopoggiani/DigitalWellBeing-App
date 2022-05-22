@@ -15,6 +15,7 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
@@ -152,11 +153,10 @@ public class BeaconForegroundService extends Service {
                 int userDetected=0;
                 if (beacon_list.isEmpty()){
                     //Toast.makeText(getApplicationContext(), "Empty", Toast.LENGTH_SHORT).show();
-                }else {
+                } else {
                     userDetected = beacon_list.size();
                     Toast.makeText(getApplicationContext(), "User detected:" + beacon_list.size(), Toast.LENGTH_SHORT).show();
                     // Create notification channel
-                    Intent intent=new Intent(getApplicationContext(),MainActivity.class);
                     String CHANNEL_ID="MYCHANNEL";
                     NotificationChannel notificationChannel=new NotificationChannel(CHANNEL_ID,"name",NotificationManager.IMPORTANCE_LOW);
                     Notification notification=new Notification.Builder(getApplicationContext(),CHANNEL_ID)
@@ -180,7 +180,7 @@ public class BeaconForegroundService extends Service {
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Getting Post failed, log a message
                 Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
             }
