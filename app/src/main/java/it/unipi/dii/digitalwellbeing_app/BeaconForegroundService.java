@@ -103,11 +103,26 @@ public class BeaconForegroundService extends Service {
     }
 
     private boolean checkCondition(Beacon b){
-        if(notfound) return false;
-        if(!b.getId().equals(lastbeacon.getId())) return false;
-        if(!b.getProximity().equals("FAR")) return false;
-        if (b.getUserDevice().equals(lastbeacon.getUserDevice())) return false;
-        if (b.getTimestamp() < lastbeacon.getTimestamp() - 300000 || b.getTimestamp() > lastbeacon.getTimestamp() + 300000 ) return false;
+        if(notfound) {
+            Log.d(TAG, "not found");
+            return false;
+        }
+        if(!b.getId().equals(lastbeacon.getId())) {
+            Log.d(TAG, "not same beacon");
+            return false;
+        }
+        if(!b.getProximity().equals("FAR")) {
+            Log.d(TAG, "far");
+            return false;
+        }
+        if (b.getUserDevice().equals(lastbeacon.getUserDevice())) {
+            Log.d(TAG, "getuserDevice");
+            return false;
+        }
+        if (b.getTimestamp() < lastbeacon.getTimestamp() - 300000 || b.getTimestamp() > lastbeacon.getTimestamp() + 300000 ) {
+            Log.d(TAG, "timestamp");
+            return false;
+        }
         // if (!b.getProximity().equals(lastbeacon.getProximity())) return false;
 
         return true;
