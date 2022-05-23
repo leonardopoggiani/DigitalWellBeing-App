@@ -23,7 +23,3 @@ y
 Iapp/src/main/java/it/unipi/dii/digitalwellbeing_app/ui/SwitchHandler.java,b/2/b25f5618586351fa86544e65f0870a50d9d82a9d
 v
 Fapp/src/main/java/it/unipi/dii/digitalwellbeing_app/SensorHandler.java,6/b/6bd8c5206fa722ed5407edb205ada25f38d21cdd
-€
-Papp/src/main/java/it/unipi/dii/digitalwellbeing_app/BeaconForegroundService.java,f/3/f316a9cb3fff527cf3f17e8951935d37db4bca65
-u
-Eapp/src/main/java/it/unipi/dii/digitalwellbeing_app/MainActivity.java,3/b/3b897c4b4b9d1a77331f12ae367b5ff5c56a56a9
