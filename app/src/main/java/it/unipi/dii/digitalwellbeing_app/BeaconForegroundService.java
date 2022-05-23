@@ -313,7 +313,7 @@ public class BeaconForegroundService extends Service {
     }
 
     private void onDeviceDiscovered(final RemoteBluetoothDevice device) {
-        if(device.getProximity().equals("FAR")){
+        if(device.getProximity().toString().equals("FAR")){
             notfound = false;
             lastbeacon.setAddress(device.getAddress());
             lastbeacon.setDistance(device.getDistance());
