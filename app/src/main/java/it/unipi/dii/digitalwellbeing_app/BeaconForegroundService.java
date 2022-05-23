@@ -115,11 +115,11 @@ public class BeaconForegroundService extends Service {
             Log.d(TAG, "far");
             return false;
         }
-        if (b.getUserDevice().equals(lastbeacon.getUserDevice())) {
+        if(b.getUserDevice().equals(lastbeacon.getUserDevice())) {
             Log.d(TAG, "getuserDevice");
             return false;
         }
-        if (b.getTimestamp() < lastbeacon.getTimestamp() - 300000 || b.getTimestamp() > lastbeacon.getTimestamp() + 300000 ) {
+        if(b.getTimestamp() < lastbeacon.getTimestamp() - 300000 || b.getTimestamp() > lastbeacon.getTimestamp() + 300000 ) {
             Log.d(TAG, "timestamp");
             return false;
         }
@@ -153,19 +153,19 @@ public class BeaconForegroundService extends Service {
                 Beacon beacon = new Beacon();
                 for (DataSnapshot postSnapshot : dataSnapshot.child("Beacon").getChildren()) {
 
-                        beacon.setProximity(postSnapshot.child("proximity").getValue(String.class));
-                        beacon.setTimestamp(postSnapshot.child("timestamp").getValue(Long.class));
-                        beacon.setRssi(postSnapshot.child("rssi").getValue(Integer.class));
-                        beacon.setUserDevice(postSnapshot.child("userDevice").getValue(String.class));
-                        beacon.setId(postSnapshot.child("id").getValue(String.class));
-                        beacon.setDistance(postSnapshot.child("distance").getValue(Double.class));
-                        if(checkCondition(beacon)){
-                            beacon_list.add(beacon);
-                            Log.d(TAG, "aggiunto alla lista");
-                        } else {
-                            Log.d(TAG, "non aggiunto fratello");
-                        }
-                        //Toast.makeText(getApplicationContext(), "DataChange" + beacon, Toast.LENGTH_SHORT).show();
+                    beacon.setProximity(postSnapshot.child("proximity").getValue(String.class));
+                    beacon.setTimestamp(postSnapshot.child("timestamp").getValue(Long.class));
+                    beacon.setRssi(postSnapshot.child("rssi").getValue(Integer.class));
+                    beacon.setUserDevice(postSnapshot.child("userDevice").getValue(String.class));
+                    beacon.setId(postSnapshot.child("id").getValue(String.class));
+                    beacon.setDistance(postSnapshot.child("distance").getValue(Double.class));
+                    if(checkCondition(beacon)){
+                        beacon_list.add(beacon);
+                        Log.d(TAG, "aggiunto alla lista");
+                    } else {
+                        Log.d(TAG, "non aggiunto fratello");
+                    }
+                    //Toast.makeText(getApplicationContext(), "DataChange" + beacon, Toast.LENGTH_SHORT).show();
 
                 }
                 int userDetected=0;
