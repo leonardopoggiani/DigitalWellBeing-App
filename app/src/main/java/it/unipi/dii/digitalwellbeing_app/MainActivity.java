@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 int how_many_in_groups = (percentuale * (count - 1)) / 100;
                 Log.d(TAG, "Group: " + how_many_in_groups);
 
-                if(group == 0) {
+                if(group == 0 || group == 1) {
                     tv4.setText(String.valueOf( ( (how_many_in_groups) * 100) / count) );
                 } else {
                     // sono in un gruppo
