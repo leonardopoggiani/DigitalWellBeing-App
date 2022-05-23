@@ -111,7 +111,7 @@ public class BeaconForegroundService extends Service {
             Log.d(TAG, "not same beacon");
             return false;
         }
-        if(!b.getProximity().equals("FAR")) {
+        if(b.getProximity().equals("FAR")) {
             Log.d(TAG, "far");
             return false;
         }
