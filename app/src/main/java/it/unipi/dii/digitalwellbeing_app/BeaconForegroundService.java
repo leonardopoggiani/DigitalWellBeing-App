@@ -313,15 +313,19 @@ public class BeaconForegroundService extends Service {
     }
 
     private void onDeviceDiscovered(final RemoteBluetoothDevice device) {
-        notfound = false;
-        lastbeacon.setAddress(device.getAddress());
-        lastbeacon.setDistance(device.getDistance());
-        lastbeacon.setId(device.getUniqueId());
-        lastbeacon.setProximity(device.getProximity().toString());
-        lastbeacon.setRssi(device.getRssi());
-        lastbeacon.setTimestamp(device.getTimestamp());
-        lastbeacon.setUserDevice(this.device);
-        insert(db, lastbeacon, getApplicationContext());
+        if(device.getProximity().equals("FAR")){
+            notfound = false;
+            lastbeacon.setAddress(device.getAddress());
+            lastbeacon.setDistance(device.getDistance());
+            lastbeacon.setId(device.getUniqueId());
+            lastbeacon.setProximity(device.getProximity().toString());
+            lastbeacon.setRssi(device.getRssi());
+            lastbeacon.setTimestamp(device.getTimestamp());
+            lastbeacon.setUserDevice(this.device);
+            insert(db, lastbeacon, getApplicationContext());
+        }
+        
+
         //Send a broadcast with discovered device
         Intent intent = new Intent();
         intent.setAction(ACTION_DEVICE_DISCOVERED);
