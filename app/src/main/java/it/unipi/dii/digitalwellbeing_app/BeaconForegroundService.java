@@ -161,11 +161,11 @@ public class BeaconForegroundService extends Service {
                         beacon.setDistance(postSnapshot.child("distance").getValue(Double.class));
                         if(checkCondition(beacon)){
                             beacon_list.add(beacon);
-                           
+                            Log.d(TAG, "aggiunto alla lista");
+                        } else {
+                            Log.d(TAG, "non aggiunto fratello");
                         }
                         //Toast.makeText(getApplicationContext(), "DataChange" + beacon, Toast.LENGTH_SHORT).show();
-
-
 
                 }
                 int userDetected=0;
