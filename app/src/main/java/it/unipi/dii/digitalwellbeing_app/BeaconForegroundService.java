@@ -107,6 +107,7 @@ public class BeaconForegroundService extends Service {
             Log.d(TAG, "not found");
             return false;
         }
+        if(lastbeacon == null) return false;
         if(!b.getId().equals(lastbeacon.getId())) {
             Log.d(TAG, "not same beacon");
             return false;
@@ -315,6 +316,7 @@ public class BeaconForegroundService extends Service {
     private void onDeviceDiscovered(final RemoteBluetoothDevice device) {
         if(!device.getProximity().toString().equals("FAR")){
             notfound = false;
+            if(lastbeacon == null) lastbeacon= new Beacon();
             lastbeacon.setAddress(device.getAddress());
             lastbeacon.setDistance(device.getDistance());
             lastbeacon.setId(device.getUniqueId());
@@ -323,6 +325,8 @@ public class BeaconForegroundService extends Service {
             lastbeacon.setTimestamp(device.getTimestamp());
             lastbeacon.setUserDevice(this.device);
             insert(db, lastbeacon, getApplicationContext());
+        } else {
+            lastbeacon = null;
         }
         
 
