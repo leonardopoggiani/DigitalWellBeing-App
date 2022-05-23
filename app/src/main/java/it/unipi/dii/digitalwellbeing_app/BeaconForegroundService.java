@@ -108,7 +108,7 @@ public class BeaconForegroundService extends Service {
         if(!b.getProximity().equals("FAR")) return false;
         if (b.getUserDevice().equals(lastbeacon.getUserDevice())) return false;
         if (b.getTimestamp() < lastbeacon.getTimestamp() - 300000 || b.getTimestamp() > lastbeacon.getTimestamp() + 300000 ) return false;
-        if (!b.getProximity().equals(lastbeacon.getProximity())) return false;
+        // if (!b.getProximity().equals(lastbeacon.getProximity())) return false;
 
         return true;
     }
