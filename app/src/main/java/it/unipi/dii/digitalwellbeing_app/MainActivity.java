@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 TextView tv4 = findViewById(R.id.perc);
                 int percentuale = Integer.parseInt((String) tv4.getText());
                 int how_many_in_groups = (percentuale * (count - 1)) / 100;
-                Log.d(TAG, "Group: " + how_many_in_groups);
+                Log.d(TAG, "How many pick up in group: " + how_many_in_groups);
 
                 if(group == 0 || group == 1) {
                     tv4.setText(String.valueOf( ( (how_many_in_groups) * 100) / count) );
@@ -202,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     if (intent.hasExtra("device_count")) {
                         int device_count = intent.getIntExtra("device_count", 0);
-                        Log.d(TAG, "device count");
+                        Log.d(TAG, "device count: " + device_count);
                         group = device_count;
                     } else {
                         String activity = intent.getStringExtra("activity");
