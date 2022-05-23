@@ -105,10 +105,10 @@ public class BeaconForegroundService extends Service {
     private boolean checkCondition(Beacon b){
         if(notfound) return false;
         if(!b.getId().equals(lastbeacon.getId())) return false;
-        if(!b.getProximity().equals("FAR")) return false;
+        if(!b.getProximity().equals("FAR") || lastbeacon.getProximity().equals("FAR")) return false;
         if (b.getUserDevice().equals(lastbeacon.getUserDevice())) return false;
         if (b.getTimestamp() < lastbeacon.getTimestamp() - 300000 || b.getTimestamp() > lastbeacon.getTimestamp() + 300000 ) return false;
-        if (!b.getProximity().equals(lastbeacon.getProximity())) return false;
+        //if (!b.getProximity().equals(lastbeacon.getProximity())) return false;
 
         return true;
     }
@@ -145,11 +145,8 @@ public class BeaconForegroundService extends Service {
                         beacon.setId(postSnapshot.child("id").getValue(String.class));
                         beacon.setDistance(postSnapshot.child("distance").getValue(Double.class));
                         if(checkCondition(beacon)){
-                            for (int i=0; i<beacon_list.size(); i++){
-                                if(!beacon_list.get(i).getUserDevice().equals(beacon.getUserDevice())) {
-                                    beacon_list.add(beacon);
-                                }
-                            }
+                            beacon_list.add(beacon);
+                           
                         }
                         //Toast.makeText(getApplicationContext(), "DataChange" + beacon, Toast.LENGTH_SHORT).show();
 
