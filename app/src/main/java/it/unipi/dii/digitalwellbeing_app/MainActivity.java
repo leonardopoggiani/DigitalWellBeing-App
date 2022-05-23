@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .setContentText("You have picked your phone " + count + " times.")
                 .setSmallIcon(R.drawable.healthcare)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setOngoing(true);
+                .setOngoing(false);
 
         createNotificationChannel();
         notificationManager.notify(statusBarNotificationID, builder.build());
@@ -180,6 +180,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 TextView tv4 = findViewById(R.id.perc);
                 int percentuale = Integer.parseInt((String) tv4.getText());
                 int how_many_in_groups = (percentuale * (count - 1)) / 100;
+                Log.d(TAG, "Group: " + how_many_in_groups);
 
                 if(group == 0) {
                     tv4.setText(String.valueOf( ( (how_many_in_groups) * 100) / count) );
@@ -197,23 +198,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onReceive(Context context, Intent intent) {
                 Log.i(TAG, "onReceive della broadcast");
-                if(intent.getAction() != null && intent.getAction().equals("update_ui")){
-                    String activity = intent.getStringExtra("activity");
-                    Log.d(TAG, activity);
-                    if(activity.equals("OTHER")) {
-                        setActivity(activity);
+                if(intent.getAction() != null && intent.getAction().equals("update_ui")) {
+
+                    if (intent.hasExtra("device_count")) {
+                        int device_count = intent.getIntExtra("device_count", 0);
+                        Log.d(TAG, "device count");
+                        group = device_count;
                     } else {
-                        setActivityAndCounter(activity);
+                        String activity = intent.getStringExtra("activity");
+                        Log.d(TAG, activity);
+                        if (activity.equals("OTHER")) {
+                            setActivity(activity);
+                        } else {
+                            setActivityAndCounter(activity);
+                        }
                     }
-                } else if(intent.getAction() != null && intent.getAction().equals("group_detection") ){
-                    int device_count = intent.getIntExtra("device_count", 0);
-                    Log.d(TAG, "device count");
-                    group = device_count;
                 }
+
             }
         };
         registerReceiver(broadcastReceiver, new IntentFilter("update_ui"));
-        registerReceiver(broadcastReceiver, new IntentFilter("group_detection"));
     }
 
     public void setActivity(String s) {
