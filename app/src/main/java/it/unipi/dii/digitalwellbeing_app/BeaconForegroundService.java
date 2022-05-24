@@ -27,6 +27,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.core.view.Change;
 import com.kontakt.sdk.android.ble.configuration.ScanMode;
 import com.kontakt.sdk.android.ble.configuration.ScanPeriod;
 import com.kontakt.sdk.android.ble.connection.OnServiceReadyListener;
@@ -65,6 +66,8 @@ public class BeaconForegroundService extends Service {
     private String device;
     private boolean notfound;
     Beacon lastbeacon;
+    ChangeLastBeacon timer;
+
 
     public static Intent createIntent(final Context context) {
         return new Intent(context, BeaconForegroundService.class);
@@ -161,8 +164,18 @@ public class BeaconForegroundService extends Service {
                     beacon.setId(postSnapshot.child("id").getValue(String.class));
                     beacon.setDistance(postSnapshot.child("distance").getValue(Double.class));
                     if(checkCondition(beacon)){
-                        beacon_list.add(beacon);
-                        Log.d(TAG, "aggiunto alla lista");
+                        if(beacon_list.isEmpty()) {
+                            beacon_list.add(beacon);
+                        }
+                        else {
+                            boolean insert = true;
+                            for (int i =0; i<beacon_list.size(); i++) {
+                                if(beacon_list.get(i).getUserDevice().equals(beacon.getUserDevice())) insert = false;
+                            }
+                            if (insert) beacon_list.add(beacon);
+                        }
+                        Log.d(TAG, "aggiunto alla lista" +beacon.getUserDevice() );
+                        //Toast.makeText(getApplicationContext(), beacon.getUserDevice(), Toast.LENGTH_SHORT).show();
                     } else {
                         Log.d(TAG, "non aggiunto fratello");
                     }
@@ -314,7 +327,12 @@ public class BeaconForegroundService extends Service {
     }
 
     private void onDeviceDiscovered(final RemoteBluetoothDevice device) {
+        Toast.makeText(getApplicationContext(), "Beacon", Toast.LENGTH_SHORT).show();
         if(!device.getProximity().toString().equals("FAR")){
+            if(timer != null){
+                if(timer.isAlive())
+                    timer.interrupt();
+            }
             notfound = false;
             if(lastbeacon == null) lastbeacon= new Beacon();
             lastbeacon.setAddress(device.getAddress());
@@ -325,7 +343,10 @@ public class BeaconForegroundService extends Service {
             lastbeacon.setTimestamp(device.getTimestamp());
             lastbeacon.setUserDevice(this.device);
             insert(db, lastbeacon, getApplicationContext());
+            timer = new ChangeLastBeacon(lastbeacon.getTimestamp());
+            timer.start();
         } else {
+            notfound=true;
             lastbeacon = null;
         }
         
@@ -334,6 +355,25 @@ public class BeaconForegroundService extends Service {
         Intent intent = new Intent();
         intent.setAction(ACTION_DEVICE_DISCOVERED);
         sendBroadcast(intent);
+    }
+
+
+    public class ChangeLastBeacon extends Thread {
+        long start;
+
+        ChangeLastBeacon(long time){
+            start = time;
+        }
+        public void run(){
+            try {
+                while(System.currentTimeMillis() < start + 180000)
+                    sleep(start + 180000 - System.currentTimeMillis());
+                //Toast.makeText(BeaconForegroundService.this, "Finito timeout", Toast.LENGTH_SHORT).show();
+                Log.d("Timer","Finito timeout");
+                notfound = true;
+                lastbeacon = null;
+            } catch (InterruptedException ie) {}
+        }
     }
 
 }
