@@ -1,6 +1,7 @@
 package it.unipi.dii.digitalwellbeing_app;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -12,6 +13,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.IBinder;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -42,6 +44,7 @@ import com.kontakt.sdk.android.common.profile.RemoteBluetoothDevice;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class BeaconForegroundService extends Service {
 
@@ -73,6 +76,7 @@ public class BeaconForegroundService extends Service {
         return new Intent(context, BeaconForegroundService.class);
     }
 
+    @SuppressLint("HardwareIds")
     @Override
     public void onCreate() {
         //Toast.makeText(this, "Foreground.", Toast.LENGTH_SHORT).show();
@@ -81,7 +85,10 @@ public class BeaconForegroundService extends Service {
         beacon_list = new ArrayList<>();
         setupProximityManager();
         isRunning = false;
-        device = android.os.Build.MODEL;
+        //device = android.os.Build.MODEL;
+        /*TelephonyManager telephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+        device = telephonyManager.getDeviceId();*/
+        device = UUID.randomUUID().toString();
         lastbeacon = new Beacon();
         beacon_list.clear();
         notfound = true;
@@ -119,9 +126,14 @@ public class BeaconForegroundService extends Service {
             Log.d(TAG, "far");
             return false;
         }
-        if(b.getAddress().equals(lastbeacon.getAddress())) {
-            Log.d(TAG, "Address");
+        if(b.getUserDevice().equals(lastbeacon.getUserDevice())) {
+            //Toast.makeText(getApplicationContext(), b.getAddress() + ", " +lastbeacon.getAddress(), Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "user device");
             return false;
+        }
+        else {
+            Toast.makeText(getApplicationContext(), "NOT SAME!", Toast.LENGTH_SHORT).show();
+
         }
         if(b.getTimestamp() < lastbeacon.getTimestamp() - 300000 || b.getTimestamp() > lastbeacon.getTimestamp() + 300000 ) {
             Log.d(TAG, "timestamp");
@@ -162,6 +174,7 @@ public class BeaconForegroundService extends Service {
                     beacon.setRssi(postSnapshot.child("rssi").getValue(Integer.class));
                     beacon.setUserDevice(postSnapshot.child("userDevice").getValue(String.class));
                     beacon.setAddress(postSnapshot.child("address").getValue(String.class));
+                    //Toast.makeText(getApplicationContext(), beacon.getAddress(), Toast.LENGTH_SHORT).show();
                     beacon.setId(postSnapshot.child("id").getValue(String.class));
                     beacon.setDistance(postSnapshot.child("distance").getValue(Double.class));
                     if(checkCondition(beacon)){
@@ -171,7 +184,7 @@ public class BeaconForegroundService extends Service {
                         else {
                             boolean insert = true;
                             for (int i =0; i<beacon_list.size(); i++) {
-                                if(beacon_list.get(i).getAddress().equals(beacon.getAddress())) insert = false;
+                                if(beacon_list.get(i).getUserDevice().equals(beacon.getUserDevice())) insert = false;
                             }
                             if (insert) beacon_list.add(beacon);
                         }
@@ -185,7 +198,7 @@ public class BeaconForegroundService extends Service {
                 }
                 int userDetected=0;
                 if (beacon_list.isEmpty()){
-                    //Toast.makeText(getApplicationContext(), "Empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Empty", Toast.LENGTH_SHORT).show();
                 } else {
                     userDetected = beacon_list.size();
                     Toast.makeText(getApplicationContext(), "User detected:" + beacon_list.size(), Toast.LENGTH_SHORT).show();
