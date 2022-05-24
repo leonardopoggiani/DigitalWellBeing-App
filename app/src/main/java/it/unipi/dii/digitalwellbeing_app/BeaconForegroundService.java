@@ -161,6 +161,7 @@ public class BeaconForegroundService extends Service {
                     beacon.setTimestamp(postSnapshot.child("timestamp").getValue(Long.class));
                     beacon.setRssi(postSnapshot.child("rssi").getValue(Integer.class));
                     beacon.setUserDevice(postSnapshot.child("userDevice").getValue(String.class));
+                    beacon.setAddress(postSnapshot.child("address").getValue(String.class));
                     beacon.setId(postSnapshot.child("id").getValue(String.class));
                     beacon.setDistance(postSnapshot.child("distance").getValue(Double.class));
                     if(checkCondition(beacon)){
