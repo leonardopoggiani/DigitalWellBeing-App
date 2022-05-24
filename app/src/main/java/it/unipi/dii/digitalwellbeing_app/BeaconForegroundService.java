@@ -131,10 +131,6 @@ public class BeaconForegroundService extends Service {
             Log.d(TAG, "user device");
             return false;
         }
-        else {
-            Toast.makeText(getApplicationContext(), "NOT SAME!", Toast.LENGTH_SHORT).show();
-
-        }
         if(b.getTimestamp() < lastbeacon.getTimestamp() - 300000 || b.getTimestamp() > lastbeacon.getTimestamp() + 300000 ) {
             Log.d(TAG, "timestamp");
             return false;
