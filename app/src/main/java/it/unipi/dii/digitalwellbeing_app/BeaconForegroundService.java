@@ -119,8 +119,8 @@ public class BeaconForegroundService extends Service {
             Log.d(TAG, "far");
             return false;
         }
-        if(b.getUserDevice().equals(lastbeacon.getUserDevice())) {
-            Log.d(TAG, "getuserDevice");
+        if(b.getAddress().equals(lastbeacon.getAddress())) {
+            Log.d(TAG, "Address");
             return false;
         }
         if(b.getTimestamp() < lastbeacon.getTimestamp() - 300000 || b.getTimestamp() > lastbeacon.getTimestamp() + 300000 ) {
@@ -170,7 +170,7 @@ public class BeaconForegroundService extends Service {
                         else {
                             boolean insert = true;
                             for (int i =0; i<beacon_list.size(); i++) {
-                                if(beacon_list.get(i).getUserDevice().equals(beacon.getUserDevice())) insert = false;
+                                if(beacon_list.get(i).getAddress().equals(beacon.getAddress())) insert = false;
                             }
                             if (insert) beacon_list.add(beacon);
                         }
