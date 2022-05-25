@@ -377,8 +377,8 @@ public class BeaconForegroundService extends Service {
         }
         public void run(){
             try {
-                while(System.currentTimeMillis() < start + 180000)
-                    sleep(start + 180000 - System.currentTimeMillis());
+                while(System.currentTimeMillis() < start + 300000)
+                    sleep(start + 300000 - System.currentTimeMillis());
                 //Toast.makeText(BeaconForegroundService.this, "Finito timeout", Toast.LENGTH_SHORT).show();
                 Log.d("Timer","Finito timeout");
                 notfound = true;
