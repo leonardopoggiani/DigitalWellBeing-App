@@ -30,7 +30,7 @@
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="116dp"
                 android:text="@string/activity"
-                android:textSize="24sp"
+                android:textSize="50px"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -47,10 +47,10 @@
 
             <ImageView
                 android:id="@+id/activity_view"
-                android:layout_width="268dp"
-                android:layout_height="154dp"
-                android:layout_marginStart="92dp"
-                android:layout_marginTop="4dp"
+                android:layout_width="198dp"
+                android:layout_height="122dp"
+                android:layout_marginStart="144dp"
+                android:layout_marginTop="24dp"
                 android:contentDescription="@string/pickup_phone"
                 android:src="@drawable/other"
                 app:layout_constraintStart_toStartOf="parent"

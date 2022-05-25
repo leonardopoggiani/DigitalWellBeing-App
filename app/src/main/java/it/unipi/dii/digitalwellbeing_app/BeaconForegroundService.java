@@ -200,7 +200,7 @@ public class BeaconForegroundService extends Service {
                     Toast.makeText(getApplicationContext(), "User detected:" + beacon_list.size(), Toast.LENGTH_SHORT).show();
                     // Create notification channel
 
-                    String CHANNEL_ID = "MYCHANNEL";
+                    /*String CHANNEL_ID = "MYCHANNEL";
                     NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "name", NotificationManager.IMPORTANCE_LOW);
                     Notification notification = new Notification.Builder(getApplicationContext(), CHANNEL_ID)
                             .setContentText("User detected")
@@ -211,7 +211,7 @@ public class BeaconForegroundService extends Service {
 
                     NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                     notificationManager.createNotificationChannel(notificationChannel);
-                    notificationManager.notify(String.valueOf(userDetected).hashCode(), notification);
+                    notificationManager.notify(String.valueOf(userDetected).hashCode(), notification);*/
                 }
                 Intent intentCount = new Intent("update_ui");
                 intentCount.putExtra("device_count", userDetected);

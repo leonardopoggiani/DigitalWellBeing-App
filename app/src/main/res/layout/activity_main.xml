@@ -103,8 +103,8 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="668dp"
+            android:layout_marginStart="52dp"
+            android:layout_marginTop="664dp"
             android:elevation="10dp"
             android:text="@string/start"
             app:layout_constraintStart_toStartOf="parent"
@@ -128,7 +128,8 @@
                 android:layout_marginTop="24dp"
                 android:text="times"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:textSize="40px"/>
 
             <TextView
                 android:id="@+id/text_group"
@@ -138,7 +139,8 @@
                 android:layout_marginTop="24dp"
                 android:text="You watched your phone "
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:textSize="40px"/>
 
             <TextView
                 android:id="@+id/text_group5"
@@ -146,9 +148,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="64dp"
                 android:layout_marginTop="56dp"
-                android:text="% of the times you were with other people!"
+                android:layout_toLeftOf = "@+id/perc"
+                android:text="  % of the times you were with other people!"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:textSize="35px"/>
 
             <TextView
                 android:id="@+id/perc"
@@ -158,7 +162,8 @@
                 android:layout_marginTop="56dp"
                 android:text="0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:textSize="35px"/>
 
             <TextView
                 android:id="@+id/text_group3"
@@ -166,17 +171,19 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="56dp"
-                android:text="The "
+                android:text="The"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:textSize="35px"/>
 
             <TextView
                 android:id="@+id/activity_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="232dp"
+                android:layout_marginStart="236dp"
                 android:layout_marginTop="24dp"
-                android:text="@string/group_number"
+                android:text="0"
+                android:textSize="40px"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
