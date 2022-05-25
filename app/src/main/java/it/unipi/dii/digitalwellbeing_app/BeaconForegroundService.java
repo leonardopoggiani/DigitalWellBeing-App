@@ -173,18 +173,18 @@ public class BeaconForegroundService extends Service {
                     //Toast.makeText(getApplicationContext(), beacon.getAddress(), Toast.LENGTH_SHORT).show();
                     beacon.setId(postSnapshot.child("id").getValue(String.class));
                     beacon.setDistance(postSnapshot.child("distance").getValue(Double.class));
-                    if(checkCondition(beacon)){
-                        if(beacon_list.isEmpty()) {
+                    if (checkCondition(beacon)) {
+                        if (beacon_list.isEmpty()) {
                             beacon_list.add(beacon);
-                        }
-                        else {
+                        } else {
                             boolean insert = true;
-                            for (int i =0; i<beacon_list.size(); i++) {
-                                if(beacon_list.get(i).getUserDevice().equals(beacon.getUserDevice())) insert = false;
+                            for (int i = 0; i < beacon_list.size(); i++) {
+                                if (beacon_list.get(i).getUserDevice().equals(beacon.getUserDevice()))
+                                    insert = false;
                             }
                             if (insert) beacon_list.add(beacon);
                         }
-                        Log.d(TAG, "aggiunto alla lista" +beacon.getUserDevice() );
+                        Log.d(TAG, "aggiunto alla lista" + beacon.getUserDevice());
                         //Toast.makeText(getApplicationContext(), beacon.getUserDevice(), Toast.LENGTH_SHORT).show();
                     } else {
                         Log.d(TAG, "non aggiunto fratello");
@@ -192,33 +192,34 @@ public class BeaconForegroundService extends Service {
                     //Toast.makeText(getApplicationContext(), "DataChange" + beacon, Toast.LENGTH_SHORT).show();
 
                 }
-                int userDetected=0;
-                if (beacon_list.isEmpty()){
+                int userDetected = 0;
+                if (beacon_list.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Empty", Toast.LENGTH_SHORT).show();
                 } else {
                     userDetected = beacon_list.size();
                     Toast.makeText(getApplicationContext(), "User detected:" + beacon_list.size(), Toast.LENGTH_SHORT).show();
                     // Create notification channel
-                    String CHANNEL_ID="MYCHANNEL";
-                    NotificationChannel notificationChannel=new NotificationChannel(CHANNEL_ID,"name",NotificationManager.IMPORTANCE_LOW);
-                    Notification notification=new Notification.Builder(getApplicationContext(),CHANNEL_ID)
+
+                    String CHANNEL_ID = "MYCHANNEL";
+                    NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "name", NotificationManager.IMPORTANCE_LOW);
+                    Notification notification = new Notification.Builder(getApplicationContext(), CHANNEL_ID)
                             .setContentText("User detected")
                             .setContentTitle("Devices detected in your zone")
                             .setAutoCancel(true)
                             .setSmallIcon(R.drawable.healthcare)
                             .build();
 
-                    NotificationManager notificationManager=(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                    NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                     notificationManager.createNotificationChannel(notificationChannel);
-                    notificationManager.notify(String.valueOf(userDetected).hashCode(),notification);
-
-                    Intent intentCount = new Intent("update_ui");
-                    intentCount.putExtra("device_count", userDetected);
-                    // startService(intentCount);
-                    sendBroadcast(intentCount);
-
+                    notificationManager.notify(String.valueOf(userDetected).hashCode(), notification);
                 }
-            }
+                Intent intentCount = new Intent("update_ui");
+                intentCount.putExtra("device_count", userDetected);
+                // startService(intentCount);
+                sendBroadcast(intentCount);
+
+
+        }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
