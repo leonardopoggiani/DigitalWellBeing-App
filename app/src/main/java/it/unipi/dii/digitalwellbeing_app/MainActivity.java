@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .setContentText("You have picked your phone " + count + " times.")
                 .setSmallIcon(R.drawable.healthcare)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setOngoing(false);
+                .setOngoing(true);
 
         createNotificationChannel();
         notificationManager.notify(statusBarNotificationID, builder.build());
