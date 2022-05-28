@@ -12,11 +12,9 @@ import it.unipi.dii.digitalwellbeing_app.ml.PickupClassifier;
 
 
 public class ActivityClassifier {
-
     private static final String TAG = "PickupClassifier";
     private Context ctx;
     static boolean pocket = false;
-
     public ActivityClassifier(Context context){
         this.ctx = context;
     }
@@ -26,7 +24,6 @@ public class ActivityClassifier {
         boolean pickup = false;
         TensorBuffer inputFeature0 = null;
         float[] data = new float[18];
-
         try {
 
             PickupClassifier model = PickupClassifier.newInstance(ctx.getApplicationContext());
