@@ -7,11 +7,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Binder;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.IBinder;
-import android.util.Log;
 import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
@@ -63,33 +59,25 @@ public class SensorHandler extends Service implements SensorEventListener {
                 switch (command) {
                     case "START":
                         initializeSensorHandler();
-                        Log.d(TAG, "Start case");
                         counter = 0;
                         //Start the sensorListener with a low sampling frequency and initialize the detection timer
                         if (startListener(Configuration.LOW_SAMPLING_RATE)) {
                             started = false;
-                            Log.d(TAG, "Detection Activated");
-                        } else
-                            Log.d(TAG, "Error in starting sensors listeners");
+                        }
                         break;
                     case "STOP":
-                        Log.d(TAG, "SensorHandlerService Stopped");
                         if (sm != null) {
                             stopListener();
                             stopSelf();
-                        } else
-                            Log.d(TAG, "SensorManager null");
+                        }
                         break;
                     default:
-                        Log.d(TAG, "Default Case");
                         break;
                 }
             };
 
             fastRun = new Thread(fastToRun);
             fastRun.start();
-
-            Log.d(TAG, "OnStartCommand SensorHandler");
         }
         else if (intent.getAction() != null && intent.getAction().compareTo("samplingRate") == 0) {
 
@@ -101,8 +89,6 @@ public class SensorHandler extends Service implements SensorEventListener {
             };
             fastRun = new Thread(slowToRun);
             fastRun.start();
-
-            Log.d(TAG, "Slow sampling activated");
         }
 
         return Service.START_STICKY;
@@ -110,34 +96,17 @@ public class SensorHandler extends Service implements SensorEventListener {
 
 
     private void setFastSampling() {
-
-        if(Boolean.TRUE.equals(stopListener())) {
-            Log.d(TAG, "Stop slow listener");
-        }
-        else
-            Log.d(TAG, "Errors in storing collected data");
         startListener(Configuration.HIGH_SAMPLING_RATE);
         startCheckPosition = false;
         started = true;
-        Log.d(TAG, "Sampling rate increased");
     }
 
     private void setLowSampling() {
-
-        if(Boolean.TRUE.equals(stopListener())) {
-            Log.d(TAG, "Stop fast listener");
-        }
-        else
-            Log.d(TAG, "Errors in storing collected data");
         if(startListener(Configuration.LOW_SAMPLING_RATE))
         {
             started = false;
             startCheckPosition = true;
-            Log.d(TAG, "Sampling rate decreased");
         }
-        else
-            Log.d(TAG, "Error in starting sensors listeners");
-
     }
 
 
@@ -145,9 +114,7 @@ public class SensorHandler extends Service implements SensorEventListener {
 
         //Se il rate è quello basso prelevo solo dall'accelerometro e il sonsore di prossimità
         if(rate == Configuration.LOW_SAMPLING_RATE){
-            Log.d(TAG, "Delay normal activated");
             return (sm.registerListener(this, accelerometer, rate) && sm.registerListener (this, proximity, rate));
-
         }
 
         //Altrimenti, attivo tutti prelevo da tutti i sensori per classifirare un pickup
@@ -161,8 +128,6 @@ public class SensorHandler extends Service implements SensorEventListener {
                 sm.registerListener (this, proximity, rate)) {
 
             started = true;
-            Log.d(TAG,"Fast Sampling activated");
-
         } else {
             //registerListener on some sensor could be failed so the rate must be reset on low frequency rate
             stopListener();
@@ -170,14 +135,12 @@ public class SensorHandler extends Service implements SensorEventListener {
             startCheckPosition = true;
             sm.registerListener(this, accelerometer, Configuration.LOW_SAMPLING_RATE);
             sm.registerListener (this, proximity, Configuration.LOW_SAMPLING_RATE);
-            Log.d(TAG,"Some registration is failed");
             return true;
         }
         return true;
     }
 
     private void initializeSensorHandler() {
-        Log.d(TAG, "Initialize sensor handler");
         started = false;
 
         sm = (SensorManager) getApplicationContext().getSystemService(SENSOR_SERVICE);
@@ -244,7 +207,6 @@ public class SensorHandler extends Service implements SensorEventListener {
             intentClassification.putExtra("sampleArray", toClassify);
             intentClassification.putExtra("treeMap", toBeClassified);
             intentClassification.setAction("Classify");
-            Log.d(TAG, "Start Service");
             startService(intentClassification);
             startCheckPosition = true;
             toBeClassified.clear();
