@@ -117,7 +117,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             int importance = NotificationManager.IMPORTANCE_NONE;
             NotificationChannel notificationChannel = new
@@ -283,12 +282,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             start_button.setText("START");
         }
     }
-
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         TextView limit = findViewById(R.id.limit);
         limit.setText("" + (progress*10 + 10) );
-
         MainActivity.PICKUP_LIMIT = progress*10 + 10;
     }
 
