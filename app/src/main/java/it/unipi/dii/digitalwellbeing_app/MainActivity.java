@@ -55,7 +55,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        } else {
+        }
+        else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
 
@@ -116,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             int importance = NotificationManager.IMPORTANCE_NONE;
             NotificationChannel notificationChannel = new
@@ -126,7 +128,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             assert notificationManager != null;
             notificationManager.createNotificationChannel(notificationChannel) ;
 
-        } else {
+        }
+        else {
             notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         }
     }
@@ -177,7 +180,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //if(group == 0 || group == 1) {
                 if(group == 0){
                     tv4.setText(String.valueOf( ( (how_many_in_groups) * 100) / count) );
-                } else {
+                }
+                else {
                     // sono in un gruppo
                     tv4.setText(String.valueOf( ( (how_many_in_groups + 1) * 100) / count) );
                 }
@@ -194,7 +198,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if (intent.hasExtra("device_count")) {
                         int device_count = intent.getIntExtra("device_count", 0);
                         group = device_count;
-                    } else {
+                    }
+                    else {
                         String activity = intent.getStringExtra("activity");
                         if (activity.equals("OTHER")) {
                             setActivity(activity);
@@ -252,7 +257,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (REQUEST_CODE_PERMISSIONS == requestCode) {
                 Toast.makeText(this, "Permissions granted", Toast.LENGTH_SHORT).show();
             }
-        } else {
+        }
+        else {
             Toast.makeText(this, "Location permissions are mandatory to use BLE features on Android 6.0 or higher", Toast.LENGTH_LONG).show();
         }
     }

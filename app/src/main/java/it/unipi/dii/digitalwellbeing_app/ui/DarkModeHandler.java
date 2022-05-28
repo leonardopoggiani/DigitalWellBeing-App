@@ -12,11 +12,12 @@ public class DarkModeHandler implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        SwitchMaterial switchtheme = v.findViewById(R.id.switchtheme);
 
+        SwitchMaterial switchtheme = v.findViewById(R.id.switchtheme);
         if (switchtheme.isChecked()) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        } else {
+        }
+        else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
 

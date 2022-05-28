@@ -128,7 +128,8 @@ public class SensorHandler extends Service implements SensorEventListener {
                 sm.registerListener (this, proximity, rate)) {
 
             started = true;
-        } else {
+        }
+        else {
             //registerListener on some sensor could be failed so the rate must be reset on low frequency rate
             stopListener();
             started = false;
@@ -348,7 +349,8 @@ public class SensorHandler extends Service implements SensorEventListener {
                 params.flags |= WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
                 MainActivity.getInstance().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 params.screenBrightness = 0f;
-            } else {
+            }
+            else {
                 MainActivity.getInstance().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 params.flags |= WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
                 params.screenBrightness = -1f;

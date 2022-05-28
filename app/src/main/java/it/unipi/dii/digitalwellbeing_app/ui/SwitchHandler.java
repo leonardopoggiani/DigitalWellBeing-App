@@ -51,15 +51,18 @@ public class SwitchHandler implements View.OnClickListener{
 
                 MainActivity.notificationManager.notify(MainActivity.statusBarNotificationID, MainActivity.builder.build());
                 vibration.setText("Activated");
-            } else {
+            }
+            else {
                 MainActivity.builder.setVibrate(vibrationPattern);
             }
-        } else {
+        }
+        else {
             vibration.setText("Not active");
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 MainActivity.notificationManager.deleteNotificationChannel(String.valueOf(last_channel_id));
-            } else {
+            }
+            else {
                 MainActivity.builder.setVibrate(noVibration);
             }
         }

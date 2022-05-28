@@ -158,7 +158,8 @@ public class BeaconForegroundService extends Service {
                     if (checkCondition(beacon)) {
                         if (beacon_list.isEmpty()) {
                             beacon_list.add(beacon);
-                        } else {
+                        }
+                        else {
                             boolean insert = true;
                             for (int i = 0; i < beacon_list.size(); i++) {
                                 if (beacon_list.get(i).getUserDevice().equals(beacon.getUserDevice()))
@@ -171,23 +172,13 @@ public class BeaconForegroundService extends Service {
                 int userDetected = 0;
                 if (beacon_list.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Empty", Toast.LENGTH_SHORT).show();
-                } else {
+                }
+                else {
                     userDetected = beacon_list.size();
                     Toast.makeText(getApplicationContext(), "User detected:" + beacon_list.size(), Toast.LENGTH_SHORT).show();
                     // Create notification channel
 
-                    /*String CHANNEL_ID = "MYCHANNEL";
-                    NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "name", NotificationManager.IMPORTANCE_LOW);
-                    Notification notification = new Notification.Builder(getApplicationContext(), CHANNEL_ID)
-                            .setContentText("User detected")
-                            .setContentTitle("Devices detected in your zone")
-                            .setAutoCancel(true)
-                            .setSmallIcon(R.drawable.healthcare)
-                            .build();
-
-                    NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                    notificationManager.createNotificationChannel(notificationChannel);
-                    notificationManager.notify(String.valueOf(userDetected).hashCode(), notification);*/
+                    
                 }
                 Intent intentCount = new Intent("update_ui");
                 intentCount.putExtra("device_count", userDetected);
@@ -331,7 +322,8 @@ public class BeaconForegroundService extends Service {
             insert(db, lastbeacon, getApplicationContext());
             timer = new ChangeLastBeacon(lastbeacon.getTimestamp());
             timer.start();
-        } else {
+        }
+        else {
             notfound = true;
             lastbeacon = null;
         }
@@ -352,6 +344,7 @@ public class BeaconForegroundService extends Service {
         }
         public void run(){
             try {
+
                 while(System.currentTimeMillis() < start + 300000)
                     sleep(start + 300000 - System.currentTimeMillis());
                 notfound = true;
