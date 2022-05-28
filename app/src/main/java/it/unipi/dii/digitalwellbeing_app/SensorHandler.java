@@ -203,7 +203,6 @@ public class SensorHandler extends Service implements SensorEventListener {
             for(int i = 0; i < 18; i++) {
                 toClassify[i] = toClassify[i] / count[i];
             }
-
             Intent intentClassification = new Intent(this, ClassificationService.class);
             intentClassification.putExtra("sampleArray", toClassify);
             intentClassification.putExtra("treeMap", toBeClassified);
@@ -212,7 +211,6 @@ public class SensorHandler extends Service implements SensorEventListener {
             startCheckPosition = true;
             toBeClassified.clear();
         }
-
     }
 
     private boolean isFull() {
@@ -223,7 +221,6 @@ public class SensorHandler extends Service implements SensorEventListener {
         }
         return true;
     }
-
     //Called when detection period of 5 minutes is finished or when changing the sampling period
     protected Boolean stopListener(){
         if(sm != null)
@@ -258,7 +255,6 @@ public class SensorHandler extends Service implements SensorEventListener {
 
             }
         }
-
         if(started) {
             if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
                 addMapValues(event, 0, 1, 2);
@@ -344,7 +340,6 @@ public class SensorHandler extends Service implements SensorEventListener {
     private void disableTouch(SensorEvent event) {
         if(event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
             WindowManager.LayoutParams params = MainActivity.getInstance().getWindow().getAttributes();
-
             if(event.values[0] == 0.0) {
                 params.flags |= WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
                 MainActivity.getInstance().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -355,7 +350,6 @@ public class SensorHandler extends Service implements SensorEventListener {
                 params.flags |= WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
                 params.screenBrightness = -1f;
             }
-
             MainActivity.getInstance().getWindow().setAttributes(params);
         }
     }
