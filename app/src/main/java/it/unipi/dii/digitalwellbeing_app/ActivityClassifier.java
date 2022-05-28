@@ -23,7 +23,6 @@ public class ActivityClassifier {
 
     boolean classifySamples(Float[] toClassify) {
         // classify the samples
-
         boolean pickup = false;
         TensorBuffer inputFeature0 = null;
         float[] data = new float[18];
