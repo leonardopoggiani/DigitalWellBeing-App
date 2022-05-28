@@ -21,7 +21,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -36,11 +35,8 @@ import it.unipi.dii.digitalwellbeing_app.ui.SwitchHandler;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, SeekBar.OnSeekBarChangeListener{
 
-    private SensorHandler sensorHandlerService;
-    private ClassificationService classificationService;
     private static final String TAG = "DigitalWellBeing";
     public static final int REQUEST_CODE_PERMISSIONS = 100;
-    boolean bound = false;
     private Context ctx;
     public static int statusBarNotificationID;
     static public NotificationCompat.Builder builder;
@@ -50,7 +46,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private final SwitchHandler switchHandler = new SwitchHandler();
     private final DarkModeHandler darkModeHandler = new DarkModeHandler();
     private int group = 0;
-
     private static MainActivity instance;
     private BroadcastReceiver broadcastReceiver;
 
@@ -142,7 +137,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             TextView tv2 = findViewById(R.id.counter);
 
             tv.setText(activity);
-            Log.d(TAG, activity);
 
             if(!activity.equals("OTHER")) {
                 ImageView imageView = findViewById(R.id.activity_view);
@@ -175,12 +169,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 tv2.setText(String.valueOf(count));
                 TextView tv3 = findViewById(R.id.activity_number);
                 tv3.setText(String.valueOf(count));
-                Log.d(TAG, String.valueOf(count));
 
                 TextView tv4 = findViewById(R.id.perc);
                 int percentuale = Integer.parseInt((String) tv4.getText());
                 int how_many_in_groups = (percentuale * (count - 1)) / 100;
-                Log.d(TAG, "How many pick up in group: " + how_many_in_groups);
 
                 //if(group == 0 || group == 1) {
                 if(group == 0){
@@ -198,16 +190,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Log.i(TAG, "onReceive della broadcast");
                 if(intent.getAction() != null && intent.getAction().equals("update_ui")) {
-
                     if (intent.hasExtra("device_count")) {
                         int device_count = intent.getIntExtra("device_count", 0);
-                        Log.d(TAG, "device count: " + device_count);
                         group = device_count;
                     } else {
                         String activity = intent.getStringExtra("activity");
-                        Log.d(TAG, activity);
                         if (activity.equals("OTHER")) {
                             setActivity(activity);
                         } else {
@@ -215,7 +203,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                     }
                 }
-
             }
         };
         registerReceiver(broadcastReceiver, new IntentFilter("update_ui"));
@@ -223,10 +210,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void setActivity(String s) {
         TextView tv = findViewById(R.id.activity);
-
         tv.setText(s);
-        Log.d(TAG, s);
-
         ImageView imageView = findViewById(R.id.activity_view);
         imageView.setImageResource(R.drawable.other);
     }
@@ -286,7 +270,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             start_button.setText("STOP");
         } else if(start_button.getText() == "STOP") {
             stopScanning();
-            Log.d(TAG, "Stop sensing");
             Intent stopIntent = new Intent(this, SensorHandler.class);
             stopIntent.setAction("Command");
             stopIntent.putExtra("command_key", "STOP");
