@@ -28,9 +28,7 @@ public class SensorHandler extends Service implements SensorEventListener {
     private Sensor rotation;
     private Sensor linear;
     private Sensor magnetometer;
-
     private static final String TAG = "SensorHandler";
-
     //Used to find out if the fast sampling is in progress
     private boolean started = false;
     private boolean goodProximity = false;
@@ -38,8 +36,6 @@ public class SensorHandler extends Service implements SensorEventListener {
     private int counter;
     private boolean startCheckPosition = true;
     private Thread fastRun;
-
-
     TreeMap<Long,Float[]> toBeClassified = new TreeMap<>();
     static boolean already_recognized = true;
     final float[] rotationMatrix = new float[9];
@@ -94,7 +90,6 @@ public class SensorHandler extends Service implements SensorEventListener {
         return Service.START_STICKY;
     }
 
-
     private void setFastSampling() {
         startListener(Configuration.HIGH_SAMPLING_RATE);
         startCheckPosition = false;
@@ -108,7 +103,6 @@ public class SensorHandler extends Service implements SensorEventListener {
             startCheckPosition = true;
         }
     }
-
 
     protected Boolean startListener(int rate){
 
@@ -143,9 +137,7 @@ public class SensorHandler extends Service implements SensorEventListener {
 
     private void initializeSensorHandler() {
         started = false;
-
         sm = (SensorManager) getApplicationContext().getSystemService(SENSOR_SERVICE);
-
         accelerometer = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         proximity = sm.getDefaultSensor(Sensor.TYPE_PROXIMITY);
         gyroscope = sm.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
