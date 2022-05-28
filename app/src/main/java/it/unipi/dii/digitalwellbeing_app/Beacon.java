@@ -5,21 +5,14 @@ import com.kontakt.sdk.android.common.Proximity;
 
 public class Beacon {
     private String key;
-
     private String address;
-
     private double distance;
-
     private String proximity;
-
     private int rssi;
-
     private long timestamp;
-
     private String id;
-
     private String userDevice;
-
+    
     public String getKey() {
         return key;
     }
