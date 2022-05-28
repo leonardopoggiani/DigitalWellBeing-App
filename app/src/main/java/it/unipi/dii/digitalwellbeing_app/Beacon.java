@@ -12,7 +12,7 @@ public class Beacon {
     private long timestamp;
     private String id;
     private String userDevice;
-    
+
     public String getKey() {
         return key;
     }

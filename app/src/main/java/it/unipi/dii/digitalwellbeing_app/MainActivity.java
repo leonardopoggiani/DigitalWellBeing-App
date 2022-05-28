@@ -126,7 +126,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             assert notificationManager != null;
             notificationManager.createNotificationChannel(notificationChannel) ;
-
         }
         else {
             notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -143,18 +142,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if(!activity.equals("OTHER")) {
                 ImageView imageView = findViewById(R.id.activity_view);
                 imageView.setImageResource(R.drawable.pickup);
-
                 CharSequence counter = tv2.getText();
                 int count = Integer.parseInt(counter.toString());
                 count += 1;
-
                 builder.setContentText("You have picked your phone " + count + " times.");
                 // Because the ID remains unchanged, the existing notification is
                 // updated.
                 notificationManager.notify(
                         statusBarNotificationID,
                         builder.build());
-
                 if(count > PICKUP_LIMIT && !already_notified) {
                     Toast.makeText(getApplicationContext(),"You are watching too much your phone!",Toast.LENGTH_LONG).show();
                     notificationManager.cancel(statusBarNotificationID);
