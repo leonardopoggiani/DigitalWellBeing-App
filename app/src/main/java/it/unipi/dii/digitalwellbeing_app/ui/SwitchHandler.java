@@ -34,13 +34,10 @@ public class SwitchHandler implements View.OnClickListener{
 
         if(vibration.isChecked()) {
             Log.d(TAG, "Vibration activated");
-
             vibration.setText("Activated");
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 MainActivity.notificationManager.deleteNotificationChannel(String.valueOf(last_channel_id));
                 last_channel_id++;
-
                 int importance = NotificationManager.IMPORTANCE_HIGH;
                 NotificationChannel notificationChannel = new
                         NotificationChannel(String.valueOf(last_channel_id), Configuration.ANDROID_CHANNEL_NAME, importance);
@@ -48,7 +45,6 @@ public class SwitchHandler implements View.OnClickListener{
                 notificationChannel.enableVibration(true);
                 notificationChannel.setVibrationPattern(vibrationPattern);
                 MainActivity.notificationManager.createNotificationChannel(notificationChannel);
-
                 MainActivity.notificationManager.notify(MainActivity.statusBarNotificationID, MainActivity.builder.build());
                 vibration.setText("Activated");
             }
@@ -58,7 +54,6 @@ public class SwitchHandler implements View.OnClickListener{
         }
         else {
             vibration.setText("Not active");
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 MainActivity.notificationManager.deleteNotificationChannel(String.valueOf(last_channel_id));
             }
