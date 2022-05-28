@@ -266,7 +266,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             if (REQUEST_CODE_PERMISSIONS == requestCode) {
-                Toast.makeText(this, "Permissions granted!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Permissions granted", Toast.LENGTH_SHORT).show();
             }
         } else {
             Toast.makeText(this, "Location permissions are mandatory to use BLE features on Android 6.0 or higher", Toast.LENGTH_LONG).show();

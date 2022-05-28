@@ -151,7 +151,7 @@ public class BeaconForegroundService extends Service {
 
         // Check if service is already active
         if (isRunning) {
-            Toast.makeText(this, "Service is already running.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Service is already running", Toast.LENGTH_SHORT).show();
             return START_STICKY;
         }
 
@@ -246,7 +246,7 @@ public class BeaconForegroundService extends Service {
             proximityManager.disconnect();
             proximityManager = null;
         }
-        Toast.makeText(this, "Scanning service stopped.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Scanning service stopped", Toast.LENGTH_SHORT).show();
         super.onDestroy();
     }
 
@@ -279,7 +279,7 @@ public class BeaconForegroundService extends Service {
         final NotificationCompat.Action action = new NotificationCompat.Action(0, "Stop", stopIntent);
         notificationForeground = new NotificationCompat.Builder(this, NOTIFICATION_CHANEL_ID)
                 .setContentTitle("Scan service")
-                .setContentText("Actively scanning iBeacons")
+                .setContentText("Actively scanning Beacons")
                 .addAction(action)
                 .setSmallIcon(R.drawable.healthcare)
                 .setContentIntent(pendingIntent)
@@ -308,7 +308,7 @@ public class BeaconForegroundService extends Service {
             public void onServiceReady() {
                 proximityManager.startScanning();
                 //devicesCount = 0;
-                Toast.makeText(BeaconForegroundService.this, "Scanning service started.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(BeaconForegroundService.this, "Scanning service started", Toast.LENGTH_SHORT).show();
             }
         });
     }
