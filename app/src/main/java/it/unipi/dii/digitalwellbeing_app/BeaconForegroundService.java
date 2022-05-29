@@ -51,6 +51,9 @@ public class BeaconForegroundService extends Service {
     public static final String TAG = BeaconForegroundService.class.getSimpleName();
 
     public static final String ACTION_DEVICE_DISCOVERED = "DEVICE_DISCOVERED_ACTION";
+    /*public static final String EXTRA_DEVICE = "DeviceExtra";
+    public static final String EXTRA_DEVICES_COUNT = "DevicesCountExtra";*/
+
     private static final String STOP_SERVICE_ACTION = "STOP_SERVICE_ACTION";
 
     private static final String NOTIFICATION_CHANEL_NAME = "Kontakt SDK Samples";
@@ -76,15 +79,22 @@ public class BeaconForegroundService extends Service {
     @SuppressLint("HardwareIds")
     @Override
     public void onCreate() {
+        //Toast.makeText(this, "Foreground.", Toast.LENGTH_SHORT).show();
         super.onCreate();
         db  = FirebaseDatabase.getInstance("https://digitalwellbeing-83177-default-rtdb.europe-west1.firebasedatabase.app/").getReference();
         beacon_list = new ArrayList<>();
         setupProximityManager();
         isRunning = false;
+        //device = android.os.Build.MODEL;
+        /*TelephonyManager telephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+        device = telephonyManager.getDeviceId();*/
         device = UUID.randomUUID().toString();
         lastbeacon = new Beacon();
         beacon_list.clear();
         notfound = true;
+        /*if(device.equals("Error")){
+            onDestroy();
+        }*/
     }
 
     private void setupProximityManager() {
@@ -104,21 +114,28 @@ public class BeaconForegroundService extends Service {
 
     private boolean checkCondition(Beacon b){
         if(notfound) {
+            Log.d(TAG, "not found");
             return false;
         }
         if(lastbeacon == null) return false;
         if(!b.getId().equals(lastbeacon.getId())) {
+            Log.d(TAG, "not same beacon");
             return false;
         }
         if(b.getProximity().equals("FAR")) {
+            Log.d(TAG, "far");
             return false;
         }
         if(b.getUserDevice().equals(lastbeacon.getUserDevice())) {
+            //Toast.makeText(getApplicationContext(), b.getAddress() + ", " +lastbeacon.getAddress(), Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "user device");
             return false;
         }
         if(b.getTimestamp() < lastbeacon.getTimestamp() - 300000 || b.getTimestamp() > lastbeacon.getTimestamp() + 300000 ) {
+            Log.d(TAG, "timestamp");
             return false;
         }
+        // if (!b.getProximity().equals(lastbeacon.getProximity())) return false;
 
         return true;
     }
@@ -153,6 +170,7 @@ public class BeaconForegroundService extends Service {
                     beacon.setRssi(postSnapshot.child("rssi").getValue(Integer.class));
                     beacon.setUserDevice(postSnapshot.child("userDevice").getValue(String.class));
                     beacon.setAddress(postSnapshot.child("address").getValue(String.class));
+                    //Toast.makeText(getApplicationContext(), beacon.getAddress(), Toast.LENGTH_SHORT).show();
                     beacon.setId(postSnapshot.child("id").getValue(String.class));
                     beacon.setDistance(postSnapshot.child("distance").getValue(Double.class));
                     if (checkCondition(beacon)) {
@@ -167,7 +185,13 @@ public class BeaconForegroundService extends Service {
                             }
                             if (insert) beacon_list.add(beacon);
                         }
+                        Log.d(TAG, "aggiunto alla lista" + beacon.getUserDevice());
+                        //Toast.makeText(getApplicationContext(), beacon.getUserDevice(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Log.d(TAG, "non aggiunto fratello");
                     }
+                    //Toast.makeText(getApplicationContext(), "DataChange" + beacon, Toast.LENGTH_SHORT).show();
+
                 }
                 int userDetected = 0;
                 if (beacon_list.isEmpty()) {
@@ -273,7 +297,7 @@ public class BeaconForegroundService extends Service {
             public void onServiceReady() {
                 proximityManager.startScanning();
                 //devicesCount = 0;
-                Toast.makeText(BeaconForegroundService.this, "Scanning service started", Toast.LENGTH_SHORT).show();
+                Toast.makeText(BeaconForegroundService.this, "Scanning service started.", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -298,6 +322,7 @@ public class BeaconForegroundService extends Service {
         //Saving the beacon object
         String pushKey = db.push().getKey();
         db.child("Beacon").push().setValue(beacon);
+        //Toast.makeText(context, "Insert firebase", Toast.LENGTH_LONG).show();
 
     }
 
@@ -320,9 +345,8 @@ public class BeaconForegroundService extends Service {
             insert(db, lastbeacon, getApplicationContext());
             timer = new ChangeLastBeacon(lastbeacon.getTimestamp());
             timer.start();
-        }
-        else {
-            notfound = true;
+        } else {
+            notfound=true;
             lastbeacon = null;
         }
         
@@ -345,6 +369,8 @@ public class BeaconForegroundService extends Service {
 
                 while(System.currentTimeMillis() < start + 300000)
                     sleep(start + 300000 - System.currentTimeMillis());
+                //Toast.makeText(BeaconForegroundService.this, "Finito timeout", Toast.LENGTH_SHORT).show();
+                Log.d("Timer","Finito timeout");
                 notfound = true;
                 lastbeacon = null;
             } catch (InterruptedException ie) {}

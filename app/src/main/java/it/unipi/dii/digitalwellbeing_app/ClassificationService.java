@@ -1,12 +1,16 @@
 package it.unipi.dii.digitalwellbeing_app;
 
+import android.app.IntentService;
 import android.app.Service;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import java.util.HashMap;
+import java.util.TreeMap;
 
 public class ClassificationService extends Service {
 
@@ -17,8 +21,11 @@ public class ClassificationService extends Service {
     Intent intentData;
     Intent intentSamplingRate;
 
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d(TAG, "Started");
+
         Runnable toRun = () -> {
             classifier = new ActivityClassifier(this);
             intentData = intent;
@@ -30,23 +37,32 @@ public class ClassificationService extends Service {
     }
 
     private void handleClassification() {
-        Float[] sampleArray = (Float[])intentData.getExtras().get("sampleArray");
-        boolean activity = classifier.classifySamples(sampleArray);
 
-        intentResult = new Intent("update_ui");
-        intentSamplingRate = new Intent(getApplicationContext(), SensorHandler.class);
-        intentSamplingRate.setAction("samplingRate");
+            Log.d(TAG, "Handle Classification!");
+            Float[] sampleArray = (Float[])intentData.getExtras().get("sampleArray");
+            TreeMap<Long,Float[]> toBeClassified;
+            toBeClassified = new TreeMap<>((HashMap<Long,Float[]>)intentData.getExtras().get("treeMap"));
+            boolean activity = classifier.classifySamples(sampleArray, toBeClassified);
 
-        if(activity) {
-            intentResult.putExtra("activity","PICKUP");
-            intentSamplingRate.putExtra("activity", "PICKUP");
-            startService(intentSamplingRate);
-        }
-        else {
-            intentResult.putExtra("activity","OTHER");
-        }
+            intentResult = new Intent("update_ui");
+            intentSamplingRate = new Intent(getApplicationContext(), SensorHandler.class);
+            intentSamplingRate.setAction("samplingRate");
 
-        getApplicationContext().sendBroadcast(intentResult);
+            if(activity) {
+                Log.d(TAG, "PICKUP");
+                intentResult.putExtra("activity","PICKUP");
+                intentSamplingRate.putExtra("activity", "PICKUP");
+                startService(intentSamplingRate);
+            }
+            else {
+                Log.d(TAG,"OTHERS");
+                intentResult.putExtra("activity","OTHER");
+            }
+
+            getApplicationContext().sendBroadcast(intentResult);
+
+            //startService(intentResult);
+            //stopSelf();
     }
 
 

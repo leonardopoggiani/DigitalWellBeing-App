@@ -1,12 +1,15 @@
 package it.unipi.dii.digitalwellbeing_app;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
+import java.util.TreeMap;
 
 import it.unipi.dii.digitalwellbeing_app.ml.PickupClassifier;
 
@@ -19,7 +22,7 @@ public class ActivityClassifier {
         this.ctx = context;
     }
 
-    boolean classifySamples(Float[] toClassify) {
+    boolean classifySamples(Float[] toClassify, TreeMap<Long, Float[]> toBeClassified) {
         // classify the samples
         boolean pickup = false;
         TensorBuffer inputFeature0 = null;
@@ -48,6 +51,8 @@ public class ActivityClassifier {
                 pickup = true;
                 pocket = false;
             }
+
+            Log.d(TAG, "predictActivities: output array: " + Arrays.toString(outputFeature0.getFloatArray()));
 
             // Releases model resources if no longer used.
             model.close();
