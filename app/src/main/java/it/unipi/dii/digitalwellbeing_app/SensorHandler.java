@@ -106,7 +106,7 @@ public class SensorHandler extends Service implements SensorEventListener {
 
     protected Boolean startListener(int rate){
 
-        //Se il rate è quello basso prelevo solo dall'accelerometro e il sonsore di prossimità
+        //Se il rate è quello basso prelevo solo dall'accelerometro e il sensore di prossimità
         if(rate == Configuration.LOW_SAMPLING_RATE){
             return (sm.registerListener(this, accelerometer, rate) && sm.registerListener (this, proximity, rate));
         }
@@ -195,6 +195,7 @@ public class SensorHandler extends Service implements SensorEventListener {
             for(int i = 0; i < 18; i++) {
                 toClassify[i] = toClassify[i] / count[i];
             }
+
             Intent intentClassification = new Intent(this, ClassificationService.class);
             intentClassification.putExtra("sampleArray", toClassify);
             intentClassification.putExtra("treeMap", toBeClassified);
@@ -213,6 +214,7 @@ public class SensorHandler extends Service implements SensorEventListener {
         }
         return true;
     }
+
     //Called when detection period of 5 minutes is finished or when changing the sampling period
     protected Boolean stopListener(){
         if(sm != null)

@@ -1,9 +1,9 @@
 
 {
-java:S3012%"YUse "Arrays.copyOf", "Arrays.asList", "Collections.addAll" or "System.arraycopy" instead.(ÏÈ‹…úÿÿÿÿ8î½×´0
+java:S3012!"YUse "Arrays.copyOf", "Arrays.asList", "Collections.addAll" or "System.arraycopy" instead.(ÏÈ‹…úÿÿÿÿ8î½×´0
 X
-java:S26964"6Make the enclosing method "static" or remove this set.(É»Ø¸şÿÿÿÿ8÷½×´0
+java:S2696,"6Make the enclosing method "static" or remove this set.(É»Ø¸şÿÿÿÿ8÷½×´0
 X
-java:S26969"6Make the enclosing method "static" or remove this set.(ËÍ·÷ùÿÿÿÿ8ø½×´0
+java:S26961"6Make the enclosing method "static" or remove this set.(ËÍ·÷ùÿÿÿÿ8ø½×´0
 I
-java:S1068"'Remove this unused "TAG" private field.(»½’…ùÿÿÿÿ8û½×´0
+java:S1068"'Remove this unused "TAG" private field.(»½’…ùÿÿÿÿ8û½×´0

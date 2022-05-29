@@ -20,7 +20,6 @@ public class DarkModeHandler implements View.OnClickListener{
         else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
-
     }
 
 }

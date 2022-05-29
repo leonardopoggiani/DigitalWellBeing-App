@@ -33,7 +33,6 @@ public class SwitchHandler implements View.OnClickListener{
         SwitchMaterial vibration = v.findViewById(R.id.notification);
 
         if(vibration.isChecked()) {
-            Log.d(TAG, "Vibration activated");
             vibration.setText("Activated");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 MainActivity.notificationManager.deleteNotificationChannel(String.valueOf(last_channel_id));
