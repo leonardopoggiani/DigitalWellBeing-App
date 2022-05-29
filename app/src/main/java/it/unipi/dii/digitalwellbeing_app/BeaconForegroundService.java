@@ -118,7 +118,7 @@ public class BeaconForegroundService extends Service {
             return false;
         }
         if(lastbeacon == null) return false;
-        if(!b.getId().equals(lastbeacon.getId())) {
+        if(b.getId() == null || !b.getId().equals(lastbeacon.getId())) {
             Log.d(TAG, "not same beacon");
             return false;
         }
@@ -160,7 +160,7 @@ public class BeaconForegroundService extends Service {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Toast.makeText(getApplicationContext(), "Qualcuno ha scritto nel db", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Qualcuno ha scritto nel db", Toast.LENGTH_SHORT).show();
                 beacon_list.clear();
                 Beacon beacon = new Beacon();
                 for (DataSnapshot postSnapshot : dataSnapshot.child("Beacon").getChildren()) {
@@ -185,21 +185,21 @@ public class BeaconForegroundService extends Service {
                             }
                             if (insert) beacon_list.add(beacon);
                         }
-                        Log.d(TAG, "aggiunto alla lista" + beacon.getUserDevice());
+                        //Log.d(TAG, "aggiunto alla lista" + beacon.getUserDevice());
                         //Toast.makeText(getApplicationContext(), beacon.getUserDevice(), Toast.LENGTH_SHORT).show();
-                    } else {
-                        Log.d(TAG, "non aggiunto fratello");
-                    }
+                    } /*else {
+                        //Log.d(TAG, "non aggiunto fratello");
+                    }*/
                     //Toast.makeText(getApplicationContext(), "DataChange" + beacon, Toast.LENGTH_SHORT).show();
 
                 }
                 int userDetected = 0;
-                if (beacon_list.isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "Empty", Toast.LENGTH_SHORT).show();
-                }
-                else {
+                if (!beacon_list.isEmpty()) {
+                    //Toast.makeText(getApplicationContext(), "Empty", Toast.LENGTH_SHORT).show();
+                //}
+                //else {
                     userDetected = beacon_list.size();
-                    Toast.makeText(getApplicationContext(), "User detected:" + beacon_list.size(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "User detected:" + beacon_list.size(), Toast.LENGTH_SHORT).show();
                 }
                 Intent intentCount = new Intent("update_ui");
                 intentCount.putExtra("device_count", userDetected);
@@ -297,7 +297,7 @@ public class BeaconForegroundService extends Service {
             public void onServiceReady() {
                 proximityManager.startScanning();
                 //devicesCount = 0;
-                Toast.makeText(BeaconForegroundService.this, "Scanning service started.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(BeaconForegroundService.this, "Scanning service started", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -327,7 +327,7 @@ public class BeaconForegroundService extends Service {
     }
 
     private void onDeviceDiscovered(final RemoteBluetoothDevice device) {
-        Toast.makeText(getApplicationContext(), "Beacon", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), "Beacon", Toast.LENGTH_SHORT).show();
         if(!device.getProximity().toString().equals("FAR")){
             if(timer != null){
                 if(timer.isAlive())
